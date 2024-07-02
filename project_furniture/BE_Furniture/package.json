@@ -1,0 +1,21 @@
+{
+  "name": "clear",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "vite": "^4.5.3",
+    "vite-plugin-node": "^3.1.0"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "joi": "^17.13.3",
+    "mongoose": "^8.4.4",
+    "nodemon": "^3.1.4"
+  }
+}
