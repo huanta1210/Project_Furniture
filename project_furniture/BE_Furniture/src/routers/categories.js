@@ -6,13 +6,22 @@ import {
   getDetailCategories,
   updateCategories,
 } from "../controllers/categories";
+import { checkPermission } from "../middlewares/checkPermission";
 
 const routerCategories = express.Router();
 
 routerCategories.get("/", getAllCategories);
 routerCategories.get("/:id", getDetailCategories);
-routerCategories.post("/create-categories", createCategories);
-routerCategories.put("/update-categories/:id", updateCategories);
-routerCategories.delete("/delete-categories/:id", deleteCategories);
+routerCategories.post("/create-categories", checkPermission, createCategories);
+routerCategories.put(
+  "/update-categories/:id",
+  checkPermission,
+  updateCategories
+);
+routerCategories.delete(
+  "/delete-categories/:id",
+  checkPermission,
+  deleteCategories
+);
 
 export default routerCategories;

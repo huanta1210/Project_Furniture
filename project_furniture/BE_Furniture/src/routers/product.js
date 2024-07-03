@@ -6,6 +6,7 @@ import {
   getDetailsProduct,
   updateProduct,
 } from "../controllers/product";
+import { checkPermission } from "../middlewares/checkPermission";
 
 const routerProduct = express.Router();
 
@@ -13,10 +14,10 @@ routerProduct.get("/", getAllProduct);
 
 routerProduct.get("/:id", getDetailsProduct);
 
-routerProduct.post("/create-product", createProduct);
+routerProduct.post("/create-product", checkPermission, createProduct);
 
-routerProduct.put("/edit-product/:id", updateProduct);
+routerProduct.put("/edit-product/:id", checkPermission, updateProduct);
 
-routerProduct.delete("/delete-product/:id", deleteProduct);
+routerProduct.delete("/delete-product/:id", checkPermission, deleteProduct);
 
 export default routerProduct;
