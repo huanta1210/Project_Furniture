@@ -1,4 +1,5 @@
 import Categories from "../models/Categories";
+import OrderItem from "../models/Order-items";
 import Product from "../models/Product";
 import {
   productUpdateValidation,
@@ -74,7 +75,19 @@ export const createProduct = async (req, res) => {
         },
       });
 
-      console.log(newProduct);
+      const updateOrderItems = await OrderItem.findByIdAndUpdate(
+        data.orderItems,
+        { $push: { products: data._id } },
+        { new: true, useFindAndModify: false }
+      );
+
+      console.log(updateOrderItems);
+
+      if (!updateOrderItems) {
+        return res.status(404).json({
+          message: "Create orderItems an unsuccessful product",
+        });
+      }
 
       if (!newProduct) {
         return res.status(404).json({

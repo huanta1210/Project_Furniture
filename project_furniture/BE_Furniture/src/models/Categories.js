@@ -6,13 +6,13 @@ const categoriesSchema = new mongoose.Schema(
       type: String,
       required: true,
       unique: true,
-      defaultValue: "UnCategorized",
+      default: "UnCategorized",
     },
     slug: {
       type: String,
       required: true,
       unique: true,
-      defaultValue: "UnCategorized",
+      default: "UnCategorized",
     },
     products: [
       {

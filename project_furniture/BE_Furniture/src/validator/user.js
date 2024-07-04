@@ -7,6 +7,15 @@ export const userValidator = Joi.object({
     "string.min": "Trường username không được dưới {#limit } kí tự",
     "string.max": "Trường username không được quá {#limit + 1 } kí tự",
   }),
+  phone: Joi.string()
+    .pattern(/^[0-9]{10,11}$/)
+    .required()
+    .messages({
+      "string.empty": "Không bỏ trống phone",
+      "any.required": "Phone là bắt buộc",
+      "string.pattern.base":
+        "Phone phải là số và có độ dài từ 10 đến 11 chữ số",
+    }),
   email: Joi.string().email().required().messages({
     "string.empty": "Không bỏ trống email",
     "any.required": "Email là bắt buộc",

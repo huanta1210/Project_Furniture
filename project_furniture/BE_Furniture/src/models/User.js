@@ -6,6 +6,10 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    phone: {
+      type: Number,
+      required: true,
+    },
     email: {
       type: String,
       required: true,
@@ -18,6 +22,10 @@ const userSchema = new mongoose.Schema(
     role: {
       type: String,
       default: "member",
+    },
+    orders: {
+      type: mongoose.Types.ObjectId,
+      ref: "Order",
     },
   },
   {

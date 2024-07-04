@@ -61,6 +61,10 @@ export const createCategories = async (req, res) => {
         message: errorMessage.message,
       });
     }
+    if (!req.body.categoryName && !req.body.slug) {
+      req.body.categoryName = "UnCategorized";
+      req.body.slug = "UnCategorized";
+    }
     const data = await Categories.create(req.body);
 
     if (!data || data.length === 0) {

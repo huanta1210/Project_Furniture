@@ -21,6 +21,10 @@ export const registerUser = async (req, res) => {
           message: "Email is already",
         });
       }
+
+      if (!req.body.role) {
+        req.body.role = "member";
+      }
       // mã hoá password
       const hashPassword = await bcryptjs.hash(req.body.password, 10);
 
@@ -31,6 +35,7 @@ export const registerUser = async (req, res) => {
 
       return res.status(200).json({
         message: "Register successful",
+        datas: user,
         // token: accessToken,
       });
     }
