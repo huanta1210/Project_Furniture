@@ -23,10 +23,12 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: "member",
     },
-    orders: {
-      type: mongoose.Types.ObjectId,
-      ref: "Order",
-    },
+    orders: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Order",
+      },
+    ],
   },
   {
     versionKey: false,

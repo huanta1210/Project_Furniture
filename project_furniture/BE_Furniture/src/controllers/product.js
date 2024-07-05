@@ -137,6 +137,11 @@ export const updateProduct = async (req, res) => {
           },
         }
       );
+      if (!newProduct) {
+        return res.status(404).json({
+          message: "Create categories an unsuccessful product",
+        });
+      }
 
       return res.status(200).json({
         message: "Product update successfully",
@@ -167,6 +172,11 @@ export const deleteProduct = async (req, res) => {
         },
       }
     );
+    if (!newProduct) {
+      return res.status(404).json({
+        message: "Create categories an unsuccessful product",
+      });
+    }
 
     return res.status(200).json({
       message: "Product delete successfully",

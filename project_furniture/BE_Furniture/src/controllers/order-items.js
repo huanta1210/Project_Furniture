@@ -9,7 +9,7 @@ export const getAllOrderItems = async (req, res) => {
       .populate("orders");
 
     if (!orderItems || orderItems.length === 0) {
-      return res.status(403).json({
+      return res.status(404).json({
         message: "Get all orderItems not found",
       });
     }
@@ -33,7 +33,7 @@ export const getDetailOrderItems = async (req, res) => {
       .populate("orders");
 
     if (!orderItems) {
-      return res.status(403).json({
+      return res.status(404).json({
         message: "Get detail orderItems not found",
       });
     }
@@ -80,7 +80,7 @@ export const updateOrderItems = async (req, res) => {
     );
 
     if (!orderItems) {
-      return res.status(403).json({
+      return res.status(404).json({
         message: "Update orderItems unsuccessful",
       });
     }

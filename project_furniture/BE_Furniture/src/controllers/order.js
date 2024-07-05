@@ -1,5 +1,5 @@
 import Order from "../models/Order";
-import OrderItems from "../models/Order-items";
+import OrderItem from "../models/Order-items";
 import User from "../models/User";
 
 export const getAllOrders = async (req, res) => {
@@ -62,6 +62,14 @@ export const createOrders = async (req, res) => {
       { new: true, useFindAndModify: false }
     );
 
+    const orderItems = req.body.orderItems;
+    if (orderItems && orderItems.length > 0) {
+      await OrderItem.updateMany(
+        { _id: { $in: orderItems } },
+        { $set: { orders: order._id } }
+      );
+    }
+
     if (!newUser) {
       return res.status(403).json({
         message: "Update user unsuccessful",
@@ -78,25 +86,34 @@ export const createOrders = async (req, res) => {
     });
   }
 };
-
+// cần fix lỗi không update đc
 export const updateOrders = async (req, res) => {
   try {
-    const order = await Order.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-    });
+    const order = await Order.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      {
+        new: true,
+        aboutEarly: false,
+      },
+      { useFindAndModify: false }
+    );
     console.log(order);
+    console.log(req.params.id);
+    console.log(req.body);
+
     if (!order) {
       return res.status(404).json({
         message: "Update order unsuccessful",
       });
     }
-
+    console.log(order.users);
     const newUser = await User.findByIdAndUpdate(
       order.users,
       { $push: { orders: order._id } },
       { new: true, useFindAndModify: false }
     );
-
+    console.log(newUser);
     if (!newUser) {
       return res.status(403).json({
         message: "Update user unsuccessful",
@@ -123,6 +140,10 @@ export const deleteOrders = async (req, res) => {
         message: "Delete order unsuccessful",
       });
     }
+    await OrderItem.updateMany(
+      { orders: order._id },
+      { $unset: { orders: "" } }
+    );
 
     const newUser = await User.findByIdAndUpdate(
       order.users,

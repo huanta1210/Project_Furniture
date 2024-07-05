@@ -4,10 +4,12 @@ const orderItemsSchema = new mongoose.Schema(
   {
     quantity: {
       type: Number,
+      min: 1,
       required: true,
     },
     price: {
       type: mongoose.Schema.Types.Decimal128,
+      min: 0.01,
       required: true,
     },
     orders: {
