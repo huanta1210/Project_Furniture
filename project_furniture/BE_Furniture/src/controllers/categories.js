@@ -57,8 +57,8 @@ export const createCategories = async (req, res) => {
       const errorMessage = error.details.map((err) => err.message);
 
       return res.status(400).json({
-        name: errorMessage.name,
-        message: errorMessage.message,
+        name: errorMessage,
+        message: errorMessage,
       });
     }
     if (!req.body.categoryName && !req.body.slug) {

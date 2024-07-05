@@ -29,6 +29,12 @@ const userSchema = new mongoose.Schema(
         ref: "Order",
       },
     ],
+    addresses: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Address",
+      },
+    ],
   },
   {
     versionKey: false,

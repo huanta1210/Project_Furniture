@@ -50,15 +50,15 @@ export const getDetailsProduct = async (req, res) => {
 
 export const createProduct = async (req, res) => {
   try {
-    const { errors } = productValidation.validate(req.body, {
+    const { error } = productValidation.validate(req.body, {
       abortEarly: false,
     });
 
-    if (errors) {
-      const error = errors.map((err) => err.message);
+    if (error) {
+      const errorMessage = error.details.map((err) => err.message);
       return res.status(404).json({
-        name: error.name,
-        message: error.message,
+        name: errorMessage.name,
+        message: errorMessage.message,
       });
     } else {
       const data = await Product.create(req.body);
@@ -77,11 +77,9 @@ export const createProduct = async (req, res) => {
 
       const updateOrderItems = await OrderItem.findByIdAndUpdate(
         data.orderItems,
-        { $push: { products: data._id } },
+        { $addToSet: { products: data._id } },
         { new: true, useFindAndModify: false }
       );
-
-      console.log(updateOrderItems);
 
       if (!updateOrderItems) {
         return res.status(404).json({
@@ -109,15 +107,15 @@ export const createProduct = async (req, res) => {
 
 export const updateProduct = async (req, res) => {
   try {
-    const { errors } = productUpdateValidation.validate(req.body, {
+    const { error } = productUpdateValidation.validate(req.body, {
       abortEarly: false,
     });
 
-    if (errors) {
-      const error = errors.map((err) => err.message);
+    if (error) {
+      const errorMessage = error.details.map((err) => err.message);
       return res.status(404).json({
-        name: error.name,
-        message: error.message,
+        name: errorMessage.name,
+        message: errorMessage.message,
       });
     } else {
       const product = await Product.findByIdAndUpdate(req.params.id, req.body, {
@@ -137,9 +135,21 @@ export const updateProduct = async (req, res) => {
           },
         }
       );
+
       if (!newProduct) {
         return res.status(404).json({
           message: "Create categories an unsuccessful product",
+        });
+      }
+      const updateOrderItems = await OrderItem.findByIdAndUpdate(
+        data.orderItems,
+        { $addToSet: { products: data._id } },
+        { new: true, useFindAndModify: false }
+      );
+
+      if (!updateOrderItems) {
+        return res.status(404).json({
+          message: "Create orderItems an unsuccessful product",
         });
       }
 
@@ -175,6 +185,17 @@ export const deleteProduct = async (req, res) => {
     if (!newProduct) {
       return res.status(404).json({
         message: "Create categories an unsuccessful product",
+      });
+    }
+    const updateOrderItems = await OrderItem.findByIdAndUpdate(
+      data.orderItems,
+      { $addToSet: { products: data._id } },
+      { new: true, useFindAndModify: false }
+    );
+
+    if (!updateOrderItems) {
+      return res.status(404).json({
+        message: "Create orderItems an unsuccessful product",
       });
     }
 

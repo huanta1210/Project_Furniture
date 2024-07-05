@@ -58,7 +58,7 @@ export const createOrders = async (req, res) => {
     }
     const newUser = await User.findByIdAndUpdate(
       order.users,
-      { $push: { orders: order._id } },
+      { $addToSet: { orders: order._id } },
       { new: true, useFindAndModify: false }
     );
 
@@ -110,7 +110,7 @@ export const updateOrders = async (req, res) => {
     console.log(order.users);
     const newUser = await User.findByIdAndUpdate(
       order.users,
-      { $push: { orders: order._id } },
+      { $addToSet: { orders: order._id } },
       { new: true, useFindAndModify: false }
     );
     console.log(newUser);
@@ -147,7 +147,7 @@ export const deleteOrders = async (req, res) => {
 
     const newUser = await User.findByIdAndUpdate(
       order.users,
-      { $push: { orders: order._id } },
+      { $addToSet: { orders: order._id } },
       { new: true, useFindAndModify: false }
     );
 
