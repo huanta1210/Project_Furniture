@@ -38,6 +38,7 @@ export const registerUser = async (req, res) => {
       return res.status(200).json({
         message: "Register successful",
         datas: user,
+        accessToken,
       });
     }
   } catch (error) {
@@ -90,7 +91,7 @@ export const loginUser = async (req, res) => {
       return res.status(200).json({
         message: "Login successful",
         checkUserRegister,
-        token: accessToken,
+        accessToken: accessToken,
       });
     }
   } catch (error) {

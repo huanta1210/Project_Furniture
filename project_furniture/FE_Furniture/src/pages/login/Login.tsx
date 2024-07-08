@@ -28,20 +28,37 @@ const MainLogin: React.FC = () => {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<FormValues>();
 
-  const onSubmit: SubmitHandler<FormValues> = async (data) => {
+  const onSubmit: SubmitHandler<FormValues> = async (dataLogin) => {
     try {
-      const res = await instance.post("/auth/login", data);
+      const { data } = await instance.post("/auth/login", dataLogin);
+      console.log(data.checkUserRegister.role);
 
-      if (!res) {
+      if (!data) {
         toast.error("The data returned failed");
       } else {
-        toast.success("Logged in successfully");
+        localStorage.setItem("token", data.accessToken);
+        localStorage.setItem("user", data.checkUserRegister);
 
-        setTimeout(() => {
-          navigate("/");
-        }, 1000);
+        if (data.checkUserRegister.role === "admin") {
+          toast.success("Logged in successfully", {
+            onClose: () => {
+              reset();
+              navigate("/admin/product/list");
+            },
+            autoClose: 1000,
+          });
+        } else {
+          toast.success("Logged in successfully", {
+            onClose: () => {
+              reset();
+              navigate("/");
+            },
+            autoClose: 1000,
+          });
+        }
       }
     } catch (error) {
       console.log(error);
