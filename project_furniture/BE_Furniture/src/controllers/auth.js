@@ -2,6 +2,10 @@ import User from "../models/User";
 import { userLoginValidator, userValidator } from "../validator/user";
 import jwt from "jsonwebtoken";
 import bcryptjs from "bcryptjs";
+import dotnev from "dotenv";
+
+dotnev.config();
+const SECRET_KEY = process.env.JWT_SECRET;
 
 export const registerUser = async (req, res) => {
   try {
@@ -25,10 +29,8 @@ export const registerUser = async (req, res) => {
       if (!req.body.role) {
         req.body.role = "member";
       }
-      // mã hoá password
       const hashPassword = await bcryptjs.hash(req.body.password, 10);
 
-      // tạo user trong đb
       const user = await User.create({ ...req.body, password: hashPassword });
 
       user.password = undefined;
@@ -36,10 +38,8 @@ export const registerUser = async (req, res) => {
       return res.status(200).json({
         message: "Register successful",
         datas: user,
-        // token: accessToken,
       });
     }
-    // check tồn tại của email
   } catch (error) {
     return res.status(500).json({
       message: error.message,
@@ -81,11 +81,9 @@ export const loginUser = async (req, res) => {
       }
       // tạo token
 
-      const accessToken = jwt.sign(
-        { _id: checkUserRegister._id },
-        "your_jwt_secret",
-        { expiresIn: "1h" }
-      );
+      const accessToken = jwt.sign({ _id: checkUserRegister._id }, SECRET_KEY, {
+        expiresIn: "1h",
+      });
 
       checkUserRegister.password = undefined;
 

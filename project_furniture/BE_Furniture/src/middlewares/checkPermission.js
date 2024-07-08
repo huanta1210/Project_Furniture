@@ -1,5 +1,8 @@
 import jwt from "jsonwebtoken";
 import User from "../models/User";
+import dotenv from "dotenv";
+dotenv.config();
+const SECRET_KEY = process.env.JWT_SECRET;
 
 export const checkPermission = async (req, res, next) => {
   try {
@@ -11,7 +14,7 @@ export const checkPermission = async (req, res, next) => {
       });
     }
 
-    const decode = jwt.verify(token, "your_jwt_secret");
+    const decode = jwt.verify(token, SECRET_KEY);
 
     const user = await User.findById(decode._id);
 
@@ -46,7 +49,7 @@ export const checkTokenUserComments = async (req, res, next) => {
       });
     }
 
-    const decode = jwt.verify(token, "your_jwt_secret");
+    const decode = jwt.verify(token, SECRET_KEY);
 
     const userComment = await User.findById(decode._id);
 
