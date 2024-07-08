@@ -6,7 +6,7 @@ export const getAllOrders = async (req, res) => {
   try {
     const order = await Order.find({});
 
-    if (!order) {
+    if (order.length === 0) {
       return res.status(403).json({
         message: "Order is empty",
       });
@@ -66,7 +66,7 @@ export const createOrders = async (req, res) => {
     if (orderItems && orderItems.length > 0) {
       await OrderItem.updateMany(
         { _id: { $in: orderItems } },
-        { $set: { orders: order._id } }
+        { $set: { order: order._id } }
       );
     }
 
@@ -86,7 +86,6 @@ export const createOrders = async (req, res) => {
     });
   }
 };
-// cần fix lỗi không update đc
 export const updateOrders = async (req, res) => {
   try {
     const order = await Order.findByIdAndUpdate(
@@ -98,22 +97,17 @@ export const updateOrders = async (req, res) => {
       },
       { useFindAndModify: false }
     );
-    console.log(order);
-    console.log(req.params.id);
-    console.log(req.body);
 
     if (!order) {
       return res.status(404).json({
         message: "Update order unsuccessful",
       });
     }
-    console.log(order.users);
     const newUser = await User.findByIdAndUpdate(
       order.users,
       { $addToSet: { orders: order._id } },
       { new: true, useFindAndModify: false }
     );
-    console.log(newUser);
     if (!newUser) {
       return res.status(403).json({
         message: "Update user unsuccessful",
@@ -147,7 +141,7 @@ export const deleteOrders = async (req, res) => {
 
     const newUser = await User.findByIdAndUpdate(
       order.users,
-      { $addToSet: { orders: order._id } },
+      { $pull: { orders: order._id } },
       { new: true, useFindAndModify: false }
     );
 

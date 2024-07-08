@@ -119,7 +119,6 @@ export const updateAddress = async (req, res) => {
         { addresses: address._id },
         { new: true, useFindAndModify: false }
       );
-      console.log(newUser);
 
       if (!newUser) {
         return res.status(403).json({
@@ -151,7 +150,7 @@ export const deleteAddress = async (req, res) => {
 
     const newUser = await User.findByIdAndUpdate(
       address.userId,
-      { addresses: address._id },
+      { $pull: { addresses: address._id } },
       {
         new: true,
         useFindAndModify: false,

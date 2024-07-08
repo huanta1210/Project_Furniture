@@ -58,6 +58,29 @@ export const createOrderItems = async (req, res) => {
         message: "Create orderItems unsuccessful",
       });
     }
+    const newOrder = await Order.findByIdAndUpdate(
+      orderItems.orders,
+      { $addToSet: { orderItems: orderItems._id } },
+      { new: true, useFindAndModify: false }
+    );
+
+    if (!newOrder) {
+      return res.status(403).json({
+        message: "Update order failed",
+      });
+    }
+
+    const newProduct = await Product.findByIdAndUpdate(
+      orderItems.products,
+      { $addToSet: { orderItems: orderItems._id } },
+      { new: true, useFindAndModify: false }
+    );
+
+    if (!newProduct) {
+      return res.status(403).json({
+        message: "Update order failed",
+      });
+    }
 
     return res.status(200).json({
       message: "Create orderItems successfully",
@@ -72,7 +95,6 @@ export const createOrderItems = async (req, res) => {
 
 export const updateOrderItems = async (req, res) => {
   try {
-    console.log(req.body);
     const orderItems = await OrderItem.findByIdAndUpdate(
       req.params.id,
       req.body,
@@ -84,6 +106,35 @@ export const updateOrderItems = async (req, res) => {
         message: "Update orderItems unsuccessful",
       });
     }
+
+    const newOrder = await Order.findByIdAndUpdate(
+      orderItems.orders,
+      { $addToSet: { orderItems: orderItems._id } },
+      { new: true, useFindAndModify: false }
+    );
+
+    if (!newOrder) {
+      return res.status(403).json({
+        message: "Update order failed",
+      });
+    }
+
+    const newProduct = await Product.findByIdAndUpdate(
+      orderItems.products,
+      { $addToSet: { orderItems: orderItems._id } },
+      { new: true, useFindAndModify: false }
+    );
+
+    if (!newProduct) {
+      return res.status(403).json({
+        message: "Update order failed",
+      });
+    }
+
+    return res.status(200).json({
+      message: "OrderItems updated successfully",
+      datas: orderItems,
+    });
   } catch (error) {
     return res.status(500).json({
       message: error.message,
@@ -97,6 +148,30 @@ export const deleteOrderItems = async (req, res) => {
     if (!orderItems) {
       return res.status(404).json({
         message: "Delete orderItems unsuccessful",
+      });
+    }
+
+    const newOrder = await Order.findByIdAndUpdate(
+      orderItems.orders,
+      { $pull: { orderItems: orderItems._id } },
+      { new: true, useFindAndModify: false }
+    );
+
+    if (!newOrder) {
+      return res.status(403).json({
+        message: "Update order failed",
+      });
+    }
+
+    const newProduct = await Product.findByIdAndUpdate(
+      orderItems.products,
+      { $pull: { orderItems: orderItems._id } },
+      { new: true, useFindAndModify: false }
+    );
+
+    if (!newProduct) {
+      return res.status(403).json({
+        message: "Update order failed",
       });
     }
 

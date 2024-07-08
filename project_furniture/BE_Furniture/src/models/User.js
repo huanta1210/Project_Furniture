@@ -35,6 +35,12 @@ const userSchema = new mongoose.Schema(
         ref: "Address",
       },
     ],
+    comments: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Comment",
+      },
+    ],
   },
   {
     versionKey: false,

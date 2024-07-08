@@ -16,8 +16,8 @@ const commentSchema = new mongoose.Schema(
     },
     rating: {
       type: Number,
-      minLength: 1,
-      maxLength: 5,
+      min: 1,
+      max: 5,
     },
   },
   {
@@ -26,6 +26,6 @@ const commentSchema = new mongoose.Schema(
   }
 );
 
-const comments = mongoose.model("Comment", commentSchema);
+const comment = mongoose.model("Comment", commentSchema);
 
-export default comments;
+export default comment;

@@ -5,6 +5,7 @@ import routerCategories from "./categories";
 import routerOrder from "./order";
 import routerOrderItems from "./order-items";
 import routerAddress from "./address";
+import routerComments from "./comment";
 
 const router = express.Router();
 
@@ -14,5 +15,6 @@ router.use("/categories", routerCategories);
 router.use("/order", routerOrder);
 router.use("/order-items", routerOrderItems);
 router.use("/address", routerAddress);
+router.use("/comment", routerComments);
 
 export default router;
