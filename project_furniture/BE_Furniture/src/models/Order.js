@@ -7,7 +7,8 @@ const orderSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      default: "Uncomfirmed",
+      enum: ["Pending", "Shipped", "Delivered", "Cancelled"],
+      default: "Pending",
     },
     total: {
       type: mongoose.Schema.Types.Decimal128,

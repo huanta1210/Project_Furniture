@@ -47,7 +47,7 @@ export const getDetailOrders = async (req, res) => {
 export const createOrders = async (req, res) => {
   try {
     if (!req.body.status) {
-      req.body.status = "UnConfirmed";
+      req.body.status = "Pending";
     }
     const order = await Order.create(req.body);
 
