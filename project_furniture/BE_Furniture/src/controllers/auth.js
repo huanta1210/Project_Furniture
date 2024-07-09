@@ -62,9 +62,9 @@ export const loginUser = async (req, res) => {
       });
     } else {
       // ktra emai đã đăng kí hay chưa
-      const checkUserRegister = await User.findOne({ email: req.body.email });
+      const user = await User.findOne({ email: req.body.email });
 
-      if (!checkUserRegister) {
+      if (!user) {
         return res.status(400).json({
           message: "This email is not registered",
         });
@@ -72,7 +72,7 @@ export const loginUser = async (req, res) => {
       // giải mã hoá password
       const isPassword = await bcryptjs.compare(
         req.body.password,
-        checkUserRegister.password
+        user.password
       );
 
       if (!isPassword) {
@@ -82,15 +82,15 @@ export const loginUser = async (req, res) => {
       }
       // tạo token
 
-      const accessToken = jwt.sign({ _id: checkUserRegister._id }, SECRET_KEY, {
+      const accessToken = jwt.sign({ _id: user._id }, SECRET_KEY, {
         expiresIn: "1h",
       });
 
-      checkUserRegister.password = undefined;
+      user.password = undefined;
 
       return res.status(200).json({
         message: "Login successful",
-        checkUserRegister,
+        user: user,
         accessToken: accessToken,
       });
     }
@@ -100,3 +100,6 @@ export const loginUser = async (req, res) => {
     });
   }
 };
+
+//./auth/userinfo.email
+//auth/userinfo.profile

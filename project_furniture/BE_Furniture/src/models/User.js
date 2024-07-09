@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema(
   {
-    userName: {
+    name: {
       type: String,
       required: true,
     },
@@ -39,6 +39,12 @@ const userSchema = new mongoose.Schema(
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Comment",
+      },
+    ],
+    userplatfroms: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "UserPlatform",
       },
     ],
   },

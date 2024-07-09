@@ -2,6 +2,12 @@ import express from "express";
 import cors from "cors";
 import { connect } from "mongoose";
 import router from "./routers/index.js";
+import dotenv from "dotenv";
+import passport from "passport";
+import "./config/passportConfig.js";
+
+dotenv.config();
+
 const app = express();
 
 app.use(express.json());
@@ -11,10 +17,11 @@ app.use(
     origin: "http://localhost:5173",
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
   })
 );
 
-connect("mongodb://127.0.0.1:27017/db_product");
+connect(process.env.MONGODB_URI);
 
 app.use("/api", router);
 
