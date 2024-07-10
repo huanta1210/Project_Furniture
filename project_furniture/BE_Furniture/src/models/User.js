@@ -2,13 +2,16 @@ import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema(
   {
+    googleId: String,
     name: {
       type: String,
       required: true,
     },
     phone: {
       type: Number,
-      required: true,
+      required: function () {
+        return !this.isGoogleUser;
+      },
     },
     email: {
       type: String,
@@ -17,11 +20,21 @@ const userSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: true,
+      required: function () {
+        return !this.isGoogleUser;
+      },
     },
     role: {
       type: String,
       default: "member",
+    },
+    photos: {
+      type: String,
+    },
+    provider: String,
+    isGoogleUser: {
+      type: Boolean,
+      default: false,
     },
     orders: [
       {
@@ -39,12 +52,6 @@ const userSchema = new mongoose.Schema(
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Comment",
-      },
-    ],
-    userplatfroms: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "UserPlatform",
       },
     ],
   },

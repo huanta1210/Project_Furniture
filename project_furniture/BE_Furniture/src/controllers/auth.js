@@ -103,3 +103,5 @@ export const loginUser = async (req, res) => {
 
 //./auth/userinfo.email
 //auth/userinfo.profile
+
+export const authPlatfrom = () => {};

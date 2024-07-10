@@ -9,7 +9,7 @@ export const userValidator = Joi.object({
   }),
   phone: Joi.string()
     .pattern(/^[0-9]{10,11}$/)
-    .required()
+    ?.required()
     .messages({
       "string.empty": "Không bỏ trống phone",
       "any.required": "Phone là bắt buộc",
@@ -21,7 +21,7 @@ export const userValidator = Joi.object({
     "any.required": "Email là bắt buộc",
     "string.email": "Trường email phải đúng định dạng",
   }),
-  password: Joi.string().required().min(6).max(255).messages({
+  password: Joi.string()?.required().min(6).max(255).messages({
     "string.empty": "Không bỏ trống password",
     "any.required": "Password là bắt buộc",
     "string.min": "Password ít nhất phải có {#limit} kí tự",
