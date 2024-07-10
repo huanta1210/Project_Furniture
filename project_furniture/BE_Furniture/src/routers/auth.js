@@ -1,17 +1,23 @@
 import express from "express";
 import passport from "passport";
-import { authPlatfrom, loginUser, registerUser } from "../controllers/auth";
+import {
+  authFacebook,
+  authGoogle,
+  loginUser,
+  registerUser,
+} from "../controllers/auth";
 
 const routerAuth = express.Router();
 
 routerAuth.post("/register", registerUser);
 routerAuth.post("/login", loginUser);
-
+// router google
 routerAuth.get(
   "/google",
   passport.authenticate("google", {
     scope: ["profile", "email"],
     session: false,
+    prompt: "select_account",
   })
 );
 
@@ -25,10 +31,14 @@ routerAuth.get(
     })(req, res, next);
   },
   (req, res) => {
-    res.redirect(`http://localhost:8000/api/auth/logins/${req.user?.id}`);
+    res.redirect(`http://localhost:5173/login/google/${req.user?.id}`);
   }
 );
 
-routerAuth.post("/logins", authPlatfrom);
+routerAuth.post("/login/google", authGoogle);
+
+// router facebook
+
+routerAuth.post("/login", authFacebook);
 
 export default routerAuth;

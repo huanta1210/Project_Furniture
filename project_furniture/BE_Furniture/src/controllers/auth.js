@@ -3,6 +3,7 @@ import { userLoginValidator, userValidator } from "../validator/user";
 import jwt from "jsonwebtoken";
 import bcryptjs from "bcryptjs";
 import dotnev from "dotenv";
+import { loginSuccessService } from "../services/authServices";
 
 dotnev.config();
 const SECRET_KEY = process.env.JWT_SECRET;
@@ -104,4 +105,33 @@ export const loginUser = async (req, res) => {
 //./auth/userinfo.email
 //auth/userinfo.profile
 
-export const authPlatfrom = () => {};
+export const authGoogle = async (req, res) => {
+  try {
+    const { id } = req?.body;
+
+    if (!id) {
+      return res.status(400).json({
+        message: "Id not found",
+      });
+    }
+
+    const response = await loginSuccessService(id);
+
+    if (!response) {
+      return res.status(400).json({
+        message: "Response not found",
+      });
+    }
+
+    return res.status(200).json({
+      message: "Success login successful",
+      datas: response,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+export const authFacebook = () => {};
