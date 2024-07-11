@@ -4,7 +4,7 @@ import { connect } from "mongoose";
 import router from "./routers/index.js";
 import dotenv from "dotenv";
 import passport from "passport";
-import "./config/passportGoogleConfig.js";
+import "./configs/passportGoogleConfig.js";
 
 dotenv.config();
 
