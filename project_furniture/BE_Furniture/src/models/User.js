@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 const userSchema = new mongoose.Schema(
   {
     googleId: String,
+    facebookId: String,
     name: {
       type: String,
       required: true,
@@ -10,7 +11,7 @@ const userSchema = new mongoose.Schema(
     phone: {
       type: Number,
       required: function () {
-        return !this.isGoogleUser;
+        return !(this.isGoogleUser || this.isFacebookUser);
       },
     },
     email: {
@@ -21,7 +22,7 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
       required: function () {
-        return !this.isGoogleUser;
+        return !(this.isGoogleUser || this.isFacebookUser);
       },
     },
     role: {
@@ -30,9 +31,16 @@ const userSchema = new mongoose.Schema(
     },
     photos: {
       type: String,
+      required: function () {
+        return !this.isFacebookUser;
+      },
     },
     provider: String,
     isGoogleUser: {
+      type: Boolean,
+      default: false,
+    },
+    isFacebookUser: {
       type: Boolean,
       default: false,
     },

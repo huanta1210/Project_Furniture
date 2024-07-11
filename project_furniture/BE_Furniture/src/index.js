@@ -3,8 +3,8 @@ import cors from "cors";
 import { connect } from "mongoose";
 import router from "./routers/index.js";
 import dotenv from "dotenv";
-import passport from "passport";
 import "./configs/passportGoogleConfig.js";
+import "./configs/passportFacebookConfig.js";
 
 dotenv.config();
 

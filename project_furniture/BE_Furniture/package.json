@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
-    "cloudinary": "^2.2.0",
+    "cloudinary": "^1.21.0",
     "cookie-session": "^2.1.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
@@ -27,6 +27,7 @@
     "multer-storage-cloudinary": "^4.0.0",
     "nodemon": "^3.1.4",
     "passport": "^0.7.0",
+    "passport-facebook": "^3.0.0",
     "passport-google-oauth20": "^2.0.0"
   }
 }

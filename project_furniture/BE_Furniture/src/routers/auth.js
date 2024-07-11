@@ -38,7 +38,28 @@ routerAuth.get(
 routerAuth.post("/login/google", authGoogle);
 
 // router facebook
+routerAuth.get(
+  "/facebook",
+  passport.authenticate("facebook", {
+    scope: ["email"],
+    session: false,
+    prompt: "select_account",
+  })
+);
 
-routerAuth.post("/login", authFacebook);
+routerAuth.get(
+  "/facebook/callback",
+  (req, res, next) => {
+    passport.authenticate("facebook", (err, profile) => {
+      req.user = profile;
+      console.log(profile);
+      next();
+    })(req, res, next);
+  },
+  (req, res) => {
+    res.redirect(`http://localhost:5173/login/facebook/${req.user?.id}`);
+  }
+);
+routerAuth.post("/login/facebook", authFacebook);
 
 export default routerAuth;

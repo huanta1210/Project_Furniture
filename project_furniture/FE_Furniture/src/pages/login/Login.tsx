@@ -65,8 +65,12 @@ const MainLogin: React.FC = () => {
       toast.error("Login to unsuccessful");
     }
   };
-  const handleLogin = () => {
-    window.open("http://localhost:8000/api/auth/google", "_self");
+  const handleLoginGoogle = () => {
+    window.open(`http://localhost:8000/api/auth/google`, "_self");
+  };
+
+  const handleLoginFaceBook = () => {
+    window.open(`http://localhost:8000/api/auth/facebook`, "_self");
   };
   return (
     <main className="mx-96 main-login">
@@ -75,15 +79,18 @@ const MainLogin: React.FC = () => {
           <h1 className="text-4xl text-black">Login to your account</h1>
           <div className="login-platform mt-6">
             <div className="login-facebook border p-2 bg-blue-800 inline-block mr-6">
-              <a className="text-white flex items-center" href="#">
+              <button
+                onClick={handleLoginFaceBook}
+                className="text-white flex items-center"
+              >
                 <i className="ti ti-facebook pr-3 text-lg border-r-2"></i>
                 <span className="mx-4 text-sm">Facebook</span>
-              </a>
+              </button>
             </div>
 
             <div className="login-facebook border p-2 bg-orange-600 inline-block mr-6">
               <button
-                onClick={handleLogin}
+                onClick={handleLoginGoogle}
                 className="text-white flex items-center"
               >
                 <i className="ti ti-google pr-3 text-lg border-r-2"></i>
