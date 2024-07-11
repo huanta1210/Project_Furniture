@@ -34,15 +34,14 @@ const MainLogin: React.FC = () => {
   const onSubmit: SubmitHandler<FormValues> = async (dataLogin) => {
     try {
       const { data } = await instance.post("/auth/login", dataLogin);
-      console.log(data.checkUserRegister.role);
 
       if (!data) {
         toast.error("The data returned failed");
       } else {
         localStorage.setItem("token", data.accessToken);
-        localStorage.setItem("user", data.checkUserRegister);
+        localStorage.setItem("user", data.user);
 
-        if (data.checkUserRegister.role === "admin") {
+        if (data.user.role === "admin") {
           toast.success("Logged in successfully", {
             onClose: () => {
               reset();
