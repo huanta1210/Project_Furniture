@@ -47,7 +47,7 @@ const MainLogin: React.FC = () => {
           toast.success("Logged in successfully", {
             onClose: () => {
               reset();
-              navigate("/admin/doasboard");
+              navigate("/admin/dashboard");
             },
             autoClose: 1000,
           });

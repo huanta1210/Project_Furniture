@@ -1,65 +1,68 @@
 import SideBar from "./component/SideBar";
 import HeaderAdmin from "./component/HeaderAdmin";
-import { Space, Table, Tag } from "antd";
-import type { TableProps } from "antd";
+import { Space, Table } from "antd";
 import { Link } from "react-router-dom";
+import { Product } from "../../interfaces/Product";
+import { toast } from "react-toastify";
+import instance from "../../api";
+import { useEffect, useState } from "react";
+import type { ColumnType } from "antd/es/table";
 
 const ProductAdmin = () => {
   return (
     <div className="bg-slate-50">
       <section className="grid grid-cols-12 gap-4 mt-10">
         <SideBar />
-        <HeaderAdmin>
-          <Product />
-        </HeaderAdmin>
+
+        <div className="col-span-9">
+          <HeaderAdmin />
+          <ProductList />
+        </div>
       </section>
     </div>
   );
 };
 
-const Product = () => {
-  interface DataType {
-    key: string;
-    name: string;
-    age: number;
-    address: string;
-    tags: string[];
-  }
-  const columns: TableProps<DataType>["columns"] = [
+const ProductList = () => {
+  const [products, setProduct] = useState<Product[]>([]);
+  useEffect(() => {
+    getProduct();
+  }, []);
+  const columns: ColumnType<Product>[] = [
     {
       title: "Name",
-      dataIndex: "name",
-      key: "name",
+      dataIndex: "productName",
+      key: "productName",
       render: (text) => <a>{text}</a>,
     },
     {
-      title: "Age",
-      dataIndex: "age",
-      key: "age",
+      title: "Price",
+      dataIndex: "price",
+      key: "price",
+      render: (number) => <a>{number}</a>,
     },
     {
-      title: "Address",
-      dataIndex: "address",
-      key: "address",
+      title: "Description",
+      dataIndex: "description",
+      key: "description",
     },
     {
-      title: "Tags",
-      key: "tags",
-      dataIndex: "tags",
-      render: (_, { tags }) => (
-        <>
-          {tags.map((tag) => {
-            let color = tag.length > 5 ? "geekblue" : "green";
-            if (tag === "loser") {
-              color = "volcano";
-            }
-            return (
-              <Tag color={color} key={tag}>
-                {tag.toUpperCase()}
-              </Tag>
-            );
-          })}
-        </>
+      title: "Description",
+      dataIndex: "description",
+      key: "description",
+    },
+
+    {
+      title: "Stock",
+      dataIndex: "stock",
+      key: "stock",
+    },
+    {
+      title: "Image",
+      dataIndex: "imageProduct",
+      key: "imageProduct",
+      render: (imageProduct) => (
+        <img src={imageProduct} alt="Preview" style={{ maxWidth: "80px" }} />
       ),
     },
     {
@@ -67,39 +70,57 @@ const Product = () => {
       key: "action",
       render: (_, record) => (
         <Space size="middle">
-          <a>Invite {record.name}</a>
-          <a>Delete</a>
+          <button className="text-white border bg-blue-500 py-1 px-4 rounded font-semibold">
+            Edit
+          </button>
+          <button
+            onClick={() => handleDelete(record._id)}
+            className="text-white border bg-red-500 py-1 px-4 rounded font-semibold"
+          >
+            Delete
+          </button>
         </Space>
       ),
     },
   ];
+  const getProduct = async () => {
+    try {
+      const res = await instance.get("/product");
+      if (!res) {
+        toast.error("Get product failed");
+      }
+      console.log(res.data.datas);
+      setProduct(res.data.datas);
+    } catch (error) {
+      console.log(error);
+      toast.error("Error getting product");
+    }
+  };
 
-  const data: DataType[] = [
-    {
-      key: "1",
-      name: "John Brown",
-      age: 32,
-      address: "New York No. 1 Lake Park",
-      tags: ["nice", "developer"],
-    },
-    {
-      key: "2",
-      name: "Jim Green",
-      age: 42,
-      address: "London No. 1 Lake Park",
-      tags: ["loser"],
-    },
-    {
-      key: "3",
-      name: "Joe Black",
-      age: 32,
-      address: "Sydney No. 1 Lake Park",
-      tags: ["cool", "teacher"],
-    },
-  ];
+  const handleDelete = async (id: string | number) => {
+    console.log("sdkjaf", id);
+
+    try {
+      const confirmPassword = window.confirm("Are you sure you want to delete");
+
+      if (confirmPassword) {
+        const res = await instance.delete(`/product/delete-product/${id}`);
+        console.log(res);
+        if (!res) {
+          toast.error("Get data product deleted unsuccessful");
+        }
+        toast.success("Product deleted successfully");
+        getProduct();
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Error API: " + error);
+    }
+  };
+
   return (
-    <>
-      <div className="my-3">
+    <div className="bg-white rounded-lg">
+      <div className="py-3 px-2">
         <Link
           to={""}
           className="text-white font-semibold py-1 px-3 bg-lime-500 text-center "
@@ -108,14 +129,12 @@ const Product = () => {
         </Link>
         <input
           type="search"
-          className="py-1 ml-3"
+          className="py-1 ml-3 outline-none bg-gray-100 pl-2"
           placeholder="Search....."
-          name=""
-          id=""
         />
       </div>
-      <Table columns={columns} dataSource={data} />
-    </>
+      <Table columns={columns} dataSource={products} />
+    </div>
   );
 };
 

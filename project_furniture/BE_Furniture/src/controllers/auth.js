@@ -58,8 +58,8 @@ export const loginUser = async (req, res) => {
     if (error) {
       const errorMessage = error.details.map((err) => err.message);
       return res.status(400).json({
-        name: errorMessage.name,
-        message: errorMessage.message,
+        name: errorMessage,
+        message: errorMessage,
       });
     } else {
       // ktra emai đã đăng kí hay chưa
@@ -84,7 +84,7 @@ export const loginUser = async (req, res) => {
       // tạo token
 
       const accessToken = jwt.sign({ _id: user._id }, SECRET_KEY, {
-        expiresIn: "1h",
+        expiresIn: "360000h",
       });
 
       user.password = undefined;
