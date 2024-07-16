@@ -43,7 +43,7 @@ routerAuth.get(
   passport.authenticate("facebook", {
     scope: ["email"],
     session: false,
-    prompt: "select_account",
+    authType: "reauthenticate",
   })
 );
 

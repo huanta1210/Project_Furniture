@@ -5,6 +5,7 @@ import { FormValues } from "../../interfaces/User";
 import { toast } from "react-toastify";
 import instance from "../../api";
 import { useNavigate } from "react-router";
+import { useState } from "react";
 
 const Login: React.FC = () => {
   return (
@@ -30,6 +31,7 @@ const MainLogin: React.FC = () => {
     formState: { errors },
     reset,
   } = useForm<FormValues>();
+  const [showPassword, setShowPassword] = useState(false);
 
   const onSubmit: SubmitHandler<FormValues> = async (dataLogin) => {
     try {
@@ -39,13 +41,13 @@ const MainLogin: React.FC = () => {
         toast.error("The data returned failed");
       } else {
         localStorage.setItem("token", data.accessToken);
-        localStorage.setItem("user", data.user);
+        localStorage.setItem("user", JSON.stringify(data.user));
 
         if (data.user.role === "admin") {
           toast.success("Logged in successfully", {
             onClose: () => {
               reset();
-              navigate("/admin/product/list");
+              navigate("/admin/doasboard");
             },
             autoClose: 1000,
           });
@@ -70,6 +72,9 @@ const MainLogin: React.FC = () => {
 
   const handleLoginFaceBook = () => {
     window.open(`http://localhost:8000/api/auth/facebook`, "_self");
+  };
+  const toggleShowPassword = () => {
+    setShowPassword(!showPassword);
   };
   return (
     <main className="mx-96 main-login">
@@ -103,11 +108,11 @@ const MainLogin: React.FC = () => {
         <div>
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="form-group mb-8">
-              <label className="text-lg text-black" htmlFor="email">
+              <label className="font-medium text-black text-sm" htmlFor="email">
                 Email:<span className="text-red-500">*</span>
               </label>
               <input
-                className="w-full py-3 mt-2 rounded-md border-gray-300 border outline-none pl-3 focus:border-lime-600"
+                className="w-full py-2 mt-2 rounded-md border-gray-300 border outline-none pl-3 focus:border-lime-600"
                 type="text"
                 placeholder="example@example.com"
                 {...register("email", {
@@ -124,21 +129,41 @@ const MainLogin: React.FC = () => {
             </div>
 
             <div className="form-group mb-8">
-              <label className="text-lg text-black" htmlFor="password">
+              <label
+                className="font-medium text-black text-sm"
+                htmlFor="password"
+              >
                 Password:<span className="text-red-500">*</span>
               </label>
-              <input
-                className="w-full py-3 mt-2 rounded-md border-gray-300 border outline-none pl-3 focus:border-lime-600"
-                type="password"
-                placeholder="************"
-                {...register("password", {
-                  required: "Password is required",
-                  minLength: {
-                    value: 6,
-                    message: "Password must be at least 6 characters",
-                  },
-                })}
-              />
+              <div className="relative">
+                <input
+                  className="w-full py-2 mt-2 pr-10 rounded-md border-gray-300 border text-base outline-none pl-3 focus:border-lime-600 input-placeholder-sm"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="************"
+                  {...register("password", {
+                    required: "Password is required",
+                    minLength: {
+                      value: 6,
+                      message: "Password must be at least 6 characters",
+                    },
+                  })}
+                />
+                <button
+                  type="button"
+                  className="absolute inset-y-0 right-3 mt-1 flex items-center text-base cursor-pointer"
+                  onClick={toggleShowPassword}
+                >
+                  <div className="relative inline-block">
+                    <i
+                      className={`fa-regular ${
+                        showPassword ? "fa-eye-slash" : "fa eye"
+                      }`}
+                    ></i>
+                    <span className={showPassword ? "" : "cross"}></span>
+                  </div>
+                </button>
+              </div>
+
               {errors.password && (
                 <small className="text-red-500">
                   {errors.password.message}

@@ -6,3 +6,8 @@ export interface FormValues {
   password: string;
   confirmPassword?: string;
 }
+
+export interface User {
+  userName: string;
+  email: string;
+}
