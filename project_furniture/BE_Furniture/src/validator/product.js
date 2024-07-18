@@ -14,6 +14,6 @@ export const productUpdateValidation = Joi.object({
   price: Joi.number().min(1).optional(),
   description: Joi.string().max(255).optional(),
   stock: Joi.number().min(1).optional(),
-  imageProduct: Joi.string().optional(),
+  imageProduct: Joi.string().required(),
   categoriesId: Joi.string().required(),
 });

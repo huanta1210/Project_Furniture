@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import logo from "../../../assets/img/logo.png";
 import { useState } from "react";
 import { User } from "../../../interfaces/User";
+import LogOut from "../../login/LogOut";
 
 const SideBar = () => {
   const getToken = (): User => {
@@ -93,12 +94,7 @@ const SideBar = () => {
             <p className="text-lg pr-4 p-2 text-slate-700 font-semibold px-10 ">
               {userName}
             </p>
-            <button
-              type="button"
-              className="border px-1 h-10 w-10 rounded-full p-auto "
-            >
-              <i className="p-px text-xl fa-solid text-slate-700 fa-arrow-right-from-bracket text-indigo-500"></i>
-            </button>
+            <LogOut />
           </div>
         </section>
       </section>

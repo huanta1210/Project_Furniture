@@ -1,3 +1,5 @@
+import LogOut from "../../login/LogOut";
+
 const HeaderAdmin = () => {
   return (
     <>
@@ -10,9 +12,7 @@ const HeaderAdmin = () => {
         </div>
         <div className="border h-16 w-36 mt-1 flex items-center justify-around bg-white rounded-full">
           <i className="fa-solid fa-question"></i>
-          <button type="button">
-            <i className="p-px text-xl fa-solid text-slate-700 fa-arrow-right-from-bracket"></i>
-          </button>
+          <LogOut />
           <img
             className="w-14 h-14 rounded-full"
             src="https://i.imgur.com/FnTQTnN.jpeg"
@@ -22,7 +22,7 @@ const HeaderAdmin = () => {
       </section>
       <section className="mt-2 mb-6">
         <section className="flex flex-wrap gap-4 justify-between">
-          <div className="bg-white  h-32 w-80 flex-grow-0 flex-shrink-0 w-[calc(25%-1rem)] rounded-lg">
+          <div className="bg-white h-32 w-96 flex-grow-0 flex-shrink-0 w-[calc(25%-1rem)] rounded-lg">
             <div className="flex items-center">
               <div className="h-16 w-16 text-center ml-2 mt-7 border rounded-full bg-slate-100">
                 <i className="fa-solid text-xl p-4 fa-user-group text-indigo-500"></i>
@@ -38,7 +38,7 @@ const HeaderAdmin = () => {
             </div>
           </div>
 
-          <div className=" h-32 w-80 flex-grow-0 flex-shrink-0 w-[calc(25%-1rem)] bg-white rounded-lg">
+          <div className="h-32 w-80 flex-grow-0 flex-shrink-0 w-[calc(25%-1rem)] bg-white rounded-lg">
             <div className="flex items-center">
               <div className="h-16 w-16 text-center ml-2 mt-7 border rounded-full bg-slate-100">
                 <i className="fa-solid fa-money-bill text-xl p-4 text-indigo-500"></i>
@@ -53,7 +53,7 @@ const HeaderAdmin = () => {
               </div>
             </div>
           </div>
-          <div className=" h-32 w-80 flex-grow-0 flex-shrink-0 w-[calc(25%-1rem)]  bg-white rounded-lg">
+          <div className="h-32 w-96 flex-grow-0 flex-shrink-0 w-[calc(25%-1rem)]  bg-white rounded-lg">
             <div className="flex items-center">
               <div className="h-16 w-16 text-center ml-2 mt-7 border rounded-full bg-slate-100">
                 <i className="fa-solid fa-key text-xl p-4 text-indigo-500"></i>

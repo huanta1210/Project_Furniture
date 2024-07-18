@@ -7,7 +7,7 @@ import PrivateRouter from "./components/PrivateRouter";
 import LoginGoogle from "./pages/login/Login-Google";
 import LoginFacebook from "./pages/login/Login-Facebook";
 import Doasboard from "./pages/admin/Doasboard";
-import ProductAdmin from "./pages/admin/ProductAdmin";
+import ProductAdmin from "./pages/admin/product/ProductAdmin";
 
 function App() {
   return (

@@ -15,7 +15,7 @@ const storage = new CloudinaryStorage({
 
 const upload = multer({ storage: storage });
 
-routerImage.post("/upload", upload.array("images", 10), uploadImages);
+routerImage.post("/upload", upload.any(), uploadImages);
 routerImage.delete("/delete-image/:publicId", deleteImages);
 
 export default routerImage;

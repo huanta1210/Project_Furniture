@@ -137,10 +137,10 @@ export const updateProduct = async (req, res) => {
 };
 
 export const deleteProduct = async (req, res) => {
-  const { id } = req.params;
-  console.log(req.params.id);
   try {
+    const { id } = req.params;
     const productDelete = await Product.findById(id);
+    console.log(productDelete);
     if (!productDelete) {
       throw new Error("Không tồn tại id xoá");
     }
@@ -160,11 +160,15 @@ export const deleteProduct = async (req, res) => {
       });
     }
 
-    const newProduct = await Categories.findByIdAndUpdate(
-      categories._id,
-      { $pull: { products: product._id } },
+    const updatedCategory = await Categories.findByIdAndUpdate(
+      productDelete.categoriesId,
+      { $pull: { products: id } },
       { new: true, useFindAndModify: false }
     );
+
+    if (!updatedCategory) {
+      return res.status(500).json({ message: "Failed to update the category" });
+    }
 
     return res.status(200).json({
       message: "Product delete successfully",

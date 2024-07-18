@@ -1,12 +1,13 @@
-import SideBar from "./component/SideBar";
-import HeaderAdmin from "./component/HeaderAdmin";
+import SideBar from "../component/SideBar";
+import HeaderAdmin from "../component/HeaderAdmin";
 import { Space, Table } from "antd";
 import { Link } from "react-router-dom";
-import { Product } from "../../interfaces/Product";
+import { Product } from "../../../interfaces/Product";
 import { toast } from "react-toastify";
-import instance from "../../api";
+import instance from "../../../api";
 import { useEffect, useState } from "react";
 import type { ColumnType } from "antd/es/table";
+import Modal from "./ModalShowAdd";
 
 const ProductAdmin = () => {
   return (
@@ -25,6 +26,7 @@ const ProductAdmin = () => {
 
 const ProductList = () => {
   const [products, setProduct] = useState<Product[]>([]);
+  const [showModal, setShowModal] = useState<boolean>(false);
   useEffect(() => {
     getProduct();
   }, []);
@@ -89,23 +91,18 @@ const ProductList = () => {
       if (!res) {
         toast.error("Get product failed");
       }
-      console.log(res.data.datas);
       setProduct(res.data.datas);
     } catch (error) {
-      console.log(error);
       toast.error("Error getting product");
     }
   };
 
   const handleDelete = async (id: string | number) => {
-    console.log("sdkjaf", id);
-
     try {
       const confirmPassword = window.confirm("Are you sure you want to delete");
 
       if (confirmPassword) {
         const res = await instance.delete(`/product/delete-product/${id}`);
-        console.log(res);
         if (!res) {
           toast.error("Get data product deleted unsuccessful");
         }
@@ -113,7 +110,6 @@ const ProductList = () => {
         getProduct();
       }
     } catch (error) {
-      console.log(error);
       toast.error("Error API: " + error);
     }
   };
@@ -122,16 +118,18 @@ const ProductList = () => {
     <div className="bg-white rounded-lg">
       <div className="py-3 px-2">
         <Link
-          to={""}
-          className="text-white font-semibold py-1 px-3 bg-lime-500 text-center "
+          to=""
+          className="text-white font-semibold py-1 px-3 bg-lime-500 text-center inline-block rounded-lg shadow-md hover:bg-gradient-to-r from-lime-500 to-lime-600 transition-colors duration-300"
+          onClick={() => setShowModal(true)}
         >
           Add Product
         </Link>
         <input
           type="search"
-          className="py-1 ml-3 outline-none bg-gray-100 pl-2"
+          className="py-1 ml-3 outline-none rounded-lg bg-gray-100 pl-2"
           placeholder="Search....."
         />
+        <Modal showModal={showModal} setShowModal={setShowModal} />
       </div>
       <Table columns={columns} dataSource={products} />
     </div>
