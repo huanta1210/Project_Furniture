@@ -16,7 +16,7 @@ export const loginSuccessService = async (id) => {
     const accessToken = jwt.sign(
       { _id: user._id, name: user.name },
       SECRET_KEY,
-      { expiresIn: "1h" }
+      { expiresIn: 360000 }
     );
 
     return { user, accessToken };

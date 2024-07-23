@@ -10,13 +10,13 @@ const SECRET_KEY = process.env.JWT_SECRET;
 
 export const registerUser = async (req, res) => {
   try {
-    const { errors } = userValidator.validate(req.body, { abortEarly: true });
+    const { error } = userValidator.validate(req.body, { abortEarly: true });
 
-    if (errors) {
-      const error = errors.details.map((err) => err.message);
+    if (error) {
+      const errorMessage = error.details.map((err) => err.message);
       return res.status(400).json({
-        name: error.name,
-        message: error.message,
+        name: errorMessage,
+        message: errorMessage,
       });
     } else {
       const userExits = await User.findOne({ email: req.body.email });
@@ -84,7 +84,7 @@ export const loginUser = async (req, res) => {
       // tạo token
 
       const accessToken = jwt.sign({ _id: user._id }, SECRET_KEY, {
-        expiresIn: "360000h",
+        expiresIn: 360000,
       });
 
       user.password = undefined;

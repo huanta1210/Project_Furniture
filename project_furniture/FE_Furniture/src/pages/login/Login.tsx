@@ -66,13 +66,10 @@ const MainLogin: React.FC = () => {
       toast.error("Login to unsuccessful");
     }
   };
-  const handleLoginGoogle = () => {
-    window.open(`http://localhost:8000/api/auth/google`, "_self");
+  const handleLoginPlatform = (provider: "google" | "facebook") => {
+    window.open(`http://localhost:8000/api/auth/${provider}`, "_self");
   };
 
-  const handleLoginFaceBook = () => {
-    window.open(`http://localhost:8000/api/auth/facebook`, "_self");
-  };
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
   };
@@ -84,7 +81,7 @@ const MainLogin: React.FC = () => {
           <div className="login-platform mt-6">
             <div className="login-facebook border p-2 bg-blue-800 inline-block mr-6">
               <button
-                onClick={handleLoginFaceBook}
+                onClick={() => handleLoginPlatform("facebook")}
                 className="text-white flex items-center"
               >
                 <i className="ti ti-facebook pr-3 text-lg border-r-2"></i>
@@ -94,7 +91,7 @@ const MainLogin: React.FC = () => {
 
             <div className="login-facebook border p-2 bg-orange-600 inline-block mr-6">
               <button
-                onClick={handleLoginGoogle}
+                onClick={() => handleLoginPlatform("google")}
                 className="text-white flex items-center"
               >
                 <i className="ti ti-google pr-3 text-lg border-r-2"></i>
@@ -155,11 +152,12 @@ const MainLogin: React.FC = () => {
                 >
                   <div className="relative inline-block">
                     <i
-                      className={`fa-regular ${
-                        showPassword ? "fa-eye-slash" : "fa eye"
-                      }`}
+                      className={
+                        showPassword
+                          ? "fa-regular fa-eye"
+                          : "fa-regular fa-eye-slash"
+                      }
                     ></i>
-                    <span className={showPassword ? "" : "cross"}></span>
                   </div>
                 </button>
               </div>

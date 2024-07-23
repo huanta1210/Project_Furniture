@@ -1,6 +1,6 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import logo from "../../../assets/img/logo.png";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { User } from "../../../interfaces/User";
 import LogOut from "../../login/LogOut";
 
@@ -12,12 +12,8 @@ const SideBar = () => {
   };
 
   const { userName } = getToken();
+  const location = useLocation();
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
-
-  const handleClick = (index: number) => {
-    setActiveIndex(index);
-  };
-
   const menuItems = [
     {
       label: "Main Dashboard",
@@ -55,6 +51,18 @@ const SideBar = () => {
       path: "/admin/profile",
     },
   ];
+
+  const handleClick = (index: number) => {
+    setActiveIndex(index);
+  };
+
+  useEffect(() => {
+    const currentIndex = menuItems.findIndex(
+      (item) => item.path === location.pathname
+    );
+    setActiveIndex(currentIndex);
+  }, [location.pathname]);
+
   return (
     <>
       <section className="col-span-3 ">
@@ -76,7 +84,7 @@ const SideBar = () => {
                 >
                   <Link to={item.path}>
                     <i
-                      className={`text-lg pr-4 p-2 text-slate-800 text-indigo-500 ${item.icon}`}
+                      className={`text-lg pr-4 p-2 text-indigo-800 text-indigo-500 ${item.icon}`}
                     ></i>
                     {item.label}
                   </Link>

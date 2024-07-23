@@ -1,17 +1,18 @@
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { ProductAdd } from "../../../interfaces/Product";
-import { Categories } from "../../../interfaces/Categories";
+import { Product } from "../../../interfaces/Product";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "react-toastify";
 import instance from "../../../api";
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
+import { useContext, useEffect, useState } from "react";
 import mongoose from "mongoose";
+import { CategoriesContext } from "../../../store/contexts/categoriesContext";
+import { ProductContext } from "../../../store/contexts/productContext";
 
 interface ModalProps {
   showModal: boolean;
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
+  currentProduct: Product | undefined;
 }
 
 const productSchema = z.object({
@@ -23,46 +24,49 @@ const productSchema = z.object({
   categoriesId: z.string().min(1),
 });
 
-const Modal: React.FC<ModalProps> = ({ showModal, setShowModal }) => {
-  const navigate = useNavigate();
-  const [categories, setCategories] = useState<Categories[]>([]);
+const ModalAdd: React.FC<ModalProps> = ({
+  showModal,
+  setShowModal,
+  currentProduct,
+}) => {
+  const [uploadedImageUrls, setUploadedImageUrls] = useState<string[]>([]);
+
+  const { state } = useContext(CategoriesContext);
+  const { createProduct, updateProduct } = useContext(ProductContext);
+
   const {
     register,
     handleSubmit,
     formState: { errors },
     setValue,
     reset,
-  } = useForm<ProductAdd>({
+  } = useForm<Product>({
     resolver: zodResolver(productSchema),
     defaultValues: {
-      categoriesId: "All",
-      imageProduct: null,
+      categoriesId: currentProduct?.categoriesId || "All",
     },
   });
-  const [uploadedImageUrls, setUploadedImageUrls] = useState<string[]>([]);
 
   useEffect(() => {
-    getCategory();
-  }, []);
-
-  const getCategory = async () => {
-    try {
-      const res = await instance.get("/categories");
-
-      if (!res) {
-        toast.error("Category not found");
-      }
-      const allCategory = {
-        _id: "all",
-        categoryName: "All Categories",
-        slug: "All",
-      };
-      setCategories([allCategory, ...res.data.datas]);
-    } catch (error) {
-      toast.error("Error API");
+    if (currentProduct) {
+      setValue("productName", currentProduct.productName);
+      setValue("price", currentProduct.price);
+      setValue("description", currentProduct.description);
+      setValue("stock", currentProduct.stock);
+      setValue("imageProduct", currentProduct.imageProduct);
+      setValue("categoriesId", currentProduct.categoriesId || "");
+    } else {
+      reset({
+        productName: "",
+        price: null,
+        description: "",
+        stock: null,
+        imageProduct: "",
+        categoriesId: "All",
+      });
     }
-  };
-  // Upload cloudinary
+  }, [currentProduct, setValue, reset]);
+
   const uploadImageToCloudinary = async (file: File) => {
     const formData = new FormData();
     formData.append("file", file);
@@ -82,8 +86,7 @@ const Modal: React.FC<ModalProps> = ({ showModal, setShowModal }) => {
     }
   };
 
-  // Process form data
-  const onSubmit = async (data: ProductAdd) => {
+  const onSubmit = async (data: Product) => {
     try {
       if (!mongoose.Types.ObjectId.isValid(data.categoriesId)) {
         throw new Error("Invalid categoriesId format");
@@ -91,7 +94,7 @@ const Modal: React.FC<ModalProps> = ({ showModal, setShowModal }) => {
       const categoriesIdObjectId = new mongoose.Types.ObjectId(
         data.categoriesId
       );
-
+      console.log(categoriesIdObjectId.toHexString());
       // Upload image
       let uploadedImageUrl = "";
       if (
@@ -100,7 +103,6 @@ const Modal: React.FC<ModalProps> = ({ showModal, setShowModal }) => {
       ) {
         uploadedImageUrl = await uploadImageToCloudinary(data.imageProduct[0]);
         if (uploadedImageUrl) {
-          console.log(uploadedImageUrl);
           setUploadedImageUrls([...uploadedImageUrls, uploadedImageUrl]);
           data.imageProduct = uploadedImageUrl;
           setValue("imageProduct", uploadedImageUrl);
@@ -112,19 +114,16 @@ const Modal: React.FC<ModalProps> = ({ showModal, setShowModal }) => {
         categoriesId: categoriesIdObjectId.toHexString(),
       };
 
-      // Call api to create product
-      const res = await instance.post("/product/create-product", productData);
-
-      if (!res) {
-        toast.error("Create product not found");
+      // Call api to create and update product
+      if (currentProduct) {
+        updateProduct(currentProduct._id, productData);
+        console.log("Product updated", productData);
+      } else {
+        createProduct(productData);
+        console.log("Product created", productData);
       }
-
-      toast.success("Create product is successful");
       reset();
-
-      setTimeout(() => {
-        navigate("/admin/products");
-      }, 500);
+      setShowModal(false);
     } catch (error) {
       console.error(error);
       toast.error("Error API");
@@ -141,13 +140,15 @@ const Modal: React.FC<ModalProps> = ({ showModal, setShowModal }) => {
               <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
                 {/*header*/}
                 <div className="flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t">
-                  <h3 className="text-2xl font-bold">Add Product</h3>
+                  <h3 className="text-2xl font-bold">
+                    {currentProduct ? "Update Product" : "Add product"}
+                  </h3>
                   <button
-                    className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
+                    className="btn-x p-1 ml-auto bg-transparent border-0 text-slate-900 opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
                     onClick={() => setShowModal(false)}
                   >
-                    <span className="bg-transparent text-black h-6 w-6 text-2xl block outline-none focus:outline-none">
-                      <i className="fa-solid fa-x text-xl "></i>
+                    <span className="icon-x bg-transparent text-black h-6 w-6 text-2xl block outline-none focus:outline-none ">
+                      <i className="fa-solid fa-x text-xl"></i>
                     </span>
                   </button>
                 </div>
@@ -162,7 +163,7 @@ const Modal: React.FC<ModalProps> = ({ showModal, setShowModal }) => {
                       Name: <span className="text-red-500">*</span>
                     </label>
                     <input
-                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline "
                       type="text"
                       {...register("productName", {
                         required: true,
@@ -238,7 +239,6 @@ const Modal: React.FC<ModalProps> = ({ showModal, setShowModal }) => {
                     <input
                       className="appearance-none rounded w-full py-2 px-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                       type="file"
-                      // onChange={handleFileChange}
                       {...register("imageProduct", {
                         required: true,
                       })}
@@ -247,6 +247,13 @@ const Modal: React.FC<ModalProps> = ({ showModal, setShowModal }) => {
                       <small className="text-red-500">
                         {errors.imageProduct.message}
                       </small>
+                    )}
+                    {currentProduct?.imageProduct && (
+                      <img
+                        src={currentProduct.imageProduct}
+                        alt={currentProduct.productName}
+                        className="mt-2 size-20 h-auto"
+                      />
                     )}
                   </div>
                   <div className="mb-4">
@@ -257,7 +264,7 @@ const Modal: React.FC<ModalProps> = ({ showModal, setShowModal }) => {
                       className="appearance-none border rounded w-full py-2 px-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                       {...register("categoriesId", { required: true })}
                     >
-                      {categories.map((category) => (
+                      {state.categories.map((category) => (
                         <option key={category._id} value={category._id}>
                           {category.categoryName}
                         </option>
@@ -282,7 +289,7 @@ const Modal: React.FC<ModalProps> = ({ showModal, setShowModal }) => {
                       className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mb-1 ease-linear transition-all duration-150"
                       type="submit"
                     >
-                      Create Product
+                      {currentProduct ? "Update Product" : "Create product"}
                     </button>
                   </div>
                 </form>
@@ -296,4 +303,4 @@ const Modal: React.FC<ModalProps> = ({ showModal, setShowModal }) => {
   );
 };
 
-export default Modal;
+export default ModalAdd;

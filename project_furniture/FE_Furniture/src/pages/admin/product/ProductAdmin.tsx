@@ -3,11 +3,10 @@ import HeaderAdmin from "../component/HeaderAdmin";
 import { Space, Table } from "antd";
 import { Link } from "react-router-dom";
 import { Product } from "../../../interfaces/Product";
-import { toast } from "react-toastify";
-import instance from "../../../api";
-import { useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import type { ColumnType } from "antd/es/table";
-import Modal from "./ModalShowAdd";
+import ModalAdd from "./ModalShowForm";
+import { ProductContext } from "../../../store/contexts/productContext";
 
 const ProductAdmin = () => {
   return (
@@ -25,11 +24,23 @@ const ProductAdmin = () => {
 };
 
 const ProductList = () => {
-  const [products, setProduct] = useState<Product[]>([]);
   const [showModal, setShowModal] = useState<boolean>(false);
-  useEffect(() => {
-    getProduct();
-  }, []);
+
+  const { state, handleDelete } = useContext(ProductContext);
+
+  const [productUpdate, setProductUpdate] = useState<Product | undefined>(
+    undefined
+  );
+
+  const handleClick = (product?: Product) => {
+    if (product) {
+      setProductUpdate(product);
+    } else {
+      setProductUpdate(undefined);
+    }
+    setShowModal(true);
+  };
+
   const columns: ColumnType<Product>[] = [
     {
       title: "Name",
@@ -43,11 +54,7 @@ const ProductList = () => {
       key: "price",
       render: (number) => <a>{number}</a>,
     },
-    {
-      title: "Description",
-      dataIndex: "description",
-      key: "description",
-    },
+
     {
       title: "Description",
       dataIndex: "description",
@@ -58,6 +65,7 @@ const ProductList = () => {
       title: "Stock",
       dataIndex: "stock",
       key: "stock",
+      render: (number) => <a>{number}</a>,
     },
     {
       title: "Image",
@@ -68,11 +76,20 @@ const ProductList = () => {
       ),
     },
     {
+      title: "Category",
+      dataIndex: "categoriesId",
+      key: "categoriesId",
+      render: (categoriesId) => <a>{categoriesId.categoryName}</a>,
+    },
+    {
       title: "Action",
       key: "action",
       render: (_, record) => (
         <Space size="middle">
-          <button className="text-white border bg-blue-500 py-1 px-4 rounded font-semibold">
+          <button
+            onClick={() => handleClick(record)}
+            className="text-white border bg-blue-500 py-1 px-4 rounded font-semibold"
+          >
             Edit
           </button>
           <button
@@ -85,34 +102,6 @@ const ProductList = () => {
       ),
     },
   ];
-  const getProduct = async () => {
-    try {
-      const res = await instance.get("/product");
-      if (!res) {
-        toast.error("Get product failed");
-      }
-      setProduct(res.data.datas);
-    } catch (error) {
-      toast.error("Error getting product");
-    }
-  };
-
-  const handleDelete = async (id: string | number) => {
-    try {
-      const confirmPassword = window.confirm("Are you sure you want to delete");
-
-      if (confirmPassword) {
-        const res = await instance.delete(`/product/delete-product/${id}`);
-        if (!res) {
-          toast.error("Get data product deleted unsuccessful");
-        }
-        toast.success("Product deleted successfully");
-        getProduct();
-      }
-    } catch (error) {
-      toast.error("Error API: " + error);
-    }
-  };
 
   return (
     <div className="bg-white rounded-lg">
@@ -120,7 +109,7 @@ const ProductList = () => {
         <Link
           to=""
           className="text-white font-semibold py-1 px-3 bg-lime-500 text-center inline-block rounded-lg shadow-md hover:bg-gradient-to-r from-lime-500 to-lime-600 transition-colors duration-300"
-          onClick={() => setShowModal(true)}
+          onClick={() => handleClick()}
         >
           Add Product
         </Link>
@@ -129,9 +118,19 @@ const ProductList = () => {
           className="py-1 ml-3 outline-none rounded-lg bg-gray-100 pl-2"
           placeholder="Search....."
         />
-        <Modal showModal={showModal} setShowModal={setShowModal} />
+        <ModalAdd
+          showModal={showModal}
+          setShowModal={setShowModal}
+          currentProduct={productUpdate}
+        />
       </div>
-      <Table columns={columns} dataSource={products} />
+      <Table
+        columns={columns}
+        dataSource={state.products.map((product) => ({
+          ...product,
+          key: product._id,
+        }))}
+      />
     </div>
   );
 };

@@ -14,23 +14,20 @@
   content: "\e901";
 }
 
-.cross {
-  position: absolute;
-  width: 100%;
-  height: 1px; /* Điều chỉnh độ dày của gạch chéo */
-  background-color: rgb(13, 12, 12); /* Màu sắc của gạch chéo */
-  top: 50%;
-  left: 0;
-  transform: translateY(-50%) rotate(45deg); /* Xoay để tạo hình chéo */
-}
-
 .dashboard:hover {
-  background-color: #000; /* Màu xanh tím */
+  background-color: #272727;
   border-radius: 8px;
   color: white;
 }
 .li-active {
-  background-color: #000;
+  background-color: #272727;
   color: #fff;
   border-radius: 7px;
+}
+
+.btn-x {
+  background-color: transparent;
+  border: none;
+  color: black;
+  opacity: 1;
 }

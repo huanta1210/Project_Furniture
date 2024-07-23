@@ -5,7 +5,6 @@ dotenv.config();
 const SECRET_KEY = process.env.JWT_SECRET;
 
 export const checkPermission = async (req, res, next) => {
-  console.log("token", req.headers.authorization);
   try {
     const token = req.headers.authorization.split(" ")[1];
 
@@ -34,7 +33,6 @@ export const checkPermission = async (req, res, next) => {
     next();
   } catch (error) {
     return res.json({
-      name: error.name,
       message: error.message,
     });
   }
