@@ -56,7 +56,6 @@ export const createProduct = async (req, res) => {
       });
     }
     const data = await Product.create(req.body);
-    console.log(data);
 
     if (!data) {
       return res.status(404).json({

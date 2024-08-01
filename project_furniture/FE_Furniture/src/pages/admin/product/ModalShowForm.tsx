@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import * as z from "zod";
+
 import { Product } from "../../../interfaces/Product";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "react-toastify";
@@ -8,21 +8,13 @@ import { useContext, useEffect, useState } from "react";
 import mongoose from "mongoose";
 import { CategoriesContext } from "../../../store/contexts/categoriesContext";
 import { ProductContext } from "../../../store/contexts/productContext";
+import { productSchema } from "../../../validators/product";
 
 interface ModalProps {
   showModal: boolean;
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
   currentProduct: Product | undefined;
 }
-
-const productSchema = z.object({
-  productName: z.string().min(3).max(255),
-  price: z.number().min(1),
-  description: z.string().min(3),
-  stock: z.number().min(1),
-  imageProduct: z.union([z.instanceof(FileList), z.string()]),
-  categoriesId: z.string().min(1),
-});
 
 const ModalAdd: React.FC<ModalProps> = ({
   showModal,
@@ -42,9 +34,6 @@ const ModalAdd: React.FC<ModalProps> = ({
     reset,
   } = useForm<Product>({
     resolver: zodResolver(productSchema),
-    defaultValues: {
-      categoriesId: currentProduct?.categoriesId || "All",
-    },
   });
 
   useEffect(() => {
@@ -62,7 +51,7 @@ const ModalAdd: React.FC<ModalProps> = ({
         description: "",
         stock: null,
         imageProduct: "",
-        categoriesId: "All",
+        categoriesId: "",
       });
     }
   }, [currentProduct, setValue, reset]);
@@ -94,7 +83,6 @@ const ModalAdd: React.FC<ModalProps> = ({
       const categoriesIdObjectId = new mongoose.Types.ObjectId(
         data.categoriesId
       );
-      console.log(categoriesIdObjectId.toHexString());
       // Upload image
       let uploadedImageUrl = "";
       if (

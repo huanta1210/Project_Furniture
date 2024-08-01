@@ -4,7 +4,7 @@ export interface Product {
   price: number | null;
   description: string;
   stock: number | null;
-  imageProduct?: string | FileList;
+  imageProduct?: string | FileList | undefined;
   categoriesId: string;
 }
 
