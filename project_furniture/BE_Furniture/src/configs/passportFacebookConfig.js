@@ -13,7 +13,6 @@ passport.use(
       profileFields: ["id", "name", "emails", "displayName"],
     },
     async (accessToken, refreshToken, profile, cb) => {
-      console.log(profile);
       const existingUser = await User.findOne({
         facebookId: profile.id,
       });
@@ -25,8 +24,9 @@ passport.use(
         console.log("New user creation");
         const newUser = await User.create({
           facebookId: profile.id,
-          name: profile.displayName,
+          userName: profile.displayName,
           email: profile.emails[0].value,
+          photos: profile.photos[0].value,
           provider: profile.provider,
           isFacebookUser: true,
         });

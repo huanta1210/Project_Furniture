@@ -1,13 +1,15 @@
-export interface FormValues {
+export interface User {
   _id?: number | string;
   userName?: string;
-  phone?: number;
+  phone?: string;
   email: string;
   password: string;
   confirmPassword?: string;
+  provider?: string;
 }
 
-export interface User {
-  userName: string;
-  email: string;
-}
+export type State = {
+  users: User[];
+};
+
+export type Action = { type: "GET_USER"; payload: User[] };

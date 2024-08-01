@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { categorySchema } from "../../../validators/category";
 import { toast } from "react-toastify";
 import { useContext, useEffect } from "react";
-import { CategoriesContext } from "../../../store/contexts/categoriesContext";
+import { CategoriesContext } from "../../../store/contexts/CategoriesContext";
 
 type Props = {
   showModal: boolean;

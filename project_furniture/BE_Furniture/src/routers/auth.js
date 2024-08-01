@@ -3,6 +3,7 @@ import passport from "passport";
 import {
   authFacebook,
   authGoogle,
+  getAuth,
   loginUser,
   registerUser,
 } from "../controllers/auth";
@@ -61,5 +62,7 @@ routerAuth.get(
   }
 );
 routerAuth.post("/login/facebook", authFacebook);
+
+routerAuth.get("/get-auth", getAuth);
 
 export default routerAuth;

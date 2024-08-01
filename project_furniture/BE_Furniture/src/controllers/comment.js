@@ -5,7 +5,9 @@ import Product from "../models/Product";
 
 export const getAllComments = async (req, res) => {
   try {
-    const comment = await Comment.find({});
+    const comment = await Comment.find({})
+      .populate("userId")
+      .populate("productId");
 
     if (!comment && comment.length === 0) {
       return res.status(404).json({

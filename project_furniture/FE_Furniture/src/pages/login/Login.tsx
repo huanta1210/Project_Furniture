@@ -1,7 +1,7 @@
 import { SubmitHandler, useForm } from "react-hook-form";
 import Footer from "../../components/Footer";
 import Header from "../../components/Header";
-import { FormValues } from "../../interfaces/User";
+import { User } from "../../interfaces/User";
 import { toast } from "react-toastify";
 import instance from "../../api";
 import { useNavigate } from "react-router";
@@ -30,10 +30,10 @@ const MainLogin: React.FC = () => {
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm<FormValues>();
+  } = useForm<User>();
   const [showPassword, setShowPassword] = useState(false);
 
-  const onSubmit: SubmitHandler<FormValues> = async (dataLogin) => {
+  const onSubmit: SubmitHandler<User> = async (dataLogin) => {
     try {
       const { data } = await instance.post("/auth/login", dataLogin);
 

@@ -12,7 +12,6 @@ passport.use(
       callbackURL: "/api/auth/google/callback",
     },
     async (accessToken, refreshToken, profile, done) => {
-      console.log(profile);
       try {
         const existingUser = await User.findOne({
           googleId: profile.id,
@@ -25,9 +24,9 @@ passport.use(
           console.log("New user creation");
           const newUser = await User.create({
             googleId: profile.id,
-            name: profile.displayName,
+            userName: profile.displayName,
             email: profile.emails[0].value,
-            photo: profile.photos[0].value,
+            photos: profile.photos[0].value,
             provider: profile.provider,
             isGoogleUser: true,
           });

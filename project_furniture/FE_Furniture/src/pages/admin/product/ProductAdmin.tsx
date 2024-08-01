@@ -6,7 +6,7 @@ import { Product } from "../../../interfaces/Product";
 import { useContext, useState } from "react";
 import type { ColumnType } from "antd/es/table";
 import ModalAdd from "./ModalShowForm";
-import { ProductContext } from "../../../store/contexts/productContext";
+import { ProductContext } from "../../../store/contexts/ProductContext";
 
 const ProductAdmin = () => {
   return (

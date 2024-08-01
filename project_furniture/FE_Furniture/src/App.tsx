@@ -9,6 +9,7 @@ import LoginFacebook from "./pages/login/Login-Facebook";
 import Doasboard from "./pages/admin/Doasboard";
 import ProductAdmin from "./pages/admin/product/ProductAdmin";
 import CategoriesAdmin from "./pages/admin/categories/CategoriesAdmin";
+import UserAdmin from "./pages/admin/user/UserAdmin";
 
 function App() {
   return (
@@ -23,6 +24,8 @@ function App() {
 
         <Route path="/admin" element={<PrivateRouter />}>
           <Route path="dashboard" element={<Doasboard />} />
+          <Route path="users" element={<UserAdmin />} />
+
           <Route path="products" element={<ProductAdmin />} />
           <Route path="categories" element={<CategoriesAdmin />} />
         </Route>

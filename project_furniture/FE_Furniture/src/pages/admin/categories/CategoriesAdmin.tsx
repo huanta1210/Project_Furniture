@@ -3,7 +3,7 @@ import HeaderAdmin from "../component/HeaderAdmin";
 import { Space, Table } from "antd";
 import type { ColumnType } from "antd/es/table";
 import { Categories } from "../../../interfaces/Categories";
-import { CategoriesContext } from "../../../store/contexts/categoriesContext";
+import { CategoriesContext } from "../../../store/contexts/CategoriesContext";
 import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import ModalCategoryForm from "./ModalCategoryForm";

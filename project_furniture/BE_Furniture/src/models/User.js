@@ -4,12 +4,12 @@ const userSchema = new mongoose.Schema(
   {
     googleId: String,
     facebookId: String,
-    name: {
+    userName: {
       type: String,
       required: true,
     },
     phone: {
-      type: Number,
+      type: String,
       required: function () {
         return !(this.isGoogleUser || this.isFacebookUser);
       },
@@ -32,8 +32,9 @@ const userSchema = new mongoose.Schema(
     photos: {
       type: String,
       required: function () {
-        return !this.isFacebookUser;
+        return !(this.isGoogleUser || this.isFacebookUser);
       },
+      default: false,
     },
     provider: String,
     isGoogleUser: {

@@ -6,8 +6,8 @@ import { toast } from "react-toastify";
 import instance from "../../../api";
 import { useContext, useEffect, useState } from "react";
 import mongoose from "mongoose";
-import { CategoriesContext } from "../../../store/contexts/categoriesContext";
-import { ProductContext } from "../../../store/contexts/productContext";
+import { CategoriesContext } from "../../../store/contexts/CategoriesContext";
+import { ProductContext } from "../../../store/contexts/ProductContext";
 import { productSchema } from "../../../validators/product";
 
 interface ModalProps {

@@ -1,10 +1,12 @@
 import { toast } from "react-toastify";
 import Footer from "../../components/Footer";
 import Header from "../../components/Header";
-import { FormValues } from "../../interfaces/User";
+import { User } from "../../interfaces/User";
 import { useForm, SubmitHandler } from "react-hook-form";
 import instance from "../../api";
 import { useNavigate } from "react-router";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { userSchema } from "../../validators/user";
 
 const Register: React.FC = () => {
   return (
@@ -28,11 +30,14 @@ const MainRegister: React.FC = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormValues>();
+  } = useForm<User>({
+    resolver: zodResolver(userSchema),
+  });
 
-  const onSubmit: SubmitHandler<FormValues> = async (data) => {
+  const onSubmit: SubmitHandler<User> = async (data) => {
     try {
       const res = await instance.post("/auth/register", data);
+      console.log(res);
 
       if (!res) {
         toast.error("The data returned is incorrect");
@@ -86,7 +91,7 @@ const MainRegister: React.FC = () => {
                 type="text"
                 placeholder="Hoàng Anh Thư"
                 {...register("userName", {
-                  required: "Name is required",
+                  required: true,
                 })}
               />
               {errors.userName && (
@@ -101,14 +106,10 @@ const MainRegister: React.FC = () => {
               </label>
               <input
                 className="w-full py-3 mt-2 rounded-md border-gray-300 border outline-none pl-3 focus:border-lime-600"
-                type="number"
+                type="text"
                 placeholder="+8490458343"
                 {...register("phone", {
-                  required: "Phone is required",
-                  pattern: {
-                    value: /^\d+$/,
-                    message: "Do not enter negative numbers",
-                  },
+                  required: true,
                 })}
               />
               {errors.phone && (
@@ -124,11 +125,7 @@ const MainRegister: React.FC = () => {
                 type="text"
                 placeholder="example@example.com"
                 {...register("email", {
-                  required: "Email is required",
-                  pattern: {
-                    value: /^\S+@\S+\.\S+$/,
-                    message: "Email không đúng định dạng",
-                  },
+                  required: true,
                 })}
               />
               {errors.email && (
@@ -145,11 +142,7 @@ const MainRegister: React.FC = () => {
                 type="password"
                 placeholder="**************"
                 {...register("password", {
-                  required: "Password is required",
-                  minLength: {
-                    value: 6,
-                    message: "Password must be at least 6 characters",
-                  },
+                  required: true,
                 })}
               />
               {errors.password && (
@@ -158,7 +151,22 @@ const MainRegister: React.FC = () => {
                 </small>
               )}
             </div>
-
+            <div className="form-group mb-8">
+              <label className="text-sm text-black" htmlFor="confirmPassword">
+                Confirm Password:<span className="text-red-500">*</span>
+              </label>
+              <input
+                className="w-full py-3 mt-2 rounded-md border-gray-300 border outline-none pl-3 focus:border-lime-600"
+                type="password"
+                placeholder="**************"
+                {...register("confirmPassword")}
+              />
+              {errors.confirmPassword && (
+                <small className="text-red-500">
+                  {errors.confirmPassword.message}
+                </small>
+              )}
+            </div>
             <div className="form-group text-center">
               <button
                 className="btn-submit border border-black py-3 px-28 text-sm text-white bg-black font-medium hover:bg-white hover:text-black"

@@ -1,15 +1,18 @@
 import { ReactNode } from "react";
-import { ProductProvider } from "./productContext";
-import { CategoriesProvider } from "./categoriesContext";
+import { ProductProvider } from "./ProductContext";
+import { CategoriesProvider } from "./CategoriesContext";
+import { UserProvider } from "./UserContext";
 
 type Children = {
   children: ReactNode;
 };
 const IndexContexts = ({ children }: Children) => {
   return (
-    <ProductProvider>
-      <CategoriesProvider>{children}</CategoriesProvider>
-    </ProductProvider>
+    <UserProvider>
+      <ProductProvider>
+        <CategoriesProvider>{children}</CategoriesProvider>
+      </ProductProvider>
+    </UserProvider>
   );
 };
 

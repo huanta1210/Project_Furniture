@@ -8,14 +8,35 @@ import { loginSuccessService } from "../services/authServices";
 dotnev.config();
 const SECRET_KEY = process.env.JWT_SECRET;
 
+export const getAuth = async (req, res) => {
+  try {
+    const user = await User.find({});
+
+    if (!user && user.length === 0) {
+      return res.status(404).json({
+        message: "users is not found",
+      });
+    }
+
+    return res.status(200).json({
+      message: "Get users successfully",
+      datas: user,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
 export const registerUser = async (req, res) => {
   try {
     const { error } = userValidator.validate(req.body, { abortEarly: true });
+    console.log(req.body);
 
     if (error) {
       const errorMessage = error.details.map((err) => err.message);
       return res.status(400).json({
-        name: errorMessage,
         message: errorMessage,
       });
     } else {
@@ -30,6 +51,10 @@ export const registerUser = async (req, res) => {
       if (!req.body.role) {
         req.body.role = "member";
       }
+      if (!req.body.provider) {
+        req.body.provider = "WebFurniture";
+      }
+
       const hashPassword = await bcryptjs.hash(req.body.password, 10);
 
       const user = await User.create({ ...req.body, password: hashPassword });
@@ -39,7 +64,6 @@ export const registerUser = async (req, res) => {
       return res.status(200).json({
         message: "Register successful",
         datas: user,
-        accessToken,
       });
     }
   } catch (error) {
@@ -91,8 +115,8 @@ export const loginUser = async (req, res) => {
 
       return res.status(200).json({
         message: "Login successful",
-        user: user,
-        accessToken: accessToken,
+        user,
+        accessToken,
       });
     }
   } catch (error) {
