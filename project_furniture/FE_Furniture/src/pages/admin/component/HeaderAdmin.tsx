@@ -1,14 +1,14 @@
+import { usePageContext } from "../../../store/contexts/PageContext";
 import LogOut from "../../login/LogOut";
 
 const HeaderAdmin = () => {
+  const { title, breadcrumbs } = usePageContext();
   return (
     <>
       <section className="flex justify-between">
         <div className="mt-1">
-          <p className="text-xs text-slate-500">Pages / Main Dashboard</p>
-          <p className="text-3xl text-slate-800 font-bold mt-2">
-            Main Dashboard
-          </p>
+          <p className="text-xs text-slate-500">{breadcrumbs}</p>
+          <p className="text-3xl text-slate-800 font-bold mt-2">{title}</p>
         </div>
         <div className="border h-16 w-36 mt-1 flex items-center justify-around bg-white rounded-full">
           <i className="fa-solid fa-question"></i>

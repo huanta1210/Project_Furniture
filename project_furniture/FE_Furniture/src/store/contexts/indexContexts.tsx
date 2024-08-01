@@ -1,18 +1,18 @@
-import { ReactNode } from "react";
 import { ProductProvider } from "./ProductContext";
 import { CategoriesProvider } from "./CategoriesContext";
 import { UserProvider } from "./UserContext";
+import { ChildrenProps } from "../../interfaces/Children";
+import { PageProvider } from "./PageContext";
 
-type Children = {
-  children: ReactNode;
-};
-const IndexContexts = ({ children }: Children) => {
+const IndexContexts = ({ children }: ChildrenProps) => {
   return (
-    <UserProvider>
-      <ProductProvider>
-        <CategoriesProvider>{children}</CategoriesProvider>
-      </ProductProvider>
-    </UserProvider>
+    <PageProvider>
+      <UserProvider>
+        <ProductProvider>
+          <CategoriesProvider>{children}</CategoriesProvider>
+        </ProductProvider>
+      </UserProvider>
+    </PageProvider>
   );
 };
 

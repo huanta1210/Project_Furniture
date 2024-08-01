@@ -1,8 +1,9 @@
-import { createContext, ReactNode, useEffect, useReducer } from "react";
+import { createContext, useEffect, useReducer } from "react";
 import { Categories } from "../../interfaces/Categories";
 import categoriesReducer from "../reducers/categoriesReducer";
 import instance from "../../api";
 import { toast } from "react-toastify";
+import { ChildrenProps } from "../../interfaces/Children";
 
 type CategoriesContext = {
   state: {
@@ -11,9 +12,6 @@ type CategoriesContext = {
   handleDelete: (id: string | number) => void;
   createCategory: (data: Categories) => void;
   updateCategory: (id: string | number, data: Categories) => void;
-};
-type ChildrenProps = {
-  children: ReactNode;
 };
 
 export const CategoriesContext = createContext<CategoriesContext>(
@@ -58,7 +56,7 @@ export const CategoriesProvider = ({ children }: ChildrenProps) => {
 
   const createCategory = async (data: Categories) => {
     try {
-      const res = await instance.put("categories/create-categories", data);
+      const res = await instance.post("categories/create-categories", data);
       console.log(res.data.datas);
       if (!res) {
         toast.error("Create categories unsuccessful");

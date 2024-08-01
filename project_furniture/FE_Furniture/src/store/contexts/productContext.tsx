@@ -1,8 +1,9 @@
-import { createContext, ReactNode, useEffect, useReducer } from "react";
+import { createContext, useEffect, useReducer } from "react";
 import { Product } from "../../interfaces/Product";
 import instance from "../../api";
 import { toast } from "react-toastify";
 import productReducer from "../reducers/productReducer";
+import { ChildrenProps } from "../../interfaces/Children";
 
 type ProductContext = {
   state: {
@@ -16,11 +17,8 @@ type ProductContext = {
 export const ProductContext = createContext<ProductContext>(
   {} as ProductContext
 );
-type Children = {
-  children: ReactNode;
-};
 
-export const ProductProvider = ({ children }: Children) => {
+export const ProductProvider = ({ children }: ChildrenProps) => {
   const [state, dispatch] = useReducer(productReducer, { products: [] });
   const handleDelete = async (id: string | number) => {
     try {

@@ -3,6 +3,7 @@ import logo from "../../../assets/img/logo.png";
 import { useEffect, useState } from "react";
 import { User } from "../../../interfaces/User";
 import LogOut from "../../login/LogOut";
+import { usePageContext } from "../../../store/contexts/PageContext";
 
 const SideBar = () => {
   const getToken = (): User => {
@@ -11,6 +12,7 @@ const SideBar = () => {
     return data ? JSON.parse(data) : null;
   };
 
+  const { setTitle, setBreadcrumbs } = usePageContext();
   const { userName } = getToken();
   const location = useLocation();
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
@@ -52,8 +54,10 @@ const SideBar = () => {
     },
   ];
 
-  const handleClick = (index: number) => {
+  const handleClick = (index: number, label: string) => {
     setActiveIndex(index);
+    setTitle(label);
+    setBreadcrumbs(`Pages / ${label}`);
   };
 
   useEffect(() => {
@@ -80,7 +84,7 @@ const SideBar = () => {
                   className={`pb-1 w-9/12 my-1 text-base font-semibold text-slate-600 dashboard ${
                     activeIndex === index ? "li-active" : ""
                   }`}
-                  onClick={() => handleClick(index)}
+                  onClick={() => handleClick(index, item.label)}
                 >
                   <Link to={item.path}>
                     <i

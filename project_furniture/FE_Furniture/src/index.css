@@ -31,3 +31,8 @@
   color: black;
   opacity: 1;
 }
+
+.active-bg-button {
+  background: rgb(73, 73, 204);
+  color: white;
+}

@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import logo from "../assets/img/logo.png";
 
 function Header() {
@@ -12,33 +13,36 @@ function Header() {
         <div className="header-nav m-auto">
           <ul>
             <li className="inline-block">
-              <a className="text-lg font-semibold hover:text-lime-600" href="/">
+              <Link
+                className="text-lg font-semibold hover:text-lime-600"
+                to="/"
+              >
                 Home
-              </a>
+              </Link>
             </li>
             <li className="inline-block pl-9">
-              <a
+              <Link
                 className="text-lg font-semibold hover:text-lime-600"
-                href="/product"
+                to="/products"
               >
                 Shop
-              </a>
+              </Link>
             </li>
             <li className="inline-block pl-9">
-              <a
+              <Link
                 className="text-lg font-semibold hover:text-lime-600"
-                href="/contact"
+                to="/contact"
               >
                 Contact
-              </a>
+              </Link>
             </li>
             <li className="inline-block pl-9">
-              <a
+              <Link
                 className="text-lg font-semibold hover:text-lime-600"
-                href="/about"
+                to="/about"
               >
                 About
-              </a>
+              </Link>
             </li>
           </ul>
         </div>
@@ -46,26 +50,31 @@ function Header() {
         <div className="header-information ">
           <ul className="mt-4">
             <li className="inline-block">
-              <a className="hover:text-lime-500" href="/login">
+              <Link className="hover:text-lime-500" to="/login">
                 <i className="ti ti-user">
                   <span className="text-sm pl-1">Tài khoản</span>
                 </i>
-              </a>
+              </Link>
             </li>
             <li className="inline-block pl-5 text-lg">
-              <a className="hover:text-lime-500" href="">
+              <Link className="hover:text-lime-500" to="">
                 <i className="ti ti-search"></i>
-              </a>
+              </Link>
             </li>
             <li className="inline-block pl-5 text-lg">
-              <a className="hover:text-lime-500" href="">
+              <Link className="hover:text-lime-500" to="">
                 <i className="ti ti-heart"></i>
-              </a>
+              </Link>
             </li>
             <li className="inline-block pl-5 text-lg">
-              <a className="hover:text-lime-500" href="/cart">
-                <i className="ti ti-shopping-cart"></i>
-              </a>
+              <div className="cart relative">
+                <Link to="/cart" className="hover:text-lime-500">
+                  <i className="ti ti-shopping-cart"></i>
+                </Link>
+                <div className="absolute top-0 left-3 right-0 bg-red-500 text-white rounded-full size-4 flex items-center justify-center text-xs">
+                  0
+                </div>
+              </div>
             </li>
           </ul>
         </div>

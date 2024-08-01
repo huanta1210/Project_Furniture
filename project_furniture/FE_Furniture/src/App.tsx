@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./App.css";
-import HomePage from "./pages/HomePage";
+import HomePage from "./pages/client/HomePage";
 import Login from "./pages/login/Login";
 import Register from "./pages/login/Register";
 import PrivateRouter from "./components/PrivateRouter";
@@ -10,6 +10,7 @@ import Doasboard from "./pages/admin/Doasboard";
 import ProductAdmin from "./pages/admin/product/ProductAdmin";
 import CategoriesAdmin from "./pages/admin/categories/CategoriesAdmin";
 import UserAdmin from "./pages/admin/user/UserAdmin";
+import ProductList from "./pages/client/products/ProductList";
 
 function App() {
   return (
@@ -17,6 +18,8 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/products" element={<ProductList />} />
+
         <Route path="/login/google/:id" element={<LoginGoogle />} />
         <Route path="/login/facebook/:id" element={<LoginFacebook />} />
 
@@ -25,7 +28,6 @@ function App() {
         <Route path="/admin" element={<PrivateRouter />}>
           <Route path="dashboard" element={<Doasboard />} />
           <Route path="users" element={<UserAdmin />} />
-
           <Route path="products" element={<ProductAdmin />} />
           <Route path="categories" element={<CategoriesAdmin />} />
         </Route>
