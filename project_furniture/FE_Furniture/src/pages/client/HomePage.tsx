@@ -4,6 +4,7 @@ import Footer from "../../components/Footer";
 import SlideShow from "../../components/SlideShow";
 import { ProductContext } from "../../store/contexts/ProductContext";
 import { Link } from "react-router-dom";
+import { CartContext } from "../../store/contexts/CartContext";
 
 const HomePage: React.FC = () => {
   return (
@@ -17,7 +18,7 @@ const HomePage: React.FC = () => {
 
 const MainPage: React.FC = () => {
   const { state } = useContext(ProductContext);
-  console.log(state);
+  const { addToCart } = useContext(CartContext);
   return (
     <>
       <div className="mb-4">
@@ -39,7 +40,7 @@ const MainPage: React.FC = () => {
         <div className="flex flex-wrap gap-4 justify-between">
           {state.products.slice(0, 4).map((product) => (
             <div className="product w-56 bg-gray-50 flex-grow-0 flex-shrink-0 w-[calc(25%-1rem)]">
-              <Link to={`/details/`}>
+              <Link to={`/details/${product._id}`}>
                 <img
                   className="h-64 w-full"
                   src={product.imageProduct}
@@ -60,7 +61,23 @@ const MainPage: React.FC = () => {
                 >
                   <i className="fa-regular fa-heart text-black hover:text-white"></i>
                 </button>
-                <button className="mb-2 border border-black font-semibold bg-white rounded text-black py-2 px-10 ml-2 whitespace-nowrap hover:bg-black transition-all duration-1000 hover:text-white ">
+                <button
+                  onClick={() =>
+                    addToCart({
+                      product: {
+                        _id: product._id,
+                        productName: product.productName,
+                        price: product.price,
+                        description: product.description,
+                        stock: product.stock,
+                        imageProduct: product.imageProduct,
+                        categoriesId: product.categoriesId,
+                      },
+                      quantity: 1,
+                    })
+                  }
+                  className="mb-2 border border-black font-semibold bg-white rounded text-black py-2 px-10 ml-2 whitespace-nowrap hover:bg-black transition-all duration-1000 hover:text-white "
+                >
                   Add to cart
                 </button>
               </div>

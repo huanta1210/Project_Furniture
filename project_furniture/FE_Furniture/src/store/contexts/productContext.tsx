@@ -8,10 +8,12 @@ import { ChildrenProps } from "../../interfaces/Children";
 type ProductContext = {
   state: {
     products: Product[];
+    selectedProduct?: Product | null;
   };
   handleDelete: (id: string | number) => void;
   createProduct: (data: Product) => void;
   updateProduct: (id: string | number, data: Product) => void;
+  getDetails: (id: string | number) => void;
 };
 
 export const ProductContext = createContext<ProductContext>(
@@ -19,7 +21,9 @@ export const ProductContext = createContext<ProductContext>(
 );
 
 export const ProductProvider = ({ children }: ChildrenProps) => {
-  const [state, dispatch] = useReducer(productReducer, { products: [] });
+  const [state, dispatch] = useReducer(productReducer, {
+    products: [],
+  });
   const handleDelete = async (id: string | number) => {
     try {
       const confirmDelete = window.confirm("Are you sure you want to delete");
@@ -50,6 +54,18 @@ export const ProductProvider = ({ children }: ChildrenProps) => {
     })();
   }, []);
 
+  const getDetails = async (id: string | number) => {
+    try {
+      const res = await instance.get(`product/${id}`);
+      if (!res) {
+        toast.error("Get product failed");
+      }
+      dispatch({ type: "GET_DETAIL_PRODUCT", payload: res.data.datas });
+    } catch (error) {
+      console.log(error);
+      toast.error("Error getting details");
+    }
+  };
   const createProduct = async (data: Product) => {
     try {
       const res = await instance.post("/product/create-product", data);
@@ -59,7 +75,7 @@ export const ProductProvider = ({ children }: ChildrenProps) => {
       }
       dispatch({ type: "CREATE_PRODUCTS", payload: res.data.datas });
       toast.success("Create product is successful", {
-        autoClose: 500,
+        autoClose: 300,
       });
     } catch (error) {
       console.log(error);
@@ -76,7 +92,7 @@ export const ProductProvider = ({ children }: ChildrenProps) => {
       }
       dispatch({ type: "UPDATE_PRODUCTS", payload: res.data.datas });
       toast.success("Update product is successful", {
-        autoClose: 500,
+        autoClose: 300,
       });
     } catch (error) {
       console.log(error);
@@ -86,7 +102,7 @@ export const ProductProvider = ({ children }: ChildrenProps) => {
 
   return (
     <ProductContext.Provider
-      value={{ state, handleDelete, createProduct, updateProduct }}
+      value={{ state, handleDelete, createProduct, updateProduct, getDetails }}
     >
       {children}
     </ProductContext.Provider>

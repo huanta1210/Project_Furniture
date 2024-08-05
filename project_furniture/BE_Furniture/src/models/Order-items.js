@@ -9,7 +9,6 @@ const orderItemsSchema = new mongoose.Schema(
     },
     price: {
       type: mongoose.Schema.Types.Decimal128,
-      min: 0.01,
       required: true,
     },
     orders: {

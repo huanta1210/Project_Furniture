@@ -1,44 +1,43 @@
 import { State, Action } from "../../interfaces/Categories";
 
-const categoriesReducer = (state: State, action: Action) => {
+const categoriesReducer = (category: State, action: Action) => {
   switch (action.type) {
     case "SET_CATEGORIES": {
       return {
-        ...state,
-        categories: [
-          action.payload.find((category) => category._id === "All") || {
-            _id: "All",
-            categoryName: "All",
-            slug: "All",
-          },
-          ...action.payload,
-        ],
+        ...category,
+        categories: action.payload,
       };
     }
     case "CREATE_CATEGORIES": {
       return {
-        ...state,
-        categories: [...state.categories, action.payload],
+        ...category,
+        categories: [...category.categories, action.payload],
       };
     }
     case "UPDATE_CATEGORIES": {
       return {
-        ...state,
-        categories: state.categories.map((item) =>
+        ...category,
+        categories: category.categories.map((item) =>
           item._id === action.payload._id ? action.payload : item
         ),
       };
     }
     case "DELETE_CATEGORIES": {
       return {
-        ...state,
-        categories: state.categories.filter(
+        ...category,
+        categories: category.categories.filter(
           (item) => item._id !== action.payload
         ),
       };
     }
+    case "GET_DETAIL_CATEGORY": {
+      return {
+        ...category,
+        selectedCategory: action.payload,
+      };
+    }
     default:
-      return state;
+      return category;
   }
 };
 export default categoriesReducer;

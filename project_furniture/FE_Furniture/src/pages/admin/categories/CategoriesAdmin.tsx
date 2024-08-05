@@ -1,5 +1,5 @@
-import SideBar from "../component/SideBar";
-import HeaderAdmin from "../component/HeaderAdmin";
+import SideBar from "../../../components/SideBar";
+import HeaderAdmin from "../../../components/HeaderAdmin";
 import { Space, Table } from "antd";
 import type { ColumnType } from "antd/es/table";
 import { Categories } from "../../../interfaces/Categories";
@@ -24,7 +24,7 @@ const CategoriesAdmin = () => {
 };
 
 const CategoriesList = () => {
-  const { state, handleDelete } = useContext(CategoriesContext);
+  const { category, handleDelete } = useContext(CategoriesContext);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [categoryUpdate, setCategoryUpdate] = useState<Categories | undefined>(
     undefined
@@ -95,7 +95,7 @@ const CategoriesList = () => {
       />
       <Table
         columns={columns}
-        dataSource={state.categories.map((category) => ({
+        dataSource={category.categories.map((category) => ({
           ...category,
           key: category._id,
         }))}

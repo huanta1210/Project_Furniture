@@ -1,6 +1,6 @@
 import { useContext } from "react";
-import HeaderAdmin from "../component/HeaderAdmin";
-import SideBar from "../component/SideBar";
+import HeaderAdmin from "../../../components/HeaderAdmin";
+import SideBar from "../../../components/SideBar";
 import { UserContext } from "../../../store/contexts/UserContext";
 import { User } from "../../../interfaces/User";
 import { Space, Table } from "antd";

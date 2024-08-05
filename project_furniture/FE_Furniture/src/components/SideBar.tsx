@@ -1,9 +1,9 @@
 import { Link, useLocation } from "react-router-dom";
-import logo from "../../../assets/img/logo.png";
+import logo from "../assets/img/logo.png";
 import { useEffect, useState } from "react";
-import { User } from "../../../interfaces/User";
-import LogOut from "../../login/LogOut";
-import { usePageContext } from "../../../store/contexts/PageContext";
+import { User } from "../interfaces/User";
+import LogOut from "../pages/login/LogOut";
+import { usePageContext } from "../store/contexts/PageContext";
 
 const SideBar = () => {
   const getToken = (): User => {

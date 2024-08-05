@@ -10,7 +10,9 @@ import Doasboard from "./pages/admin/Doasboard";
 import ProductAdmin from "./pages/admin/product/ProductAdmin";
 import CategoriesAdmin from "./pages/admin/categories/CategoriesAdmin";
 import UserAdmin from "./pages/admin/user/UserAdmin";
-import ProductList from "./pages/client/products/ProductList";
+import ProductList from "./pages/client/ProductList";
+import ProductDetails from "./pages/client/ProductDetails";
+import Cart from "./pages/client/cart/Cart";
 
 function App() {
   return (
@@ -19,6 +21,8 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/products" element={<ProductList />} />
+        <Route path="/details/:id" element={<ProductDetails />} />
+        <Route path="/cart" element={<Cart />} />
 
         <Route path="/login/google/:id" element={<LoginGoogle />} />
         <Route path="/login/facebook/:id" element={<LoginFacebook />} />

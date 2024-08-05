@@ -23,7 +23,7 @@ const ModalAdd: React.FC<ModalProps> = ({
 }) => {
   const [uploadedImageUrls, setUploadedImageUrls] = useState<string[]>([]);
 
-  const { state } = useContext(CategoriesContext);
+  const { category } = useContext(CategoriesContext);
   const { createProduct, updateProduct } = useContext(ProductContext);
 
   const {
@@ -76,6 +76,7 @@ const ModalAdd: React.FC<ModalProps> = ({
   };
 
   const onSubmit = async (data: Product) => {
+    console.log(data);
     try {
       if (!mongoose.Types.ObjectId.isValid(data.categoriesId)) {
         throw new Error("Invalid categoriesId format");
@@ -85,10 +86,7 @@ const ModalAdd: React.FC<ModalProps> = ({
       );
       // Upload image
       let uploadedImageUrl = "";
-      if (
-        data.imageProduct instanceof FileList &&
-        data.imageProduct.length > 0
-      ) {
+      if (data.imageProduct) {
         uploadedImageUrl = await uploadImageToCloudinary(data.imageProduct[0]);
         if (uploadedImageUrl) {
           setUploadedImageUrls([...uploadedImageUrls, uploadedImageUrl]);
@@ -105,10 +103,8 @@ const ModalAdd: React.FC<ModalProps> = ({
       // Call api to create and update product
       if (currentProduct) {
         updateProduct(currentProduct._id, productData);
-        console.log("Product updated", productData);
       } else {
         createProduct(productData);
-        console.log("Product created", productData);
       }
       reset();
       setShowModal(false);
@@ -252,7 +248,7 @@ const ModalAdd: React.FC<ModalProps> = ({
                       className="appearance-none border rounded w-full py-2 px-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                       {...register("categoriesId", { required: true })}
                     >
-                      {state.categories.map((category) => (
+                      {category.categories.map((category) => (
                         <option key={category._id} value={category._id}>
                           {category.categoryName}
                         </option>

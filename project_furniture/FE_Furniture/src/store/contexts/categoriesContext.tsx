@@ -6,12 +6,14 @@ import { toast } from "react-toastify";
 import { ChildrenProps } from "../../interfaces/Children";
 
 type CategoriesContext = {
-  state: {
+  category: {
     categories: Categories[];
+    selectedCategory?: Categories | null;
   };
   handleDelete: (id: string | number) => void;
   createCategory: (data: Categories) => void;
   updateCategory: (id: string | number, data: Categories) => void;
+  getDetailCategory: (id: string | number) => void;
 };
 
 export const CategoriesContext = createContext<CategoriesContext>(
@@ -19,7 +21,9 @@ export const CategoriesContext = createContext<CategoriesContext>(
 );
 
 export const CategoriesProvider = ({ children }: ChildrenProps) => {
-  const [state, dispatch] = useReducer(categoriesReducer, { categories: [] });
+  const [category, dispatch] = useReducer(categoriesReducer, {
+    categories: [],
+  });
 
   useEffect(() => {
     (async () => {
@@ -91,9 +95,29 @@ export const CategoriesProvider = ({ children }: ChildrenProps) => {
     }
   };
 
+  const getDetailCategory = async (id: string | number) => {
+    try {
+      const res = await instance.get(`categories/${id}`);
+      if (!res) {
+        toast.error("Update categories unsuccessful");
+      } else {
+        dispatch({ type: "GET_DETAIL_CATEGORY", payload: res.data.datas });
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Error Api");
+    }
+  };
+
   return (
     <CategoriesContext.Provider
-      value={{ state, handleDelete, createCategory, updateCategory }}
+      value={{
+        category,
+        handleDelete,
+        createCategory,
+        updateCategory,
+        getDetailCategory,
+      }}
     >
       {children}
     </CategoriesContext.Provider>

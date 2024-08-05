@@ -8,6 +8,7 @@ const productReducer = (state: State, action: Action) => {
         products: action.payload,
       };
     }
+
     case "CREATE_PRODUCTS": {
       return {
         ...state,
@@ -26,6 +27,12 @@ const productReducer = (state: State, action: Action) => {
       return {
         ...state,
         products: state.products.filter((item) => item._id !== action.payload),
+      };
+    }
+    case "GET_DETAIL_PRODUCT": {
+      return {
+        ...state,
+        selectedProduct: action.payload,
       };
     }
 

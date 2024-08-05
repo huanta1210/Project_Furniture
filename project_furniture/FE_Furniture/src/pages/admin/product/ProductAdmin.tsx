@@ -1,5 +1,6 @@
-import SideBar from "../component/SideBar";
-import HeaderAdmin from "../component/HeaderAdmin";
+import SideBar from "../../../components/SideBar";
+
+import HeaderAdmin from "../../../components/HeaderAdmin";
 import { Space, Table } from "antd";
 import { Link } from "react-router-dom";
 import { Product } from "../../../interfaces/Product";

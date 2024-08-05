@@ -1,7 +1,10 @@
 import { Link } from "react-router-dom";
 import logo from "../assets/img/logo.png";
+import { useContext } from "react";
+import { CartContext } from "../store/contexts/CartContext";
 
 function Header() {
+  const { quantityCart } = useContext(CartContext);
   return (
     <header className="mx-44">
       <div className="header flex justify-between items-center">
@@ -72,7 +75,7 @@ function Header() {
                   <i className="ti ti-shopping-cart"></i>
                 </Link>
                 <div className="absolute top-0 left-3 right-0 bg-red-500 text-white rounded-full size-4 flex items-center justify-center text-xs">
-                  0
+                  {quantityCart}
                 </div>
               </div>
             </li>

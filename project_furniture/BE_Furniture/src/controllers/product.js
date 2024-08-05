@@ -1,5 +1,5 @@
 import Categories from "../models/Categories";
-import OrderItem from "../models/Order-items";
+// import OrderItem from "../models/Order-items";
 import Product from "../models/Product";
 import mongoose from "mongoose";
 import {
@@ -25,7 +25,6 @@ export const getAllProduct = async (req, res) => {
 export const getDetailsProduct = async (req, res) => {
   try {
     const productId = await Product.findById(req.params.id);
-
     if (!productId) {
       return res.status(404).json({
         message: "Product details not found",
