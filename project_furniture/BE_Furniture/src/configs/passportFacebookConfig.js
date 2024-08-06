@@ -19,19 +19,19 @@ passport.use(
 
       if (existingUser) {
         console.log("Existing user found");
-        return cb(null, existingUser);
+        return cb(null, existingUser, accessToken);
       } else {
         console.log("New user creation");
         const newUser = await User.create({
           facebookId: profile.id,
           userName: profile.displayName,
           email: profile.emails[0].value,
-          photos: profile.photos[0].value,
+          photos: profile.photos,
           provider: profile.provider,
           isFacebookUser: true,
         });
         console.log("New user created:", newUser);
-        return cb(null, newUser);
+        return cb(null, newUser, accessToken);
       }
     }
   )

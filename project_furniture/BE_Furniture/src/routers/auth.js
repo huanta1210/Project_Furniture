@@ -1,5 +1,6 @@
 import express from "express";
 import passport from "passport";
+import jwt from "jsonwebtoken";
 import {
   authFacebook,
   authGoogle,
@@ -7,6 +8,8 @@ import {
   loginUser,
   registerUser,
 } from "../controllers/auth";
+import dotenv from "dotenv";
+dotenv.config();
 
 const routerAuth = express.Router();
 
@@ -25,14 +28,30 @@ routerAuth.get(
 routerAuth.get(
   "/google/callback",
   (req, res, next) => {
-    passport.authenticate("google", (err, profile) => {
-      req.user = profile;
-      console.log(profile);
+    passport.authenticate("google", (err, user, profile) => {
+      req.authInfo = profile;
+      req.user = user;
       next();
     })(req, res, next);
   },
   (req, res) => {
-    res.redirect(`http://localhost:5173/login/google/${req.user?.id}`);
+    const accessToken = req.authInfo;
+
+    if (accessToken) {
+      const token = jwt.sign(
+        {
+          id: req.user._id,
+          role: req.user.role,
+          userName: req.user.userName,
+          email: req.user.email,
+        },
+        process.env.JWT_SECRET,
+        { expiresIn: "1h" }
+      );
+      res.redirect(`http://localhost:5173/google/callback?token=${token}`);
+    } else {
+      res.redirect("http://localhost:5173/google/login?error=token");
+    }
   }
 );
 
@@ -51,14 +70,30 @@ routerAuth.get(
 routerAuth.get(
   "/facebook/callback",
   (req, res, next) => {
-    passport.authenticate("facebook", (err, profile) => {
-      req.user = profile;
-      console.log(profile);
+    passport.authenticate("facebook", (err, user, profile) => {
+      req.authInfo = profile;
+      req.user = user;
+
       next();
     })(req, res, next);
   },
   (req, res) => {
-    res.redirect(`http://localhost:5173/login/facebook/${req.user?.id}`);
+    const accessToken = req.authInfo;
+    if (accessToken) {
+      const token = jwt.sign(
+        {
+          id: req.user._id,
+          role: req.user.role,
+          userName: req.user.userName,
+          email: req.user.email,
+        },
+        process.env.JWT_SECRET,
+        { expiresIn: "1h" }
+      );
+      res.redirect(`http://localhost:5173/facebook/callback?token=${token}`);
+    } else {
+      res.redirect("http://localhost:5173/facebook/login?error=token");
+    }
   }
 );
 routerAuth.post("/login/facebook", authFacebook);

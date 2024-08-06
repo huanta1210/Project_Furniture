@@ -4,23 +4,30 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const SECRET_KEY = process.env.JWT_SECRET;
 export const loginSuccessService = async (id) => {
   try {
     const user = await User.findOne({ _id: id });
+    console.log(user);
 
     if (!user) {
       throw new Error("User not found");
     }
 
     const accessToken = jwt.sign(
-      { _id: user._id, name: user.name },
-      SECRET_KEY,
-      { expiresIn: 360000 }
+      { _id: user._id, role: user.role, name: user.name },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "3000h",
+      }
     );
 
-    return { user, accessToken };
+    return {
+      user,
+      accessToken,
+      message: accessToken ? "Set token successfull" : "Set token failure",
+    };
   } catch (error) {
-    throw new Error("Failed to login auth service", error);
+    console.log(error);
+    throw new Error("Failed to login auth service");
   }
 };

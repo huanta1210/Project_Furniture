@@ -19,7 +19,7 @@ passport.use(
 
         if (existingUser) {
           console.log("Existing user found");
-          return done(null, existingUser);
+          return done(null, existingUser, accessToken);
         } else {
           console.log("New user creation");
           const newUser = await User.create({
@@ -30,8 +30,7 @@ passport.use(
             provider: profile.provider,
             isGoogleUser: true,
           });
-          console.log("New user created:", newUser);
-          return done(null, newUser);
+          return done(null, newUser, accessToken);
         }
       } catch (error) {
         console.error("Error during authentication", error);

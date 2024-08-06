@@ -140,7 +140,6 @@ export const authGoogle = async (req, res) => {
     }
 
     const response = await loginSuccessService(id);
-
     if (!response) {
       return res.status(400).json({
         message: "Response not found",
@@ -158,4 +157,30 @@ export const authGoogle = async (req, res) => {
   }
 };
 
-export const authFacebook = () => {};
+export const authFacebook = async (req, res) => {
+  try {
+    const { id } = req?.body;
+
+    if (!id) {
+      return res.status(400).json({
+        message: "Id not found",
+      });
+    }
+
+    const response = await loginSuccessService(id);
+    if (!response) {
+      return res.status(400).json({
+        message: "Response not found",
+      });
+    }
+
+    return res.status(200).json({
+      message: "Success login successful",
+      datas: response,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};

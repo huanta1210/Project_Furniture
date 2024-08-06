@@ -24,8 +24,8 @@ function App() {
         <Route path="/details/:id" element={<ProductDetails />} />
         <Route path="/cart" element={<Cart />} />
 
-        <Route path="/login/google/:id" element={<LoginGoogle />} />
-        <Route path="/login/facebook/:id" element={<LoginFacebook />} />
+        <Route path="/google/callback" element={<LoginGoogle />} />
+        <Route path="/facebook/callback" element={<LoginFacebook />} />
 
         <Route path="/register" element={<Register />} />
 
