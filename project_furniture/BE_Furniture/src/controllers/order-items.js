@@ -51,32 +51,40 @@ export const getDetailOrderItems = async (req, res) => {
 
 export const createOrderItems = async (req, res) => {
   try {
-    const orderItems = await OrderItem.create(req.body);
+    const { productId, quantity, orderId } = req.body;
+    const product = await Product.findById(productId);
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+    const total = product.price * quantity;
 
+    const orderItems = await OrderItem.create({
+      quantity,
+      price: product.price,
+      orderId,
+      productId,
+    });
     if (!orderItems) {
       return res.status(403).json({
         message: "Create orderItems unsuccessful",
       });
     }
+    const order = await Order.findById(orderId);
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    const newTotal = (parseFloat(order.total) || 0) + total;
     const newOrder = await Order.findByIdAndUpdate(
-      orderItems.orders,
-      { $addToSet: { orderItems: orderItems._id } },
-      { new: true, useFindAndModify: false }
+      orderId,
+      {
+        $push: { orderItems: orderItems._id },
+        $inc: { total: newTotal },
+      },
+      { new: true }
     );
 
     if (!newOrder) {
-      return res.status(403).json({
-        message: "Update order failed",
-      });
-    }
-
-    const newProduct = await Product.findByIdAndUpdate(
-      orderItems.products,
-      { $addToSet: { orderItems: orderItems._id } },
-      { new: true, useFindAndModify: false }
-    );
-
-    if (!newProduct) {
       return res.status(403).json({
         message: "Update order failed",
       });
@@ -98,7 +106,7 @@ export const updateOrderItems = async (req, res) => {
     const orderItems = await OrderItem.findByIdAndUpdate(
       req.params.id,
       req.body,
-      { new: true, useFindAndModify: false }
+      { new: true }
     );
 
     if (!orderItems) {

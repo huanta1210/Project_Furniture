@@ -4,16 +4,19 @@ import categoriesReducer from "../reducers/categoriesReducer";
 import instance from "../../api";
 import { toast } from "react-toastify";
 import { ChildrenProps } from "../../interfaces/Children";
+import { Product } from "../../interfaces/Product";
 
 type CategoriesContext = {
   category: {
     categories: Categories[];
     selectedCategory?: Categories | null;
+    products: Product[];
   };
   handleDelete: (id: string | number) => void;
   createCategory: (data: Categories) => void;
   updateCategory: (id: string | number, data: Categories) => void;
   getDetailCategory: (id: string | number) => void;
+  filterProductsByCategory: (categoriesId: string | number) => void;
 };
 
 export const CategoriesContext = createContext<CategoriesContext>(
@@ -23,6 +26,7 @@ export const CategoriesContext = createContext<CategoriesContext>(
 export const CategoriesProvider = ({ children }: ChildrenProps) => {
   const [category, dispatch] = useReducer(categoriesReducer, {
     categories: [],
+    products: [],
   });
 
   useEffect(() => {
@@ -109,6 +113,11 @@ export const CategoriesProvider = ({ children }: ChildrenProps) => {
     }
   };
 
+  const filterProductsByCategory = (categoriesId: string | number) => {
+    console.log("Filter Products", categoriesId);
+    dispatch({ type: "FILTER_CATEGORIES", payload: categoriesId });
+  };
+
   return (
     <CategoriesContext.Provider
       value={{
@@ -117,6 +126,7 @@ export const CategoriesProvider = ({ children }: ChildrenProps) => {
         createCategory,
         updateCategory,
         getDetailCategory,
+        filterProductsByCategory,
       }}
     >
       {children}

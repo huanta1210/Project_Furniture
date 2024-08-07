@@ -4,7 +4,14 @@ import User from "../models/User";
 
 export const getAllOrders = async (req, res) => {
   try {
-    const order = await Order.find({});
+    const order = await Order.find({})
+      .populate({
+        path: "orderItems",
+        populate: {
+          path: "productId",
+        },
+      })
+      .populate("users");
 
     if (order.length === 0) {
       return res.status(403).json({
@@ -25,7 +32,14 @@ export const getAllOrders = async (req, res) => {
 
 export const getDetailOrders = async (req, res) => {
   try {
-    const order = await Order.findById(req.params.id).populate("users");
+    const order = await Order.findById(req.params.id)
+      .populate({
+        path: "orderItems",
+        populate: {
+          path: "productId",
+        },
+      })
+      .populate("users");
 
     if (!order || order.length === 0) {
       return res.status(403).json({
@@ -59,14 +73,14 @@ export const createOrders = async (req, res) => {
     const newUser = await User.findByIdAndUpdate(
       order.users,
       { $addToSet: { orders: order._id } },
-      { new: true, useFindAndModify: false }
+      { new: true }
     );
 
     const orderItems = req.body.orderItems;
     if (orderItems && orderItems.length > 0) {
       await OrderItem.updateMany(
         { _id: { $in: orderItems } },
-        { $set: { order: order._id } }
+        { $set: { orderId: order._id } }
       );
     }
 
@@ -88,15 +102,10 @@ export const createOrders = async (req, res) => {
 };
 export const updateOrders = async (req, res) => {
   try {
-    const order = await Order.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      {
-        new: true,
-        aboutEarly: false,
-      },
-      { useFindAndModify: false }
-    );
+    const order = await Order.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    });
 
     if (!order) {
       return res.status(404).json({
@@ -135,7 +144,7 @@ export const deleteOrders = async (req, res) => {
       });
     }
     await OrderItem.updateMany(
-      { orders: order._id },
+      { orderId: order._id },
       { $unset: { orders: "" } }
     );
 

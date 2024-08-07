@@ -3,6 +3,7 @@ import Footer from "../../../components/Footer";
 import Header from "../../../components/Header";
 import { CartContext } from "../../../store/contexts/CartContext";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../../../store/contexts/AuthContext";
 
 const Cart = () => {
   const {
@@ -12,7 +13,9 @@ const Cart = () => {
     totalPrice,
     handleDeleteCart,
   } = useContext(CartContext);
-  console.log(cartState.cartItems);
+  const { userState } = useContext(AuthContext);
+  const userId: string | number = userState.users?.id || "";
+
   return (
     <>
       <Header />
@@ -22,7 +25,7 @@ const Cart = () => {
             <div className="col-span-9">
               {/* giỏ hàng trống */}
               {cartState.cartItems.length === 0 ? (
-                <div className="cart-empty text-center hidden">
+                <div className="cart-empty text-center">
                   <img
                     className="h-48 m-auto"
                     src="https://bizweb.dktcdn.net/100/414/728/themes/867455/assets/empty-cart.png?1716045319283"
@@ -80,7 +83,7 @@ const Cart = () => {
                               <button
                                 onClick={() =>
                                   item.quantity <= 1
-                                    ? handleDeleteCart(item.product._id)
+                                    ? handleDeleteCart(userId, item.product._id)
                                     : decreaseQuantity(item.product._id)
                                 }
                                 className="px-2 py-1"
@@ -99,11 +102,13 @@ const Cart = () => {
                             </div>
                           </td>
                           <td className="pl-4 py-4 whitespace-no-wrap text-sm leading-5 text-gray-500 font-semibold">
-                            {(item.product.price * item.quantity).toFixed(2)} $
+                            {(item.product.price! * item.quantity).toFixed(2)} $
                           </td>
                           <td className="px-6 py-4 whitespace-no-wrap text-xl text-red-500">
                             <button
-                              onClick={() => handleDeleteCart(item.product._id)}
+                              onClick={() =>
+                                handleDeleteCart(userId, item.product._id)
+                              }
                               type="button"
                             >
                               <i className="ti ti-trash"></i>

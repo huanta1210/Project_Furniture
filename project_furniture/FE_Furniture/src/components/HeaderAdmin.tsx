@@ -1,5 +1,5 @@
 import { usePageContext } from "../store/contexts/PageContext";
-import LogOut from "../pages/login/LogOut";
+import LogOut from "./LogOut";
 
 const HeaderAdmin = () => {
   const { title, breadcrumbs } = usePageContext();

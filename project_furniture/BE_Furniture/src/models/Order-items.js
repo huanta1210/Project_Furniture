@@ -11,12 +11,12 @@ const orderItemsSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.Decimal128,
       required: true,
     },
-    orders: {
+    orderId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Order",
       required: true,
     },
-    products: {
+    productId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Product",
       required: true,

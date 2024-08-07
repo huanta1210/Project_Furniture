@@ -36,6 +36,15 @@ const categoriesReducer = (category: State, action: Action) => {
         selectedCategory: action.payload,
       };
     }
+    case "FILTER_CATEGORIES": {
+      return {
+        ...category,
+        products: category.products.filter(
+          (item) => item.categoriesId === action.payload
+        ),
+      };
+    }
+
     default:
       return category;
   }

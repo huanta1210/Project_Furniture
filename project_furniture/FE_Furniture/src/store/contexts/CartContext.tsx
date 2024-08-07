@@ -1,8 +1,10 @@
-import { createContext, useReducer } from "react";
+import { createContext, useContext, useEffect, useReducer } from "react";
 import { CartItem } from "../../interfaces/Cart";
 import { ChildrenProps } from "../../interfaces/Children";
 import cartReducer from "../reducers/cartReducer";
 import { toast } from "react-toastify";
+import instance from "../../api";
+import { AuthContext } from "./AuthContext";
 
 type CartContext = {
   cartState: {
@@ -13,24 +15,43 @@ type CartContext = {
   decreaseQuantity: (id: string | number) => void;
   increaseQuantity: (id: string | number) => void;
   addToCart: (data: CartItem) => void;
-  handleDeleteCart: (id: string | number) => void;
+  handleDeleteCart: (
+    userId: string | number,
+    productId: string | number
+  ) => void;
+  updateCart: (productId: string | number, quantity: number) => void;
 };
 
 export const CartContext = createContext<CartContext>({} as CartContext);
 
 export const CartProvider = ({ children }: ChildrenProps) => {
   const [cartState, dispatch] = useReducer(cartReducer, { cartItems: [] });
+  const { userState } = useContext(AuthContext);
+  const userId: string | number = userState.users?.id || "";
+  console.log(cartState.cartItems);
 
   const quantityCart = cartState.cartItems.reduce(
     (quantity, item) => quantity + item.quantity,
     0
   );
+
   const totalPrice = cartState.cartItems.reduce((acc, item) => {
     if (item.product && item.product.price) {
       return acc + item.product.price * item.quantity;
     }
     return acc;
   }, 0);
+  useEffect(() => {
+    (async () => {
+      const res = await instance.get(`/cart/${userId}`);
+      console.log(res);
+      if (res!) {
+        toast.error("Get cart failed");
+      }
+      dispatch({ type: "SET_CART", payload: res.data.datas });
+    })();
+  }, []);
+
   const decreaseQuantity = (id: string | number) => {
     dispatch({ type: "DESCREASE_QUANTITY", payload: id });
   };
@@ -39,23 +60,76 @@ export const CartProvider = ({ children }: ChildrenProps) => {
     dispatch({ type: "INCREASE_QUANTITY", payload: id });
   };
 
-  const addToCart = (data: CartItem, quantity = 1) => {
-    toast.success("Thêm sản phẩm thành công", {
-      autoClose: 200,
-    });
-    if (data) {
-      dispatch({ type: "ADD_CART", payload: data, quantity: quantity });
+  const addToCart = async (data: CartItem, quantity = 1) => {
+    try {
+      const newCart = {
+        userId: userState.users?.id,
+        product: data.product,
+        quantity,
+      };
+
+      const cart = await instance.post("/cart/create-cart", newCart);
+      const cartItem = cart.data.datas;
+
+      if (!cartItem) {
+        throw new Error("Invalid cart item data");
+      }
+      toast.success("Add product successfully", {
+        autoClose: 300,
+      });
+      dispatch({
+        type: "ADD_CART",
+        payload: cart.data.datas,
+      });
+    } catch (error) {
+      console.log(error);
+      toast.error("Error adding");
     }
   };
-  const handleDeleteCart = (id: string | number) => {
-    toast.success("Xoá sản phẩm thành công", {
-      autoClose: 300,
-    });
-    dispatch({ type: "DELETE_CART", payload: id });
+  const handleDeleteCart = async (
+    userId: string | number,
+    productId: string | number
+  ) => {
+    try {
+      const res = await instance.delete(
+        `/cart/delete-cart/${userId}/${productId}`
+      );
+
+      if (!res) {
+        toast.error("Error deleting");
+      } else {
+        toast.success("Xoá sản phẩm thành công", {
+          autoClose: 300,
+        });
+        dispatch({ type: "DELETE_CART", payload: productId });
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Error deleting");
+    }
+  };
+  const updateCart = async (productId: string | number, quantity: number) => {
+    try {
+      const res = await instance.put(
+        `/update-cart/${userId}/item/${productId}`
+      );
+      if (!res) {
+        toast.error("Data update failed");
+      } else {
+        dispatch({
+          type: "UPDATE_CART_ITEM",
+          payload: { productId, quantity },
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Error updating");
+    }
   };
   return (
     <CartContext.Provider
       value={{
+        updateCart,
         cartState,
         quantityCart,
         totalPrice,

@@ -7,12 +7,15 @@ import "react-toastify/dist/ReactToastify.css";
 import IndexContexts from "./store/contexts/indexContexts.tsx";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { BrowserRouter } from "react-router-dom";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
-    <IndexContexts>
-      <App />
-      <ToastContainer />
-    </IndexContexts>
-  </React.StrictMode>
+  <BrowserRouter>
+    <React.StrictMode>
+      <IndexContexts>
+        <App />
+        <ToastContainer />
+      </IndexContexts>
+    </React.StrictMode>
+  </BrowserRouter>
 );

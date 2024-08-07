@@ -1,14 +1,21 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ProductContext } from "../../store/contexts/ProductContext";
 import SlideShow from "../../components/SlideShow";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import { Link } from "react-router-dom";
+import FilterCategory from "../../components/FilterCategory";
 import { CategoriesContext } from "../../store/contexts/CategoriesContext";
 
 const ProductList = () => {
   const { state } = useContext(ProductContext);
-  const { category } = useContext(CategoriesContext);
+  const { category, filterProductsByCategory } = useContext(CategoriesContext);
+  useEffect(() => {
+    if (category.selectedCategory) {
+      filterProductsByCategory(category.selectedCategory._id);
+    }
+  }, []);
+
   const [currentPages, setCurrentPages] = useState(1);
   const productPage = 8;
 
@@ -45,16 +52,8 @@ const ProductList = () => {
         <div className="banner h-4/5 relative">
           <SlideShow />
         </div>
-        <div className="text-center mt-10">
-          {category.categories.map((category) => (
-            <button
-              type="button"
-              className="mr-2 border px-2 py-0,5 border-indigo-500 text-base font-normal rounded text-black transition-all duration-1000 hover:bg-indigo-500 hover:text-white"
-            >
-              {category.categoryName}
-            </button>
-          ))}
-        </div>
+        <FilterCategory />
+
         <div className="mt-7 mx-44">
           <div className="flex flex-wrap gap-4 justify-between">
             {productNumber.map((product) => (

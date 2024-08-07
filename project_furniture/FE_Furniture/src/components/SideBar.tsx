@@ -2,7 +2,7 @@ import { Link, useLocation } from "react-router-dom";
 import logo from "../assets/img/logo.png";
 import { useEffect, useState } from "react";
 import { User } from "../interfaces/User";
-import LogOut from "../pages/login/LogOut";
+import LogOut from "./LogOut";
 import { usePageContext } from "../store/contexts/PageContext";
 
 const SideBar = () => {

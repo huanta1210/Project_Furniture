@@ -18,7 +18,7 @@ const orderSchema = new mongoose.Schema(
     },
     total: {
       type: mongoose.Schema.Types.Decimal128,
-      required: true,
+      default: 0,
     },
     users: {
       type: mongoose.Schema.Types.ObjectId,

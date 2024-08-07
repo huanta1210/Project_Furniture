@@ -29,12 +29,7 @@ const productSchema = new mongoose.Schema(
       ref: "Categories",
       required: true,
     },
-    orderItems: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "OrderItem",
-      },
-    ],
+
     comments: [
       {
         type: mongoose.Schema.Types.ObjectId,
