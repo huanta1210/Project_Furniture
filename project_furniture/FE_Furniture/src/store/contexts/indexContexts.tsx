@@ -5,20 +5,23 @@ import { ChildrenProps } from "../../interfaces/Children";
 import { PageProvider } from "./PageContext";
 import { CartProvider } from "./CartContext";
 import { AuthProvider } from "./AuthContext";
+import { LocationProvider } from "./LocationContext";
 
 const IndexContexts = ({ children }: ChildrenProps) => {
   return (
-    <AuthProvider>
-      <CartProvider>
-        <PageProvider>
-          <UserProvider>
-            <ProductProvider>
-              <CategoriesProvider>{children}</CategoriesProvider>
-            </ProductProvider>
-          </UserProvider>
-        </PageProvider>
-      </CartProvider>
-    </AuthProvider>
+    <LocationProvider>
+      <AuthProvider>
+        <CartProvider>
+          <PageProvider>
+            <UserProvider>
+              <ProductProvider>
+                <CategoriesProvider>{children}</CategoriesProvider>
+              </ProductProvider>
+            </UserProvider>
+          </PageProvider>
+        </CartProvider>
+      </AuthProvider>
+    </LocationProvider>
   );
 };
 

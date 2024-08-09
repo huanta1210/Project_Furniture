@@ -20,6 +20,7 @@ type CartContext = {
     productId: string | number
   ) => void;
   updateCart: (productId: string | number, quantity: number) => void;
+  handleDeleteAllCart: (userId: string | number) => void;
 };
 
 export const CartContext = createContext<CartContext>({} as CartContext);
@@ -28,7 +29,6 @@ export const CartProvider = ({ children }: ChildrenProps) => {
   const [cartState, dispatch] = useReducer(cartReducer, { cartItems: [] });
   const { userState } = useContext(AuthContext);
   const userId: string | number = userState.users?.id || "";
-  console.log(cartState.cartItems);
 
   const quantityCart = cartState.cartItems.reduce(
     (quantity, item) => quantity + item.quantity,
@@ -44,8 +44,7 @@ export const CartProvider = ({ children }: ChildrenProps) => {
   useEffect(() => {
     (async () => {
       const res = await instance.get(`/cart/${userId}`);
-      console.log(res);
-      if (res!) {
+      if (!res) {
         toast.error("Get cart failed");
       }
       dispatch({ type: "SET_CART", payload: res.data.datas });
@@ -98,7 +97,7 @@ export const CartProvider = ({ children }: ChildrenProps) => {
       if (!res) {
         toast.error("Error deleting");
       } else {
-        toast.success("Xoá sản phẩm thành công", {
+        toast.success("Delete cart sucsesfully", {
           autoClose: 300,
         });
         dispatch({ type: "DELETE_CART", payload: productId });
@@ -126,9 +125,24 @@ export const CartProvider = ({ children }: ChildrenProps) => {
       toast.error("Error updating");
     }
   };
+  const handleDeleteAllCart = async (userId: string | number) => {
+    try {
+      const res = await instance.delete(`/cart/delete-all-cart/${userId}`);
+
+      if (!res) {
+        toast.error("Error deleting all cart");
+      }
+
+      dispatch({ type: "DELETE_ALL_CART" });
+    } catch (error) {
+      console.log(error);
+      toast.error("Error deleting all cart");
+    }
+  };
   return (
     <CartContext.Provider
       value={{
+        handleDeleteAllCart,
         updateCart,
         cartState,
         quantityCart,

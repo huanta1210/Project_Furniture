@@ -143,12 +143,14 @@ const Cart = () => {
                     </p>
                   </div>
 
-                  <button
-                    className="border-2 py-2 px-16 ml-2 my-6 border-black rounded text-black hover:bg-black hover:text-white transition-all duration-1000 font-semibold "
-                    type="button"
-                  >
-                    CheckOut
-                  </button>
+                  <Link to={"/check-out"}>
+                    <button
+                      className="border-2 py-2 px-16 ml-2 my-6 border-black rounded text-black hover:bg-black hover:text-white transition-all duration-1000 font-semibold "
+                      type="button"
+                    >
+                      CheckOut
+                    </button>
+                  </Link>
                 </div>
               </div>
             </div>

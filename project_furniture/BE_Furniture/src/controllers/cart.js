@@ -152,3 +152,21 @@ export const deleteCart = async (req, res) => {
     });
   }
 };
+
+export const deleteAllCart = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    const result = await Cart.deleteMany({ userId });
+
+    if (result.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "No orders found for this user." });
+    }
+    res.status(200).json({ message: "All orders have been deleted." });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error deleting orders", error });
+  }
+};

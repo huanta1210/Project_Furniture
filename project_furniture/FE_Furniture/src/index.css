@@ -36,3 +36,6 @@
   background: rgb(73, 73, 204);
   color: white;
 }
+.PhoneInputInput:focus {
+  outline: none;
+}

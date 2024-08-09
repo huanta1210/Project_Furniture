@@ -1,4 +1,4 @@
-import { SubmitHandler, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import Footer from "../../components/Footer";
 import Header from "../../components/Header";
 import { User } from "../../interfaces/User";
@@ -33,9 +33,8 @@ const MainLogin: React.FC = () => {
   } = useForm<User>();
   const [showPassword, setShowPassword] = useState(false);
   const { loginCustom, userState } = useContext(AuthContext);
-  console.log(userState);
 
-  const onSubmit: SubmitHandler<User> = async (dataLogin) => {
+  const onSubmit = async (dataLogin: User) => {
     try {
       loginCustom(dataLogin);
       reset();

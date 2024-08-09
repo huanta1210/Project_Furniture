@@ -12,6 +12,8 @@ import UserAdmin from "./pages/admin/user/UserAdmin";
 import ProductList from "./pages/client/ProductList";
 import ProductDetails from "./pages/client/ProductDetails";
 import Cart from "./pages/client/cart/Cart";
+import YourOrder from "./pages/client/cart/YourOrder";
+import CheckOut from "./pages/client/cart/CheckOut";
 
 function App() {
   return (
@@ -21,6 +23,8 @@ function App() {
       <Route path="/products" element={<ProductList />} />
       <Route path="/details/:id" element={<ProductDetails />} />
       <Route path="/cart" element={<Cart />} />
+      <Route path="/your-order" element={<YourOrder />} />
+      <Route path="/check-out" element={<CheckOut />} />
 
       <Route path="/google/callback" element={<LoginPlatform />} />
       <Route path="/facebook/callback" element={<LoginPlatform />} />

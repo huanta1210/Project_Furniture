@@ -1,10 +1,9 @@
 import { Action, State } from "../../interfaces/Cart";
 
-const cartReducer = (cartState: State, action: Action) => {
+const cartReducer = (cartState: State, action: Action): State => {
   switch (action.type) {
     case "SET_CART": {
-      const { items } = action.payload;
-
+      const items = action.payload.items || [];
       return {
         ...cartState,
         cartItems: items,
@@ -74,6 +73,12 @@ const cartReducer = (cartState: State, action: Action) => {
         cartItems: cartState.cartItems.filter(
           (item) => item.product._id !== action.payload
         ),
+      };
+    }
+    case "DELETE_ALL_CART": {
+      return {
+        ...cartState,
+        cartItems: [],
       };
     }
     case "UPDATE_CART_ITEM": {
