@@ -75,6 +75,11 @@ export const createOrders = async (req, res) => {
       { $addToSet: { orders: order._id } },
       { new: true }
     );
+    if (!newUser) {
+      return res.status(403).json({
+        message: "Update user unsuccessful",
+      });
+    }
 
     const orderItems = req.body.orderItems;
     if (orderItems && orderItems.length > 0) {
@@ -82,12 +87,6 @@ export const createOrders = async (req, res) => {
         { _id: { $in: orderItems } },
         { $set: { orderId: order._id } }
       );
-    }
-
-    if (!newUser) {
-      return res.status(403).json({
-        message: "Update user unsuccessful",
-      });
     }
 
     return res.status(200).json({

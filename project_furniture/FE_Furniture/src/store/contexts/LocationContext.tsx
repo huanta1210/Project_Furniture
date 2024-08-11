@@ -1,15 +1,17 @@
 import { createContext, useEffect, useReducer } from "react";
-import { Action, State } from "../../interfaces/location";
 import { ChildrenProps } from "../../interfaces/Children";
 import locationReducer from "../reducers/locationReducer";
 import { toast } from "react-toastify";
 import instanceProvinces from "../../api/provinces";
+import { Action, Address, State } from "../../interfaces/Location";
+import instance from "../../api";
 
 type LocationContext = {
   locationState: State;
   dispatch: React.Dispatch<Action>;
   fetchDistrict: (selectedProvince: string) => void;
   fetchWard: (selectedDistrict: string) => void;
+  handleCreateAddress: (data: Address) => void;
 };
 
 export const LocationContext = createContext<LocationContext>(
@@ -18,6 +20,7 @@ export const LocationContext = createContext<LocationContext>(
 
 export const LocationProvider = ({ children }: ChildrenProps) => {
   const [locationState, dispatch] = useReducer(locationReducer, {
+    address: [],
     provinces: [],
     districts: [],
     wards: [],
@@ -69,10 +72,30 @@ export const LocationProvider = ({ children }: ChildrenProps) => {
       toast.error("Error fetching award");
     }
   };
+  const handleCreateAddress = async (data: Address) => {
+    try {
+      const res = await instance.post("/address/create-address", data);
+      if (!res) {
+        toast.error("Error creating address");
+      } else {
+        toast.success("Create address successfully");
+        dispatch({ type: "SET_ADDRESS", payload: res.data.datas });
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Error creating address");
+    }
+  };
 
   return (
     <LocationContext.Provider
-      value={{ locationState, dispatch, fetchDistrict, fetchWard }}
+      value={{
+        locationState,
+        dispatch,
+        fetchDistrict,
+        fetchWard,
+        handleCreateAddress,
+      }}
     >
       {children}
     </LocationContext.Provider>

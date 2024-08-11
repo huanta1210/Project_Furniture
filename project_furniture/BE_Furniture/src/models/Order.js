@@ -5,7 +5,12 @@ const orderSchema = new mongoose.Schema(
     orderDate: {
       type: Date,
     },
-    status: {
+
+    total: {
+      type: Number,
+      default: 0,
+    },
+    paymentStatus: {
       type: String,
       enum: [
         "Pending",
@@ -15,12 +20,9 @@ const orderSchema = new mongoose.Schema(
         "Payment Completed",
       ],
       default: "Pending",
+      required: true,
     },
-    total: {
-      type: mongoose.Schema.Types.Decimal128,
-      default: 0,
-    },
-    users: {
+    userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,

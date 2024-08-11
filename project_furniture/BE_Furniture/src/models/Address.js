@@ -7,6 +7,12 @@ const addressSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+    street: {
+      type: String,
+      required: true,
+      trim: true,
+      maxlength: 100,
+    },
     ward: {
       type: String,
       required: true,

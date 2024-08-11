@@ -25,8 +25,18 @@ export interface Ward {
   name: string;
   name_en: string;
 }
+export interface Address {
+  _id?: string | number;
+  userId: string | number;
+  street: string;
+  ward: string;
+  district: string;
+  city: string;
+  country: string;
+}
 
 export type State = {
+  address: Address[];
   provinces: Province[];
   districts: District[];
   wards: Ward[];
@@ -35,6 +45,7 @@ export type State = {
 };
 
 export type Action =
+  | { type: "SET_ADDRESS"; payload: Address[] }
   | { type: "SET_PROVINCES"; payload: Province[] }
   | { type: "SET_DISTRICTS"; payload: District[] }
   | { type: "SET_WARDS"; payload: Ward[] }

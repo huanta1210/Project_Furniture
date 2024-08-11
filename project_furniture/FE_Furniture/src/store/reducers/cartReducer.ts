@@ -20,14 +20,14 @@ const cartReducer = (cartState: State, action: Action): State => {
         );
 
         if (existingItemIndex !== -1) {
-          updatedItems[existingItemIndex].quantity += 1;
+          updatedItems[existingItemIndex].quantity += item.quantity;
           updatedItems[existingItemIndex].totalPrice =
             updatedItems[existingItemIndex].product.price! *
             updatedItems[existingItemIndex].quantity;
         } else {
           updatedItems.push({
             ...item,
-            quantity: 1,
+            quantity: item.quantity,
             totalPrice: item.product.price! * item.quantity,
           });
         }
@@ -92,6 +92,16 @@ const cartReducer = (cartState: State, action: Action): State => {
       return {
         ...cartState,
         cartItems: updatedItems,
+      };
+    }
+    case "UPDATE_ORDER_STATUS": {
+      return {
+        ...cartState,
+        orders: cartState.orders.map((order) =>
+          order._id === action.payload.orderId
+            ? { ...order, status: action.payload.paymentStatus }
+            : order
+        ),
       };
     }
 

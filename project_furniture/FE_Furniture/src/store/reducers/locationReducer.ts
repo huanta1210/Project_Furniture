@@ -1,7 +1,9 @@
-import { State, Action } from "../../interfaces/location";
+import { Action, State } from "../../interfaces/Location";
 
 const locationReducer = (locationState: State, action: Action) => {
   switch (action.type) {
+    case "SET_ADDRESS":
+      return { ...locationState, address: action.payload };
     case "SET_PROVINCES":
       return { ...locationState, provinces: action.payload };
     case "SET_DISTRICTS":

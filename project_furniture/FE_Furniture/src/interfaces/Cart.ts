@@ -7,8 +7,24 @@ export interface CartItem {
   totalPrice?: number;
 }
 
+export interface Order {
+  _id: string | number;
+  orderDate: string;
+  total: number;
+  paymentStatus: [
+    "Pending",
+    "Shipped",
+    "Delivered",
+    "Cancelled",
+    "Payment Completed"
+  ];
+  userId: string;
+  orderItems: [];
+}
+
 export type State = {
   cartItems: CartItem[];
+  orders: Order[];
 };
 
 export type Action =
@@ -27,7 +43,7 @@ export type Action =
       type: "UPDATE_ORDER_STATUS";
       payload: {
         orderId: string | number;
-        status:
+        paymentStatus:
           | "Pending"
           | "Shipped"
           | "Delivered"

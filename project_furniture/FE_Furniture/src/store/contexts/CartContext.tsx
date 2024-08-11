@@ -1,5 +1,11 @@
-import { createContext, useContext, useEffect, useReducer } from "react";
-import { CartItem } from "../../interfaces/Cart";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useReducer,
+} from "react";
+import { CartItem, Order } from "../../interfaces/Cart";
 import { ChildrenProps } from "../../interfaces/Children";
 import cartReducer from "../reducers/cartReducer";
 import { toast } from "react-toastify";
@@ -9,6 +15,7 @@ import { AuthContext } from "./AuthContext";
 type CartContext = {
   cartState: {
     cartItems: CartItem[];
+    orders: Order[];
   };
   quantityCart: number;
   totalPrice: number;
@@ -26,7 +33,10 @@ type CartContext = {
 export const CartContext = createContext<CartContext>({} as CartContext);
 
 export const CartProvider = ({ children }: ChildrenProps) => {
-  const [cartState, dispatch] = useReducer(cartReducer, { cartItems: [] });
+  const [cartState, dispatch] = useReducer(cartReducer, {
+    cartItems: [],
+    orders: [],
+  });
   const { userState } = useContext(AuthContext);
   const userId: string | number = userState.users?.id || "";
 
@@ -34,6 +44,7 @@ export const CartProvider = ({ children }: ChildrenProps) => {
     (quantity, item) => quantity + item.quantity,
     0
   );
+  console.log(cartState.cartItems);
 
   const totalPrice = cartState.cartItems.reduce((acc, item) => {
     if (item.product && item.product.price) {
@@ -49,42 +60,46 @@ export const CartProvider = ({ children }: ChildrenProps) => {
       }
       dispatch({ type: "SET_CART", payload: res.data.datas });
     })();
+  }, [userId]);
+
+  const decreaseQuantity = useCallback((id: string | number) => {
+    dispatch({ type: "DESCREASE_QUANTITY", payload: id });
   }, []);
 
-  const decreaseQuantity = (id: string | number) => {
-    dispatch({ type: "DESCREASE_QUANTITY", payload: id });
-  };
-
-  const increaseQuantity = (id: string | number) => {
+  const increaseQuantity = useCallback((id: string | number) => {
     dispatch({ type: "INCREASE_QUANTITY", payload: id });
-  };
+  }, []);
 
-  const addToCart = async (data: CartItem, quantity = 1) => {
-    try {
-      const newCart = {
-        userId: userState.users?.id,
-        product: data.product,
-        quantity,
-      };
+  const addToCart = useCallback(
+    async (data: CartItem, quantity = 1) => {
+      try {
+        const newCart = {
+          userId: userState.users?.id,
+          product: data.product,
+          quantity,
+        };
 
-      const cart = await instance.post("/cart/create-cart", newCart);
-      const cartItem = cart.data.datas;
+        const cart = await instance.post("/cart/create-cart", newCart);
+        const cartItem = cart.data.datas;
 
-      if (!cartItem) {
-        throw new Error("Invalid cart item data");
+        if (!cartItem) {
+          throw new Error("Invalid cart item data");
+        }
+        toast.success("Add product successfully", {
+          autoClose: 300,
+        });
+        dispatch({
+          type: "ADD_CART",
+          payload: cartItem,
+        });
+        dispatch({ type: "SET_CART", payload: cartItem });
+      } catch (error) {
+        console.log(error);
+        toast.error("Error adding");
       }
-      toast.success("Add product successfully", {
-        autoClose: 300,
-      });
-      dispatch({
-        type: "ADD_CART",
-        payload: cart.data.datas,
-      });
-    } catch (error) {
-      console.log(error);
-      toast.error("Error adding");
-    }
-  };
+    },
+    [userState.users?.id]
+  );
   const handleDeleteCart = async (
     userId: string | number,
     productId: string | number

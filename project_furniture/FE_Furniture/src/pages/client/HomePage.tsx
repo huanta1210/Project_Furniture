@@ -39,7 +39,10 @@ const MainPage: React.FC = () => {
 
         <div className="flex flex-wrap gap-4 justify-between">
           {state.products.slice(0, 4).map((product) => (
-            <div className="product w-56 bg-gray-50 flex-grow-0 flex-shrink-0 w-[calc(25%-1rem)]">
+            <div
+              key={product._id}
+              className="product w-56 bg-gray-50 flex-grow-0 flex-shrink-0 w-[calc(25%-1rem)]"
+            >
               <Link to={`/details/${product._id}`}>
                 <img
                   className="h-64 w-full"

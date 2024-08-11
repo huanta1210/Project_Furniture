@@ -8,17 +8,24 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { formSchema } from "../../../validators/formCheckout";
 
 import PhoneInput from "react-phone-number-input";
+
 import { FormValues } from "../../../interfaces/FormCheckOut";
 import { toast } from "react-toastify";
 import { AuthContext } from "../../../store/contexts/AuthContext";
+import { parsePhoneNumber } from "libphonenumber-js";
 
 const CheckOut = () => {
   const { cartState, totalPrice } = useContext(CartContext);
-  const { locationState, dispatch, fetchDistrict, fetchWard } =
-    useContext(LocationContext);
+  const {
+    locationState,
+    dispatch,
+    fetchDistrict,
+    fetchWard,
+    handleCreateAddress,
+  } = useContext(LocationContext);
   const { userState } = useContext(AuthContext);
   const [active, setActive] = useState<number | null>(null);
-
+  const userId = userState.users?.id || "";
   const {
     control,
     handleSubmit,
@@ -60,6 +67,20 @@ const CheckOut = () => {
       const wardName =
         locationState.wards.find((prov) => prov.id === data.ward)?.full_name ||
         "";
+      const phoneNumber = parsePhoneNumber(data.phone);
+      const countryCode = phoneNumber.country;
+
+      const newAddress = {
+        userId: userId,
+        street: data.address,
+        ward: wardName,
+        district: districtName,
+        city: provinceName,
+        country: countryCode ? "Việt Nam" : "",
+      };
+      if (newAddress) {
+        handleCreateAddress(newAddress);
+      }
 
       const formattedData = {
         ...data,
@@ -401,9 +422,10 @@ const CheckOut = () => {
                     use your Order ID as the payment refernce. You order wil not
                     be shipped until the funds have cleared in our account.
                   </p>
-                  <div
+                  <button
+                    value="banking"
                     onClick={() => handleActive(1)}
-                    className={`flex items-center mb-4 p-2 border border-gray-200 rounded-lg shadow-md cursor-pointer hover:bg-gray-100 ${
+                    className={`flex w-full items-center mb-4 p-2 border border-gray-200 rounded-lg shadow-md cursor-pointer hover:bg-gray-100 ${
                       active === 1 ? "bg-gray-100" : ""
                     }`}
                   >
@@ -419,11 +441,12 @@ const CheckOut = () => {
                     <span className="font-medium text-sm text-gray-700">
                       Direct Bank Transfer
                     </span>
-                  </div>
+                  </button>
 
-                  <div
+                  <button
+                    value="delivery"
                     onClick={() => handleActive(2)}
-                    className={`flex items-center mb-4 p-2 border border-gray-200 rounded-lg shadow-md cursor-pointer hover:bg-gray-100 ${
+                    className={`flex w-full items-center mb-4 p-2 border border-gray-200 rounded-lg shadow-md cursor-pointer hover:bg-gray-100 ${
                       active === 2 ? "bg-gray-100" : ""
                     }`}
                   >
@@ -439,7 +462,7 @@ const CheckOut = () => {
                     <span className="font-medium text-sm text-gray-700">
                       Cash On Delivery
                     </span>
-                  </div>
+                  </button>
                 </div>
 
                 <div className="mt-4">
