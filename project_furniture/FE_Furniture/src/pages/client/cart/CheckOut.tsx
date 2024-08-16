@@ -15,7 +15,8 @@ import { AuthContext } from "../../../store/contexts/AuthContext";
 import { parsePhoneNumber } from "libphonenumber-js";
 
 const CheckOut = () => {
-  const { cartState, totalPrice } = useContext(CartContext);
+  const { cartState, totalPrice, placeOrder, handleDeleteAllCart, orderItem } =
+    useContext(CartContext);
   const {
     locationState,
     dispatch,
@@ -25,13 +26,13 @@ const CheckOut = () => {
   } = useContext(LocationContext);
   const { userState } = useContext(AuthContext);
   const [active, setActive] = useState<number | null>(null);
-  const userId = userState.users?.id || "";
+  const userId = userState.users?._id || "";
   const {
     control,
     handleSubmit,
     setValue,
-    formState: { errors },
     reset,
+    formState: { errors },
   } = useForm<FormValues>({
     resolver: zodResolver(formSchema),
   });
@@ -42,7 +43,7 @@ const CheckOut = () => {
       setValue("phone", userState.users?.phone || "");
       setValue("email", userState.users?.email || "");
     }
-  }, []);
+  }, [setValue, userState]);
 
   useEffect(() => {
     if (locationState.selectedProvince) {
@@ -61,6 +62,7 @@ const CheckOut = () => {
       const provinceName =
         locationState.provinces.find((prov) => prov.id === data.province)
           ?.full_name || "";
+
       const districtName =
         locationState.districts.find((prov) => prov.id === data.district)
           ?.full_name || "";
@@ -88,6 +90,7 @@ const CheckOut = () => {
         district: districtName,
         ward: wardName,
       };
+      handleCreateOrder();
       reset();
       console.log(formattedData);
     } catch (error) {
@@ -99,6 +102,30 @@ const CheckOut = () => {
   const handleActive = (id: number) => {
     setActive(id);
   };
+  const handleCreateOrder = async () => {
+    const orderItems: string[] = cartState.cartItems
+      .map((item) => item._id)
+      .filter((id): id is string => id !== undefined);
+
+    placeOrder({
+      orderDate: new Date().toDateString(),
+      total: totalPrice,
+      paymentStatus: active === 2 ? "Payment Completed" : "Pending",
+      userId,
+      orderItems,
+    });
+    handleDeleteAllCart(userId);
+  };
+  useEffect(() => {
+    cartState.cartItems.map((item) => {
+      orderItem({
+        quantity: item.quantity,
+        price: item.totalPrice!,
+        productId: item.product._id,
+        orderId: cartState.orders[0]._id!,
+      });
+    });
+  }, [cartState.orders, cartState.cartItems, orderItem]);
 
   return (
     <>
@@ -423,11 +450,11 @@ const CheckOut = () => {
                     be shipped until the funds have cleared in our account.
                   </p>
                   <button
-                    value="banking"
                     onClick={() => handleActive(1)}
                     className={`flex w-full items-center mb-4 p-2 border border-gray-200 rounded-lg shadow-md cursor-pointer hover:bg-gray-100 ${
                       active === 1 ? "bg-gray-100" : ""
                     }`}
+                    type="button"
                   >
                     <div className="h-8 w-8 border border-gray-300 rounded-full flex items-center justify-center bg-white mr-3 ">
                       <svg
@@ -444,11 +471,11 @@ const CheckOut = () => {
                   </button>
 
                   <button
-                    value="delivery"
                     onClick={() => handleActive(2)}
                     className={`flex w-full items-center mb-4 p-2 border border-gray-200 rounded-lg shadow-md cursor-pointer hover:bg-gray-100 ${
                       active === 2 ? "bg-gray-100" : ""
                     }`}
+                    type="button"
                   >
                     <div className="h-8 w-8 border border-gray-300 rounded-full flex items-center justify-center bg-white mr-3">
                       <svg

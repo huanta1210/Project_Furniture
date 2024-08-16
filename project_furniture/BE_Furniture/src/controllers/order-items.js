@@ -5,8 +5,8 @@ import Product from "../models/Product";
 export const getAllOrderItems = async (req, res) => {
   try {
     const orderItems = await OrderItem.find({})
-      .populate("products")
-      .populate("orders");
+      .populate("productId")
+      .populate("orderId");
 
     if (!orderItems || orderItems.length === 0) {
       return res.status(404).json({
@@ -29,8 +29,8 @@ export const getAllOrderItems = async (req, res) => {
 export const getDetailOrderItems = async (req, res) => {
   try {
     const orderItems = await OrderItem.findById(req.params.id)
-      .populate("products")
-      .populate("orders");
+      .populate("productId")
+      .populate("orderId");
 
     if (!orderItems) {
       return res.status(404).json({
@@ -115,32 +115,27 @@ export const updateOrderItems = async (req, res) => {
       });
     }
 
-    const newOrder = await Order.findByIdAndUpdate(
-      orderItems.orders,
-      { $addToSet: { orderItems: orderItems._id } },
-      { new: true, useFindAndModify: false }
-    );
+    const order = await Order.findById(orderItems.orderId);
+    if (order) {
+      const total = await OrderItem.aggregate([
+        { $match: { orderId: order._id } },
+        {
+          $group: {
+            _id: "$orderId",
+            total: { $sum: { $multiply: ["$price", "$quantity"] } },
+          },
+        },
+      ]);
 
-    if (!newOrder) {
-      return res.status(403).json({
-        message: "Update order failed",
-      });
-    }
-
-    const newProduct = await Product.findByIdAndUpdate(
-      orderItems.products,
-      { $addToSet: { orderItems: orderItems._id } },
-      { new: true, useFindAndModify: false }
-    );
-
-    if (!newProduct) {
-      return res.status(403).json({
-        message: "Update order failed",
-      });
+      await Order.findByIdAndUpdate(
+        orderItem.orderId,
+        { total: total[0]?.total || 0 },
+        { new: true }
+      );
     }
 
     return res.status(200).json({
-      message: "OrderItems updated successfully",
+      message: "Order item updated successfully",
       datas: orderItems,
     });
   } catch (error) {
@@ -151,36 +146,31 @@ export const updateOrderItems = async (req, res) => {
 };
 export const deleteOrderItems = async (req, res) => {
   try {
-    const orderItems = await OrderItem.findByIdAndDelete(req.params.id);
+    const orderItem = await OrderItem.findByIdAndDelete(req.params.id);
 
-    if (!orderItems) {
-      return res.status(404).json({
-        message: "Delete orderItems unsuccessful",
-      });
+    if (!orderItem) {
+      return res
+        .status(404)
+        .json({ message: "Delete order item unsuccessful" });
     }
 
-    const newOrder = await Order.findByIdAndUpdate(
-      orderItems.orders,
-      { $pull: { orderItems: orderItems._id } },
-      { new: true, useFindAndModify: false }
-    );
+    const order = await Order.findById(orderItem.orderId);
+    if (order) {
+      const total = await OrderItem.aggregate([
+        { $match: { orderId: order._id } },
+        {
+          $group: {
+            _id: "$orderId",
+            total: { $sum: { $multiply: ["$price", "$quantity"] } },
+          },
+        },
+      ]);
 
-    if (!newOrder) {
-      return res.status(403).json({
-        message: "Update order failed",
-      });
-    }
-
-    const newProduct = await Product.findByIdAndUpdate(
-      orderItems.products,
-      { $pull: { orderItems: orderItems._id } },
-      { new: true, useFindAndModify: false }
-    );
-
-    if (!newProduct) {
-      return res.status(403).json({
-        message: "Update order failed",
-      });
+      await Order.findByIdAndUpdate(
+        orderItem.orderId,
+        { total: total[0]?.total || 0 },
+        { new: true }
+      );
     }
 
     return res.status(200).json({

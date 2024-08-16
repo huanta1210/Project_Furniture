@@ -2,8 +2,9 @@ import { useContext } from "react";
 import Footer from "../../../components/Footer";
 import Header from "../../../components/Header";
 import { CartContext } from "../../../store/contexts/CartContext";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../../store/contexts/AuthContext";
+import { toast } from "react-toastify";
 
 const Cart = () => {
   const {
@@ -14,7 +15,21 @@ const Cart = () => {
     handleDeleteCart,
   } = useContext(CartContext);
   const { userState } = useContext(AuthContext);
-  const userId: string | number = userState.users?.id || "";
+  const userId: string | number = userState.users?._id || "";
+  const navigate = useNavigate();
+
+  const handleCheckOut = () => {
+    if (cartState.cartItems.length === 0) {
+      toast.error("Your cart is empty !");
+      return;
+    }
+
+    if (!userState.token) {
+      toast.error("Please login in before processing to check out !");
+      return;
+    }
+    navigate("/check-out");
+  };
 
   return (
     <>
@@ -61,7 +76,10 @@ const Cart = () => {
                       </tr>
                     </thead>
                     {cartState.cartItems.map((item) => (
-                      <tbody className="bg-white divide-y divide-gray-200">
+                      <tbody
+                        key={item._id}
+                        className="bg-white divide-y divide-gray-200"
+                      >
                         <tr>
                           <td className="pr-6 py-4 whitespace-no-wrap">
                             <div className="flex items-center">
@@ -143,14 +161,13 @@ const Cart = () => {
                     </p>
                   </div>
 
-                  <Link to={"/check-out"}>
-                    <button
-                      className="border-2 py-2 px-16 ml-2 my-6 border-black rounded text-black hover:bg-black hover:text-white transition-all duration-1000 font-semibold "
-                      type="button"
-                    >
-                      CheckOut
-                    </button>
-                  </Link>
+                  <button
+                    onClick={handleCheckOut}
+                    className="border-2 py-2 px-16 ml-2 my-6 border-black rounded text-black hover:bg-black hover:text-white transition-all duration-1000 font-semibold "
+                    type="button"
+                  >
+                    CheckOut
+                  </button>
                 </div>
               </div>
             </div>

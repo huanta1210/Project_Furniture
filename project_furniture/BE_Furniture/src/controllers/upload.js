@@ -47,7 +47,6 @@ export const deleteImages = async (req, res) => {
       });
     }
     const result = await cloudinary.uploader.destroy(publicId);
-    console.log(result);
 
     if (result.result !== "ok") {
       return res.status(404).json({

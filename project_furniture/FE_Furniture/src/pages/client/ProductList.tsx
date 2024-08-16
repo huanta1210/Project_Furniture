@@ -6,15 +6,17 @@ import Footer from "../../components/Footer";
 import { Link } from "react-router-dom";
 import FilterCategory from "../../components/FilterCategory";
 import { CategoriesContext } from "../../store/contexts/CategoriesContext";
+import { CartContext } from "../../store/contexts/CartContext";
 
 const ProductList = () => {
   const { state } = useContext(ProductContext);
   const { category, filterProductsByCategory } = useContext(CategoriesContext);
+  const { addToCart } = useContext(CartContext);
   useEffect(() => {
     if (category.selectedCategory) {
       filterProductsByCategory(category.selectedCategory._id);
     }
-  }, []);
+  }, [category.selectedCategory, filterProductsByCategory]);
 
   const [currentPages, setCurrentPages] = useState(1);
   const productPage = 8;
@@ -85,7 +87,23 @@ const ProductList = () => {
                   >
                     <i className="fa-regular fa-heart text-black hover:text-white"></i>
                   </button>
-                  <button className="mb-2 border border-black font-semibold bg-white rounded text-black py-2 px-10 ml-2 whitespace-nowrap hover:bg-black transition-all duration-1000 hover:text-white ">
+                  <button
+                    onClick={() =>
+                      addToCart({
+                        product: {
+                          _id: product._id,
+                          productName: product.productName,
+                          price: product.price,
+                          description: product.description,
+                          stock: product.stock,
+                          imageProduct: product.imageProduct,
+                          categoriesId: product.categoriesId,
+                        },
+                        quantity: 1,
+                      })
+                    }
+                    className="mb-2 border border-black font-semibold bg-white rounded text-black py-2 px-10 ml-2 whitespace-nowrap hover:bg-black transition-all duration-1000 hover:text-white "
+                  >
                     Add to cart
                   </button>
                 </div>

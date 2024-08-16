@@ -5,17 +5,19 @@ import {
   useEffect,
   useReducer,
 } from "react";
-import { CartItem, Order } from "../../interfaces/Cart";
+import { CartItem, Order, OrderItem } from "../../interfaces/Cart";
 import { ChildrenProps } from "../../interfaces/Children";
 import cartReducer from "../reducers/cartReducer";
 import { toast } from "react-toastify";
 import instance from "../../api";
 import { AuthContext } from "./AuthContext";
+import { useNavigate } from "react-router";
 
 type CartContext = {
   cartState: {
     cartItems: CartItem[];
     orders: Order[];
+    orderitems: OrderItem[];
   };
   quantityCart: number;
   totalPrice: number;
@@ -28,23 +30,28 @@ type CartContext = {
   ) => void;
   updateCart: (productId: string | number, quantity: number) => void;
   handleDeleteAllCart: (userId: string | number) => void;
+  placeOrder: (order: Order) => void;
+  orderItem: (data: OrderItem) => void;
 };
 
 export const CartContext = createContext<CartContext>({} as CartContext);
 
 export const CartProvider = ({ children }: ChildrenProps) => {
+  const navigate = useNavigate();
   const [cartState, dispatch] = useReducer(cartReducer, {
     cartItems: [],
     orders: [],
+    orderitems: [],
   });
   const { userState } = useContext(AuthContext);
-  const userId: string | number = userState.users?.id || "";
+  // const { orderItem } = useContext(CartContext);
+
+  const userId: string | number = userState.users?._id || "";
 
   const quantityCart = cartState.cartItems.reduce(
     (quantity, item) => quantity + item.quantity,
     0
   );
-  console.log(cartState.cartItems);
 
   const totalPrice = cartState.cartItems.reduce((acc, item) => {
     if (item.product && item.product.price) {
@@ -54,11 +61,16 @@ export const CartProvider = ({ children }: ChildrenProps) => {
   }, 0);
   useEffect(() => {
     (async () => {
-      const res = await instance.get(`/cart/${userId}`);
-      if (!res) {
+      try {
+        const res = await instance.get(`/cart/${userId}`);
+        if (!res) {
+          toast.error("Get cart failed", { autoClose: 300 });
+        }
+        dispatch({ type: "SET_CART", payload: res.data.datas });
+      } catch (error) {
+        console.log(error);
         toast.error("Get cart failed");
       }
-      dispatch({ type: "SET_CART", payload: res.data.datas });
     })();
   }, [userId]);
 
@@ -74,7 +86,7 @@ export const CartProvider = ({ children }: ChildrenProps) => {
     async (data: CartItem, quantity = 1) => {
       try {
         const newCart = {
-          userId: userState.users?.id,
+          userId: userState.users?._id,
           product: data.product,
           quantity,
         };
@@ -98,7 +110,7 @@ export const CartProvider = ({ children }: ChildrenProps) => {
         toast.error("Error adding");
       }
     },
-    [userState.users?.id]
+    [userState.users?._id]
   );
   const handleDeleteCart = async (
     userId: string | number,
@@ -145,15 +157,54 @@ export const CartProvider = ({ children }: ChildrenProps) => {
       const res = await instance.delete(`/cart/delete-all-cart/${userId}`);
 
       if (!res) {
-        toast.error("Error deleting all cart");
+        toast.error("Data delete failed");
+      } else {
+        dispatch({ type: "DELETE_ALL_CART" });
       }
-
-      dispatch({ type: "DELETE_ALL_CART" });
     } catch (error) {
       console.log(error);
       toast.error("Error deleting all cart");
     }
   };
+  const placeOrder = useCallback(
+    async (order: Order) => {
+      try {
+        const res = await instance.post("/order/create-order", order);
+        if (!res) {
+          toast.error("Error creating order");
+        }
+        // orderItem();
+
+        dispatch({ type: "PLACE_ORDER", payload: res.data.datas });
+
+        toast.success("Order created", {
+          autoClose: 500,
+        });
+        setTimeout(() => {
+          navigate("/products");
+        }, 500);
+      } catch (error) {
+        console.log(error);
+        toast.error("Error post order");
+      }
+    },
+    [navigate]
+  );
+
+  const orderItem = useCallback(async (data: OrderItem) => {
+    try {
+      const res = await instance.post("/order-items/create-orderItems", data);
+
+      if (!res) {
+        toast.error("Error creating orderItem");
+      }
+      dispatch({ type: "SET_ORDER_ITEM", payload: res.data.datas });
+    } catch (error) {
+      console.log(error);
+      toast.error("Error post orderItem");
+    }
+  }, []);
+
   return (
     <CartContext.Provider
       value={{
@@ -166,6 +217,8 @@ export const CartProvider = ({ children }: ChildrenProps) => {
         decreaseQuantity,
         addToCart,
         handleDeleteCart,
+        placeOrder,
+        orderItem,
       }}
     >
       {children}

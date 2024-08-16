@@ -179,3 +179,29 @@ export const deleteProduct = async (req, res) => {
     });
   }
 };
+
+export const updateProductStock = async (req, res) => {
+  try {
+    console.log("id product", req.params.productId);
+    console.log("quantity", req.body.quantity);
+
+    const product = await Product.findByIdAndUpdate(
+      req.params.productId,
+      { $inc: { stock: --quantity } },
+      { new: true, useFindAndModify: false }
+    );
+    if (!product) {
+      return res.status(404).json({
+        message: "Product not found",
+      });
+    }
+    return res.status(200).json({
+      message: "Product update successfully",
+      datas: product,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};

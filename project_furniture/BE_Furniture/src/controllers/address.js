@@ -56,7 +56,6 @@ export const createAddress = async (req, res) => {
       });
     } else {
       const address = await Address.create(req.body);
-      console.log(address);
 
       if (!address) {
         return res.status(403).json({
@@ -70,7 +69,6 @@ export const createAddress = async (req, res) => {
         },
         { new: true, useFindAndModify: false }
       );
-      console.log(address._id);
 
       if (!newUser) {
         return res.status(404).json({
@@ -98,7 +96,6 @@ export const updateAddress = async (req, res) => {
 
     if (error) {
       const errorMessage = error.details.map((err) => err.message);
-      //   console.log(errorMessage);
       return res.status(400).json({
         message: errorMessage,
       });

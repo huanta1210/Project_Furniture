@@ -11,7 +11,7 @@ export const getAllOrders = async (req, res) => {
           path: "productId",
         },
       })
-      .populate("users");
+      .populate("userId");
 
     if (order.length === 0) {
       return res.status(403).json({
@@ -60,8 +60,8 @@ export const getDetailOrders = async (req, res) => {
 
 export const createOrders = async (req, res) => {
   try {
-    if (!req.body.status) {
-      req.body.status = "Pending";
+    if (!req.body.paymentStatus) {
+      req.body.paymentStatus = "Pending";
     }
     const order = await Order.create(req.body);
 
@@ -71,22 +71,15 @@ export const createOrders = async (req, res) => {
       });
     }
     const newUser = await User.findByIdAndUpdate(
-      order.users,
+      order.userId,
       { $addToSet: { orders: order._id } },
       { new: true }
     );
+
     if (!newUser) {
       return res.status(403).json({
         message: "Update user unsuccessful",
       });
-    }
-
-    const orderItems = req.body.orderItems;
-    if (orderItems && orderItems.length > 0) {
-      await OrderItem.updateMany(
-        { _id: { $in: orderItems } },
-        { $set: { orderId: order._id } }
-      );
     }
 
     return res.status(200).json({
@@ -112,7 +105,7 @@ export const updateOrders = async (req, res) => {
       });
     }
     const newUser = await User.findByIdAndUpdate(
-      order.users,
+      order.userId,
       { $addToSet: { orders: order._id } },
       { new: true, useFindAndModify: false }
     );
@@ -148,9 +141,9 @@ export const deleteOrders = async (req, res) => {
     );
 
     const newUser = await User.findByIdAndUpdate(
-      order.users,
+      order.userId,
       { $pull: { orders: order._id } },
-      { new: true, useFindAndModify: false }
+      { new: true }
     );
 
     if (!newUser) {

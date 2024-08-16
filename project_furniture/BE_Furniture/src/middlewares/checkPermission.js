@@ -29,7 +29,6 @@ export const checkPermission = async (req, res, next) => {
         message: "You are not allowed to do this",
       });
     }
-
     next();
   } catch (error) {
     return res.json({

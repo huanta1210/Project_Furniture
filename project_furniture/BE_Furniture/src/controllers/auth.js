@@ -32,7 +32,6 @@ export const getAuth = async (req, res) => {
 export const registerUser = async (req, res) => {
   try {
     const { error } = userValidator.validate(req.body, { abortEarly: true });
-    console.log(req.body);
 
     if (error) {
       const errorMessage = error.details.map((err) => err.message);

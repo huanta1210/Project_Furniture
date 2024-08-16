@@ -32,7 +32,6 @@ export const LocationProvider = ({ children }: ChildrenProps) => {
     (async () => {
       try {
         const res = await instanceProvinces.get("/1/0.htm");
-
         if (!res) {
           toast.error("Provinces not found");
         } else {
@@ -50,9 +49,8 @@ export const LocationProvider = ({ children }: ChildrenProps) => {
       const res = await instanceProvinces.get(`/2/${selectedProvince}.htm`);
       if (!res) {
         toast.error("District not found");
-      } else {
-        dispatch({ type: "SET_DISTRICTS", payload: res.data.data });
       }
+      dispatch({ type: "SET_DISTRICTS", payload: res.data.data });
     } catch (error) {
       console.log(error);
       toast.error("Error fetchingDistrict");
@@ -64,9 +62,8 @@ export const LocationProvider = ({ children }: ChildrenProps) => {
       const res = await instanceProvinces.get(`/3/${selectedDistrict}.htm`);
       if (!res) {
         toast.error("District not found");
-      } else {
-        dispatch({ type: "SET_WARDS", payload: res.data.data });
       }
+      dispatch({ type: "SET_WARDS", payload: res.data.data });
     } catch (error) {
       console.log(error);
       toast.error("Error fetching award");
@@ -78,7 +75,6 @@ export const LocationProvider = ({ children }: ChildrenProps) => {
       if (!res) {
         toast.error("Error creating address");
       } else {
-        toast.success("Create address successfully");
         dispatch({ type: "SET_ADDRESS", payload: res.data.datas });
       }
     } catch (error) {

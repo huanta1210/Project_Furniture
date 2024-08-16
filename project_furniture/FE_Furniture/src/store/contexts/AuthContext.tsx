@@ -1,4 +1,4 @@
-import { createContext, useReducer } from "react";
+import { createContext, useEffect, useReducer } from "react";
 import { ChildrenProps } from "../../interfaces/Children";
 import authReducer from "../reducers/authReducer";
 import { JWTDecode, State, User } from "../../interfaces/User";
@@ -23,6 +23,9 @@ export const AuthContext = createContext<AuthContext>({} as AuthContext);
 export const AuthProvider = ({ children }: ChildrenProps) => {
   const [userState, dispatch] = useReducer(authReducer, initialState);
   const navigate = useNavigate();
+  useEffect(() => {
+    dispatch({ type: "CHECK_TOKEN" });
+  }, []);
 
   const loginCustom = async (dataLogin: User) => {
     try {
@@ -38,6 +41,7 @@ export const AuthProvider = ({ children }: ChildrenProps) => {
             users: data.user,
           },
         });
+        toast.success("Login Success", { autoClose: 200 });
         if (data.user.role === "admin") {
           navigate("/admin/dashboard");
         } else {

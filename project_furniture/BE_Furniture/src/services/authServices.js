@@ -7,7 +7,6 @@ dotenv.config();
 export const loginSuccessService = async (id) => {
   try {
     const user = await User.findOne({ _id: id });
-    console.log(user);
 
     if (!user) {
       throw new Error("User not found");

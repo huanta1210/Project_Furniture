@@ -40,7 +40,7 @@ routerAuth.get(
     if (accessToken) {
       const token = jwt.sign(
         {
-          id: req.user._id,
+          _id: req.user._id,
           role: req.user.role,
           userName: req.user.userName,
           email: req.user.email,
@@ -82,7 +82,7 @@ routerAuth.get(
     if (accessToken) {
       const token = jwt.sign(
         {
-          id: req.user._id,
+          _id: req.user._id,
           role: req.user.role,
           userName: req.user.userName,
           email: req.user.email,

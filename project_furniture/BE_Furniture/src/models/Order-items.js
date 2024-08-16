@@ -8,13 +8,12 @@ const orderItemsSchema = new mongoose.Schema(
       required: true,
     },
     price: {
-      type: mongoose.Schema.Types.Decimal128,
+      type: Number,
       required: true,
     },
     orderId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Order",
-      required: true,
     },
     productId: {
       type: mongoose.Schema.Types.ObjectId,

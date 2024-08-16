@@ -95,13 +95,44 @@ const cartReducer = (cartState: State, action: Action): State => {
       };
     }
     case "UPDATE_ORDER_STATUS": {
+      const { orderId, paymentStatus } = action.payload;
       return {
         ...cartState,
         orders: cartState.orders.map((order) =>
-          order._id === action.payload.orderId
-            ? { ...order, status: action.payload.paymentStatus }
+          order._id === orderId
+            ? { ...order, paymentStatus: paymentStatus }
             : order
         ),
+      };
+    }
+    case "PLACE_ORDER": {
+      return {
+        ...cartState,
+        orders: [...cartState.orders, action.payload],
+        cartItems: [],
+      };
+    }
+    case "DESCREASE_QUANTITY_UPDATE": {
+      const updateCartItemStock = cartState.cartItems.map((item) =>
+        item.product._id === action.payload.productId
+          ? {
+              ...item,
+              product: {
+                ...item.product,
+                stock: item.product.stock! - action.payload.quantity,
+              },
+            }
+          : item
+      );
+      return {
+        ...cartState,
+        cartItems: updateCartItemStock,
+      };
+    }
+    case "SET_ORDER_ITEM": {
+      return {
+        ...cartState,
+        orderitems: [...cartState.orderitems, action.payload],
       };
     }
 
