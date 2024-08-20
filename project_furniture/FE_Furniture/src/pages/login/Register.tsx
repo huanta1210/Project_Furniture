@@ -37,7 +37,6 @@ const MainRegister: React.FC = () => {
   const onSubmit: SubmitHandler<User> = async (data) => {
     try {
       const res = await instance.post("/auth/register", data);
-      console.log(res);
 
       if (!res) {
         toast.error("The data returned is incorrect");

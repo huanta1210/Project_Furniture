@@ -31,7 +31,6 @@ type CartContext = {
   updateCart: (productId: string | number, quantity: number) => void;
   handleDeleteAllCart: (userId: string | number) => void;
   placeOrder: (order: Order) => void;
-  orderItem: (data: OrderItem) => void;
 };
 
 export const CartContext = createContext<CartContext>({} as CartContext);
@@ -170,16 +169,31 @@ export const CartProvider = ({ children }: ChildrenProps) => {
     async (order: Order) => {
       try {
         const res = await instance.post("/order/create-order", order);
-        if (!res) {
+        if (!res || !res.data || !res.data.datas) {
           toast.error("Error creating order");
+          return;
         }
-        // orderItem();
 
-        dispatch({ type: "PLACE_ORDER", payload: res.data.datas });
+        const newOrder = res.data.datas;
+        const orderId = newOrder._id;
+
+        // Gửi yêu cầu tạo orderItems cho các mặt hàng trong giỏ hàng
+        await Promise.all(
+          cartState.cartItems.map((item) =>
+            orderItem({
+              quantity: item.quantity,
+              price: item.totalPrice!,
+              productId: item.product._id,
+              orderId: orderId!,
+            })
+          )
+        );
+        dispatch({ type: "PLACE_ORDER", payload: newOrder });
 
         toast.success("Order created", {
           autoClose: 500,
         });
+
         setTimeout(() => {
           navigate("/products");
         }, 500);
@@ -196,12 +210,14 @@ export const CartProvider = ({ children }: ChildrenProps) => {
       const res = await instance.post("/order-items/create-orderItems", data);
 
       if (!res) {
-        toast.error("Error creating orderItem");
+        toast.error("Error creating orderItem", { autoClose: 200 });
       }
       dispatch({ type: "SET_ORDER_ITEM", payload: res.data.datas });
     } catch (error) {
       console.log(error);
-      toast.error("Error post orderItem");
+      toast.error("Error post orderItem", {
+        autoClose: 200,
+      });
     }
   }, []);
 
@@ -218,7 +234,6 @@ export const CartProvider = ({ children }: ChildrenProps) => {
         addToCart,
         handleDeleteCart,
         placeOrder,
-        orderItem,
       }}
     >
       {children}

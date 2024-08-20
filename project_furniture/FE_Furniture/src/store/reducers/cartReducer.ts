@@ -109,7 +109,6 @@ const cartReducer = (cartState: State, action: Action): State => {
       return {
         ...cartState,
         orders: [...cartState.orders, action.payload],
-        cartItems: [],
       };
     }
     case "DESCREASE_QUANTITY_UPDATE": {

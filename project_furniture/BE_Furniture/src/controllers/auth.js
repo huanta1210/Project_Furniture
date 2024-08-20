@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 import bcryptjs from "bcryptjs";
 import dotnev from "dotenv";
 import { loginSuccessService } from "../services/authServices";
+import { sendConfirmationEmail } from "../configs/send-mail";
 
 dotnev.config();
 const SECRET_KEY = process.env.JWT_SECRET;
@@ -59,6 +60,7 @@ export const registerUser = async (req, res) => {
       const user = await User.create({ ...req.body, password: hashPassword });
 
       user.password = undefined;
+      sendConfirmationEmail(req.body.email);
 
       return res.status(200).json({
         message: "Register successful",

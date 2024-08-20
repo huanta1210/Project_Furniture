@@ -1,6 +1,7 @@
 import Order from "../models/Order";
 import OrderItem from "../models/Order-items";
 import User from "../models/User";
+import { sendConfirmationEmailOrder } from "../configs/send-mail";
 
 export const getAllOrders = async (req, res) => {
   try {
@@ -81,6 +82,7 @@ export const createOrders = async (req, res) => {
         message: "Update user unsuccessful",
       });
     }
+    sendConfirmationEmailOrder(order);
 
     return res.status(200).json({
       message: "Create order successful",

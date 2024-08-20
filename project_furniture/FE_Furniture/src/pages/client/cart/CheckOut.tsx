@@ -15,7 +15,7 @@ import { AuthContext } from "../../../store/contexts/AuthContext";
 import { parsePhoneNumber } from "libphonenumber-js";
 
 const CheckOut = () => {
-  const { cartState, totalPrice, placeOrder, handleDeleteAllCart, orderItem } =
+  const { cartState, totalPrice, placeOrder, handleDeleteAllCart } =
     useContext(CartContext);
   const {
     locationState,
@@ -57,7 +57,7 @@ const CheckOut = () => {
     }
   }, [locationState.selectedDistrict]);
   // handle event
-  const onSubmit = (data: FormValues) => {
+  const onSubmit = async (data: FormValues) => {
     try {
       const provinceName =
         locationState.provinces.find((prov) => prov.id === data.province)
@@ -83,16 +83,9 @@ const CheckOut = () => {
       if (newAddress) {
         handleCreateAddress(newAddress);
       }
+      await handleCreateOrder();
 
-      const formattedData = {
-        ...data,
-        province: provinceName,
-        district: districtName,
-        ward: wardName,
-      };
-      handleCreateOrder();
       reset();
-      console.log(formattedData);
     } catch (error) {
       console.log(error);
       toast.error("Error failed");
@@ -103,7 +96,7 @@ const CheckOut = () => {
     setActive(id);
   };
   const handleCreateOrder = async () => {
-    const orderItems: string[] = cartState.cartItems
+    const orderItems: string[] = cartState.orderitems
       .map((item) => item._id)
       .filter((id): id is string => id !== undefined);
 
@@ -114,18 +107,9 @@ const CheckOut = () => {
       userId,
       orderItems,
     });
+
     handleDeleteAllCart(userId);
   };
-  useEffect(() => {
-    cartState.cartItems.map((item) => {
-      orderItem({
-        quantity: item.quantity,
-        price: item.totalPrice!,
-        productId: item.product._id,
-        orderId: cartState.orders[0]._id!,
-      });
-    });
-  }, [cartState.orders, cartState.cartItems, orderItem]);
 
   return (
     <>
