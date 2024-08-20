@@ -2,6 +2,7 @@ import Order from "../models/Order";
 import OrderItem from "../models/Order-items";
 import User from "../models/User";
 import { sendConfirmationEmailOrder } from "../configs/send-mail";
+import Address from "../models/Address";
 
 export const getAllOrders = async (req, res) => {
   try {
@@ -76,10 +77,20 @@ export const createOrders = async (req, res) => {
       { $addToSet: { orders: order._id } },
       { new: true }
     );
-
     if (!newUser) {
       return res.status(403).json({
         message: "Update user unsuccessful",
+      });
+    }
+
+    const newOrder = await Address.findByIdAndUpdate(
+      order.addressId,
+      { $addToSet: { orders: order._id } },
+      { new: true }
+    );
+    if (!newOrder) {
+      return res.status(403).json({
+        message: "Update order unsuccessful",
       });
     }
     sendConfirmationEmailOrder(order);

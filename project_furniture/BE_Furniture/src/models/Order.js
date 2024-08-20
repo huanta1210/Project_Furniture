@@ -4,7 +4,7 @@ const orderSchema = new mongoose.Schema(
   {
     orderDate: {
       type: Date,
-      default: Date.now(),
+      default: Date.now().toLocaleString(),
     },
 
     total: {
@@ -26,6 +26,11 @@ const orderSchema = new mongoose.Schema(
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
+      required: true,
+    },
+    addressId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Address",
       required: true,
     },
     orderItems: [

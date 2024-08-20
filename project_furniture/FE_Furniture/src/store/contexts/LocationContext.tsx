@@ -74,9 +74,9 @@ export const LocationProvider = ({ children }: ChildrenProps) => {
       const res = await instance.post("/address/create-address", data);
       if (!res) {
         toast.error("Error creating address");
-      } else {
-        dispatch({ type: "SET_ADDRESS", payload: res.data.datas });
       }
+      dispatch({ type: "SET_ADDRESS", payload: res.data.datas });
+      return res.data.datas._id;
     } catch (error) {
       console.log(error);
       toast.error("Error creating address");

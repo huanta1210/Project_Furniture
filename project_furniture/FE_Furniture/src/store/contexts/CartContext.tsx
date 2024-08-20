@@ -177,16 +177,13 @@ export const CartProvider = ({ children }: ChildrenProps) => {
         const newOrder = res.data.datas;
         const orderId = newOrder._id;
 
-        // Gửi yêu cầu tạo orderItems cho các mặt hàng trong giỏ hàng
-        await Promise.all(
-          cartState.cartItems.map((item) =>
-            orderItem({
-              quantity: item.quantity,
-              price: item.totalPrice!,
-              productId: item.product._id,
-              orderId: orderId!,
-            })
-          )
+        cartState.cartItems.map((item) =>
+          orderItem({
+            quantity: item.quantity,
+            price: item.totalPrice!,
+            productId: item.product._id,
+            orderId: orderId!,
+          })
         );
         dispatch({ type: "PLACE_ORDER", payload: newOrder });
 

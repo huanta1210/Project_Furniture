@@ -15,7 +15,7 @@ import { AuthContext } from "../../../store/contexts/AuthContext";
 import { parsePhoneNumber } from "libphonenumber-js";
 
 const CheckOut = () => {
-  const { cartState, totalPrice, placeOrder, handleDeleteAllCart } =
+  const { cartState, totalPrice, handleDeleteAllCart, placeOrder } =
     useContext(CartContext);
   const {
     locationState,
@@ -24,8 +24,8 @@ const CheckOut = () => {
     fetchWard,
     handleCreateAddress,
   } = useContext(LocationContext);
-  const { userState } = useContext(AuthContext);
   const [active, setActive] = useState<number | null>(null);
+  const { userState } = useContext(AuthContext);
   const userId = userState.users?._id || "";
   const {
     control,
@@ -80,11 +80,11 @@ const CheckOut = () => {
         city: provinceName,
         country: countryCode ? "Việt Nam" : "",
       };
+      let addressId;
       if (newAddress) {
-        handleCreateAddress(newAddress);
+        addressId = await handleCreateAddress(newAddress);
       }
-      await handleCreateOrder();
-
+      handleCreateOrder(addressId);
       reset();
     } catch (error) {
       console.log(error);
@@ -95,17 +95,20 @@ const CheckOut = () => {
   const handleActive = (id: number) => {
     setActive(id);
   };
-  const handleCreateOrder = async () => {
+  const handleCreateOrder = async (addressId: unknown) => {
     const orderItems: string[] = cartState.orderitems
       .map((item) => item._id)
       .filter((id): id is string => id !== undefined);
 
     placeOrder({
-      orderDate: new Date().toDateString(),
+      orderDate: new Date().toLocaleString("en-US", {
+        timeZone: "Asia/Ho_Chi_Minh",
+      }),
       total: totalPrice,
-      paymentStatus: active === 2 ? "Payment Completed" : "Pending",
+      paymentStatus: "Pending",
       userId,
       orderItems,
+      addressId,
     });
 
     handleDeleteAllCart(userId);

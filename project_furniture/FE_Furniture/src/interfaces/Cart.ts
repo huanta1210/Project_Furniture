@@ -27,6 +27,7 @@ export interface Order {
     | "Cancelled"
     | "Payment Completed";
   userId: string;
+  addressId: string | unknown;
   orderItems: string[];
 }
 

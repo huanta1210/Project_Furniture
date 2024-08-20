@@ -70,7 +70,6 @@ export const createOrderItems = async (req, res) => {
       });
     }
     const order = await Order.findById(orderId);
-    console.log(order);
     if (!order) {
       return res.status(404).json({ message: "Order not found" });
     }

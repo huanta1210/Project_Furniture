@@ -7,6 +7,12 @@ const addressSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+    orders: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Order",
+      },
+    ],
     street: {
       type: String,
       required: true,
