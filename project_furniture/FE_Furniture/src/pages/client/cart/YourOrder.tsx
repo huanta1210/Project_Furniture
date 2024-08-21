@@ -17,6 +17,7 @@ const YourOrder = () => {
   const [order, setOrder] = useState<Order | undefined>(undefined);
   const { userState } = useContext(AuthContext);
   const { cartState } = useContext(CartContext);
+  console.log(cartState.orders);
   const columns: TableColumnsType<Order> = [
     {
       title: "Id",

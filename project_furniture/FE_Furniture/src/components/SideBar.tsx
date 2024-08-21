@@ -7,7 +7,6 @@ import { AuthContext } from "../store/contexts/AuthContext";
 
 const SideBar = () => {
   const { userState } = useContext(AuthContext);
-  console.log(userState.users?.userName);
 
   const { setTitle, setBreadcrumbs } = usePageContext();
   const location = useLocation();

@@ -1,8 +1,36 @@
+import { useContext } from "react";
 import { usePageContext } from "../store/contexts/PageContext";
 import LogOut from "./LogOut";
+import { CartContext } from "../store/contexts/CartContext";
+import { Order } from "../interfaces/Cart";
+import dayjs from "dayjs";
 
 const HeaderAdmin = () => {
   const { title, breadcrumbs } = usePageContext();
+  const { cartState } = useContext(CartContext);
+
+  const orderDataByMonth = cartState.orders.reduce(
+    (
+      acc: Record<string, { totalPrice: number; totalOrders: number }>,
+      order: Order
+    ) => {
+      const month = dayjs(order.orderDate).format("DD MMM YYYY");
+      if (!acc[month]) {
+        acc[month] = { totalPrice: 0, totalOrders: 0 };
+      }
+      acc[month].totalPrice += order.total * 25000;
+      acc[month].totalOrders += 1;
+      return acc;
+    },
+    {}
+  );
+
+  const labels = Object.keys(orderDataByMonth);
+  const totalPrices = labels.map((month) => orderDataByMonth[month].totalPrice);
+  const totalOrders = labels.map(
+    (month) => orderDataByMonth[month].totalOrders
+  );
+
   return (
     <>
       <section className="flex justify-between">
@@ -32,7 +60,7 @@ const HeaderAdmin = () => {
                   Number of users ordering by month
                 </p>
                 <p className="text-black font-semibold text-3xl pt-1">
-                  500,000
+                  {totalOrders.toLocaleString()}
                 </p>
               </div>
             </div>
@@ -48,7 +76,7 @@ const HeaderAdmin = () => {
                   Total amount by month
                 </p>
                 <p className="text-black font-semibold text-3xl pt-1">
-                  174,540
+                  {totalPrices.toLocaleString()}
                 </p>
               </div>
             </div>

@@ -72,7 +72,7 @@ export const CartProvider = ({ children }: ChildrenProps) => {
         }
       })();
     }
-  }, [userId]);
+  }, [userId, cartState.cartItems]);
   useEffect(() => {
     async () => {
       try {
@@ -89,18 +89,20 @@ export const CartProvider = ({ children }: ChildrenProps) => {
 
   useEffect(() => {
     (async () => {
-      try {
-        const res = await instance.get("/order");
-        if (!res) {
-          toast.error("Get order failed", { autoClose: 300 });
+      if (userId && cartState.orders.length > 0) {
+        try {
+          const res = await instance.get("/order");
+          if (!res) {
+            toast.error("Get order failed", { autoClose: 300 });
+          }
+          dispatch({ type: "SET_ORDER", payload: res.data.datas });
+        } catch (error) {
+          console.log(error);
+          toast.error("Get order failed");
         }
-        dispatch({ type: "SET_ORDER", payload: res.data.datas });
-      } catch (error) {
-        console.log(error);
-        toast.error("Get order failed");
       }
     })();
-  }, []);
+  }, [userId, cartState.orders]);
 
   const decreaseQuantity = useCallback((id: string | number) => {
     dispatch({ type: "DESCREASE_QUANTITY", payload: id });

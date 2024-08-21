@@ -100,11 +100,15 @@ const CheckOut = () => {
       ?.map((item) => item._id)
       .filter((id): id is string => id !== undefined);
 
+    const total = cartState.orderitems.reduce(
+      (acc, cur) => acc + cur.price * cur.quantity,
+      0
+    );
     placeOrder({
       orderDate: new Date().toLocaleString("en-US", {
         timeZone: "Asia/Ho_Chi_Minh",
       }),
-      total: totalPrice,
+      total: total,
       paymentStatus: "Pending",
       userId,
       orderItems,

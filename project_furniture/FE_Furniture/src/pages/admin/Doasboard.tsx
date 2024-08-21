@@ -1,6 +1,10 @@
 import SideBar from "../../components/SideBar";
 import HeaderAdmin from "../../components/HeaderAdmin";
 import Chart from "../../components/Chart";
+import { useContext } from "react";
+import { CartContext } from "../../store/contexts/CartContext";
+import { Order } from "../../interfaces/Cart";
+import dayjs from "dayjs";
 
 const Doasboard = () => {
   return (
@@ -14,6 +18,27 @@ const Doasboard = () => {
 };
 
 const Content = () => {
+  const { cartState } = useContext(CartContext);
+  const orderDataByYear = cartState.orders.reduce(
+    (
+      acc: Record<string, { totalPrice: number; totalOrders: number }>,
+      order: Order
+    ) => {
+      const year = dayjs(order.orderDate).format("YYYY");
+      if (!acc[year]) {
+        acc[year] = { totalPrice: 0, totalOrders: 0 };
+      }
+      acc[year].totalPrice += order.total * 25000;
+      acc[year].totalOrders += 1;
+      return acc;
+    },
+    {}
+  );
+
+  const labelYear = Object.keys(orderDataByYear);
+  const totalOrderyear = labelYear.map(
+    (year) => orderDataByYear[year].totalOrders
+  );
   return (
     <>
       <section className="col-span-9 mx-5">
@@ -28,7 +53,9 @@ const Content = () => {
               <p className="text-sm text-slate-600 font-semibold">
                 Statistics by year
               </p>
-              <p className="text-black font-semibold text-3xl pt-1">131,4</p>
+              <p className="text-black font-semibold text-3xl pt-1">
+                {totalOrderyear.toLocaleString()}
+              </p>
             </div>
           </div>
           <Chart />
