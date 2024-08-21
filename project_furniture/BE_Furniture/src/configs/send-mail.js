@@ -149,9 +149,9 @@ export const sendConfirmationEmailOrder = async (order) => {
          }" style="width: 60px; height: auto;"/>
             </td>
             <td style="padding: 10px;">${item.product.productName}</td>
-            <td style="padding: 10px; text-align: right;">${item.price.toLocaleString(
-              "vi-VN"
-            )}VND</td>
+            <td style="padding: 10px; text-align: right;">${(
+              item.price * 25000
+            ).toLocaleString("vi-VN")}VND</td>
             <td style="padding: 10px; text-align: right;">${item.quantity.toLocaleString(
               "vi-VN"
             )}</td>
@@ -162,16 +162,13 @@ export const sendConfirmationEmailOrder = async (order) => {
           `
        )}
         <tr>
-          <td colspan="4" style="padding: 10px; text-align: right; font-weight: bold;">Tổng cộng: ${(
-            totalPrice * 25000
-          ).toLocaleString("vi-VN")}VND</td>
-          <td style="padding: 10px; text-align: right; font-weight: bold;">${(
-            totalPrice * 25000
-          ).toLocaleString("vi-VN")}VND</td>
+          <td colspan="4" style="padding: 10px; text-align: right; font-weight: bold;">Tổng cộng: ${totalPrice.toLocaleString(
+            "vi-VN"
+          )}VND</td>
+          <td style="padding: 10px; text-align: right; font-weight: bold;">${totalPrice.toLocaleString(
+            "vi-VN"
+          )}VND</td>
         </tr>
-        
-         
-        
       </tbody>
     </table>
   </div>

@@ -5,6 +5,7 @@ import {
   authFacebook,
   authGoogle,
   getAuth,
+  getDetailAuth,
   loginUser,
   registerUser,
 } from "../controllers/auth";
@@ -99,5 +100,6 @@ routerAuth.get(
 routerAuth.post("/login/facebook", authFacebook);
 
 routerAuth.get("/get-auth", getAuth);
+routerAuth.get("/get-detail-auth/:id", getDetailAuth);
 
 export default routerAuth;

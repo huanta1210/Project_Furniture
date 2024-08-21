@@ -40,6 +40,7 @@ export type State = {
 export type Action =
   | { type: "SET_ORDER_ITEM"; payload: OrderItem }
   | { type: "SET_CART"; payload: CartItem }
+  | { type: "SET_ORDER"; payload: Order[] }
   | { type: "ADD_CART"; payload: { items: CartItem[] } }
   | { type: "INCREASE_QUANTITY"; payload: string | number }
   | { type: "DESCREASE_QUANTITY"; payload: string | number }

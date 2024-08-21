@@ -128,6 +128,12 @@ const cartReducer = (cartState: State, action: Action): State => {
         cartItems: updateCartItemStock,
       };
     }
+    case "SET_ORDER": {
+      return {
+        ...cartState,
+        orders: action.payload,
+      };
+    }
     case "SET_ORDER_ITEM": {
       return {
         ...cartState,

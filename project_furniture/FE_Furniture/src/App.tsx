@@ -14,6 +14,7 @@ import ProductDetails from "./pages/client/ProductDetails";
 import Cart from "./pages/client/cart/Cart";
 import YourOrder from "./pages/client/cart/YourOrder";
 import CheckOut from "./pages/client/cart/CheckOut";
+import OrderAdmin from "./pages/admin/orders/OrderAdmin";
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
         <Route path="users" element={<UserAdmin />} />
         <Route path="products" element={<ProductAdmin />} />
         <Route path="categories" element={<CategoriesAdmin />} />
+        <Route path="orders" element={<OrderAdmin />} />
       </Route>
     </Routes>
   );

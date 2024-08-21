@@ -1,21 +1,30 @@
-import { memo, useContext, useState } from "react";
+import SideBar from "../../../components/SideBar";
+import HeaderAdmin from "../../../components/HeaderAdmin";
 import { Space, Table, TableColumnsType } from "antd";
-import Header from "../../../components/Header";
-import Footer from "../../../components/Footer";
-import { Link } from "react-router-dom";
-import LogOut from "../../../components/LogOut";
-import { AuthContext } from "../../../store/contexts/AuthContext";
-import { CartContext } from "../../../store/contexts/CartContext";
 import { Order } from "../../../interfaces/Cart";
+import { memo, useContext, useState } from "react";
+import { CartContext } from "../../../store/contexts/CartContext";
 import Modal from "../../../components/Modal";
 const MemoizedModal = memo(Modal);
-const MemoizedHeader = memo(Header);
-const MemoizedFooter = memo(Footer);
 
-const YourOrder = () => {
+const OrderAdmin = () => {
+  return (
+    <div className="bg-slate-50">
+      <section className="grid grid-cols-12 gap-4 mt-10">
+        <SideBar />
+
+        <div className="col-span-9">
+          <HeaderAdmin />
+          <OrderList />
+        </div>
+      </section>
+    </div>
+  );
+};
+
+const OrderList = () => {
   const [showModal, setShowModal] = useState(false);
   const [order, setOrder] = useState<Order | undefined>(undefined);
-  const { userState } = useContext(AuthContext);
   const { cartState } = useContext(CartContext);
   const columns: TableColumnsType<Order> = [
     {
@@ -66,20 +75,6 @@ const YourOrder = () => {
       ),
     },
   ];
-  const payload = [
-    {
-      name: "Account Infomation",
-      path: "/login",
-    },
-    {
-      name: "Your Order",
-      path: "/your-order",
-    },
-    {
-      name: "Forgot Password",
-      path: "/forgot-password",
-    },
-  ];
   const handleClick = (order: Order) => {
     if (order) {
       setOrder(order);
@@ -90,42 +85,13 @@ const YourOrder = () => {
   };
   return (
     <>
-      <header>
-        <MemoizedHeader />
-      </header>
-
-      <main className="mx-20 my-10">
-        <div className="grid grid-cols-12">
-          <div className="col-span-2">
-            <h2 className="text-xl font-bold">Account Page</h2>
-            <p className="text-sm font-semibold py-3 mb-3">
-              Hello! {userState.users?.userName}
-            </p>
-            {payload.map((payload, index) => (
-              <div key={index}>
-                <Link
-                  className="text-sm text-gray-600 hover:text-red-400"
-                  to={payload.path}
-                >
-                  {payload.name}
-                </Link>
-              </div>
-            ))}
-
-            <div className="mt-2">
-              <LogOut />
-            </div>
-          </div>
-          <div className="col-span-10">
-            <Table columns={columns} dataSource={cartState.orders} />
-          </div>
-        </div>
-      </main>
-      <footer>
-        <MemoizedFooter />
-      </footer>
+      <Table columns={columns} dataSource={cartState.orders} />
+      <MemoizedModal
+        showModal={showModal}
+        order={order}
+        setShowModal={setShowModal}
+      />
     </>
   );
 };
-
-export default YourOrder;
+export default OrderAdmin;

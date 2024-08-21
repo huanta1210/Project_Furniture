@@ -32,6 +32,24 @@ export const getAllOrders = async (req, res) => {
   }
 };
 
+export const getOrderByUserId = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const order = await Order.find({ userId });
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+    return res.status(200).json({
+      message: "Order successfully",
+      datas: order,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
 export const getDetailOrders = async (req, res) => {
   try {
     const order = await Order.findById(req.params.id)
@@ -41,7 +59,7 @@ export const getDetailOrders = async (req, res) => {
           path: "productId",
         },
       })
-      .populate("users");
+      .populate("userId");
 
     if (!order || order.length === 0) {
       return res.status(403).json({

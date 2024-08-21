@@ -43,7 +43,6 @@ export const CartProvider = ({ children }: ChildrenProps) => {
     orderitems: [],
   });
   const { userState } = useContext(AuthContext);
-  // const { orderItem } = useContext(CartContext);
 
   const userId: string | number = userState.users?._id || "";
 
@@ -59,19 +58,49 @@ export const CartProvider = ({ children }: ChildrenProps) => {
     return acc;
   }, 0);
   useEffect(() => {
-    (async () => {
-      try {
-        const res = await instance.get(`/cart/${userId}`);
-        if (!res) {
-          toast.error("Get cart failed", { autoClose: 300 });
+    if (userId && cartState.cartItems.length > 0) {
+      (async () => {
+        try {
+          const res = await instance.get(`/cart/${userId}`);
+          if (!res) {
+            toast.error("Get cart failed", { autoClose: 300 });
+          }
+          dispatch({ type: "SET_CART", payload: res.data.datas });
+        } catch (error) {
+          console.log(error);
+          toast.error("Get cart failed");
         }
-        dispatch({ type: "SET_CART", payload: res.data.datas });
+      })();
+    }
+  }, [userId]);
+  useEffect(() => {
+    async () => {
+      try {
+        const res = await instance.get(`/order/get-order/${userId}`);
+        if (!res) {
+          toast.error("Get order failed", { autoClose: 300 });
+        }
+        dispatch({ type: "SET_ORDER", payload: res.data.datas });
       } catch (error) {
         console.log(error);
-        toast.error("Get cart failed");
+      }
+    };
+  }, [userId]);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await instance.get("/order");
+        if (!res) {
+          toast.error("Get order failed", { autoClose: 300 });
+        }
+        dispatch({ type: "SET_ORDER", payload: res.data.datas });
+      } catch (error) {
+        console.log(error);
+        toast.error("Get order failed");
       }
     })();
-  }, [userId]);
+  }, []);
 
   const decreaseQuantity = useCallback((id: string | number) => {
     dispatch({ type: "DESCREASE_QUANTITY", payload: id });

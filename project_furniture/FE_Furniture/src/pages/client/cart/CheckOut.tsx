@@ -97,7 +97,7 @@ const CheckOut = () => {
   };
   const handleCreateOrder = async (addressId: unknown) => {
     const orderItems: string[] = cartState.orderitems
-      .map((item) => item._id)
+      ?.map((item) => item._id)
       .filter((id): id is string => id !== undefined);
 
     placeOrder({

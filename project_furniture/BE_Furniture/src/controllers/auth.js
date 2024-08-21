@@ -13,7 +13,7 @@ export const getAuth = async (req, res) => {
   try {
     const user = await User.find({});
 
-    if (!user && user.length === 0) {
+    if (!user) {
       return res.status(404).json({
         message: "users is not found",
       });
@@ -21,6 +21,25 @@ export const getAuth = async (req, res) => {
 
     return res.status(200).json({
       message: "Get users successfully",
+      datas: user,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+export const getDetailAuth = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    if (!user) {
+      return res.status(404).json({
+        message: "One users is not found",
+      });
+    }
+    return res.status(200).json({
+      message: "Get one user successfully",
       datas: user,
     });
   } catch (error) {

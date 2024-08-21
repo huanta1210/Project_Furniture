@@ -22,7 +22,6 @@ const UserAdmin = () => {
 };
 const UserList = () => {
   const { state } = useContext(UserContext);
-  console.log(state.users);
   const columns: ColumnType<User>[] = [
     {
       title: "Image",

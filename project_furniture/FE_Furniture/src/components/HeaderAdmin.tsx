@@ -10,7 +10,7 @@ const HeaderAdmin = () => {
           <p className="text-xs text-slate-500">{breadcrumbs}</p>
           <p className="text-3xl text-slate-800 font-bold mt-2">{title}</p>
         </div>
-        <div className="border h-16 w-36 mt-1 flex items-center justify-around bg-white rounded-full">
+        <div className="border h-16 w-48 mt-1 flex items-center justify-around bg-white rounded-full">
           <i className="fa-solid fa-question"></i>
           <LogOut />
           <img

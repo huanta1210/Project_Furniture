@@ -1,19 +1,15 @@
 import { Link, useLocation } from "react-router-dom";
 import logo from "../assets/img/logo.png";
-import { useEffect, useState } from "react";
-import { User } from "../interfaces/User";
+import { useContext, useEffect, useState } from "react";
 import LogOut from "./LogOut";
 import { usePageContext } from "../store/contexts/PageContext";
+import { AuthContext } from "../store/contexts/AuthContext";
 
 const SideBar = () => {
-  const getToken = (): User => {
-    const data = localStorage.getItem("user");
-
-    return data ? JSON.parse(data) : null;
-  };
+  const { userState } = useContext(AuthContext);
+  console.log(userState.users?.userName);
 
   const { setTitle, setBreadcrumbs } = usePageContext();
-  const { userName } = getToken();
   const location = useLocation();
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const menuItems = [
@@ -99,12 +95,12 @@ const SideBar = () => {
 
           <div className="flex items-center mt-20">
             <img
-              className="w-20 h-20 rounded-full"
+              className="size-12 rounded-full"
               src="https://i.imgur.com/FnTQTnN.jpeg"
               alt=""
             />
-            <p className="text-lg pr-4 p-2 text-slate-700 font-semibold px-10 ">
-              {userName}
+            <p className="text-sm pr-4 p-2 text-slate-700 font-semibold px-4 ">
+              {userState.users?.userName}
             </p>
             <LogOut />
           </div>
