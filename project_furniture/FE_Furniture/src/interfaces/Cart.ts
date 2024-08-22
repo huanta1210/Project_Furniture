@@ -20,12 +20,7 @@ export interface Order {
   _id?: string;
   orderDate: string;
   total: number;
-  paymentStatus:
-    | "Pending"
-    | "Shipped"
-    | "Delivered"
-    | "Cancelled"
-    | "Payment Completed";
+  paymentStatus: string;
   userId: string;
   addressId: string | unknown;
   orderItems: string[];
@@ -54,13 +49,8 @@ export type Action =
   | {
       type: "UPDATE_ORDER_STATUS";
       payload: {
-        orderId: string | number;
-        paymentStatus:
-          | "Pending"
-          | "Shipped"
-          | "Delivered"
-          | "Cancelled"
-          | "Payment Completed";
+        orderId: string;
+        paymentStatus: string;
       };
     }
   | {

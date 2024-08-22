@@ -15,10 +15,11 @@ const orderSchema = new mongoose.Schema(
       type: String,
       enum: [
         "Pending",
+        "Confirmed",
         "Shipped",
-        "Delivered",
         "Cancelled",
         "Payment Completed",
+        "Delivery Successful",
       ],
       default: "Pending",
       required: true,

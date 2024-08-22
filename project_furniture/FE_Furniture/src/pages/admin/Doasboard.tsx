@@ -2,9 +2,10 @@ import SideBar from "../../components/SideBar";
 import HeaderAdmin from "../../components/HeaderAdmin";
 import Chart from "../../components/Chart";
 import { useContext } from "react";
-import { CartContext } from "../../store/contexts/CartContext";
 import { Order } from "../../interfaces/Cart";
 import dayjs from "dayjs";
+
+import { OrderContext } from "../../store/contexts/OrderContext";
 
 const Doasboard = () => {
   return (
@@ -18,8 +19,8 @@ const Doasboard = () => {
 };
 
 const Content = () => {
-  const { cartState } = useContext(CartContext);
-  const orderDataByYear = cartState.orders.reduce(
+  const { orderState } = useContext(OrderContext);
+  const orderDataByYear = orderState.orderCharts.reduce(
     (
       acc: Record<string, { totalPrice: number; totalOrders: number }>,
       order: Order

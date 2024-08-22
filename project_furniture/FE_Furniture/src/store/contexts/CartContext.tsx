@@ -12,6 +12,7 @@ import { toast } from "react-toastify";
 import instance from "../../api";
 import { AuthContext } from "./AuthContext";
 import { useNavigate } from "react-router";
+import { OrderContext } from "./OrderContext";
 
 type CartContext = {
   cartState: {
@@ -31,6 +32,7 @@ type CartContext = {
   updateCart: (productId: string | number, quantity: number) => void;
   handleDeleteAllCart: (userId: string | number) => void;
   placeOrder: (order: Order) => void;
+  updateOrderStatus: (orderId: string, paymentStatus: string) => void;
 };
 
 export const CartContext = createContext<CartContext>({} as CartContext);
@@ -45,6 +47,8 @@ export const CartProvider = ({ children }: ChildrenProps) => {
   const { userState } = useContext(AuthContext);
 
   const userId: string | number = userState.users?._id || "";
+
+  const { getOrderList } = useContext(OrderContext);
 
   const quantityCart = cartState.cartItems.reduce(
     (quantity, item) => quantity + item.quantity,
@@ -62,19 +66,15 @@ export const CartProvider = ({ children }: ChildrenProps) => {
       (async () => {
         try {
           const res = await instance.get(`/cart/${userId}`);
-          if (!res) {
-            toast.error("Get cart failed", { autoClose: 300 });
-          }
           dispatch({ type: "SET_CART", payload: res.data.datas });
         } catch (error) {
           console.log(error);
-          toast.error("Get cart failed");
         }
       })();
     }
   }, [userId, cartState.cartItems]);
   useEffect(() => {
-    async () => {
+    (async () => {
       try {
         const res = await instance.get(`/order/get-order/${userId}`);
         if (!res) {
@@ -84,25 +84,8 @@ export const CartProvider = ({ children }: ChildrenProps) => {
       } catch (error) {
         console.log(error);
       }
-    };
-  }, [userId]);
-
-  useEffect(() => {
-    (async () => {
-      if (userId && cartState.orders.length > 0) {
-        try {
-          const res = await instance.get("/order");
-          if (!res) {
-            toast.error("Get order failed", { autoClose: 300 });
-          }
-          dispatch({ type: "SET_ORDER", payload: res.data.datas });
-        } catch (error) {
-          console.log(error);
-          toast.error("Get order failed");
-        }
-      }
     })();
-  }, [userId, cartState.orders]);
+  }, [userId]);
 
   const decreaseQuantity = useCallback((id: string | number) => {
     dispatch({ type: "DESCREASE_QUANTITY", payload: id });
@@ -249,6 +232,27 @@ export const CartProvider = ({ children }: ChildrenProps) => {
     }
   }, []);
 
+  const updateOrderStatus = async (orderId: string, paymentStatus: string) => {
+    try {
+      const res = await instance.put(`/order/update-order/${orderId}`, {
+        paymentStatus: paymentStatus,
+      });
+
+      if (res.status === 200) {
+        dispatch({
+          type: "UPDATE_ORDER_STATUS",
+          payload: {
+            orderId,
+            paymentStatus,
+          },
+        });
+        getOrderList();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <CartContext.Provider
       value={{
@@ -262,6 +266,7 @@ export const CartProvider = ({ children }: ChildrenProps) => {
         addToCart,
         handleDeleteCart,
         placeOrder,
+        updateOrderStatus,
       }}
     >
       {children}

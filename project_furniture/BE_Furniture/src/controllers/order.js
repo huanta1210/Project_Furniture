@@ -35,7 +35,14 @@ export const getAllOrders = async (req, res) => {
 export const getOrderByUserId = async (req, res) => {
   try {
     const { userId } = req.params;
-    const order = await Order.find({ userId });
+    const order = await Order.find({ userId })
+      .populate({
+        path: "orderItems",
+        populate: {
+          path: "productId",
+        },
+      })
+      .populate("userId");
     if (!order) {
       return res.status(404).json({ message: "Order not found" });
     }
@@ -129,20 +136,9 @@ export const updateOrders = async (req, res) => {
       new: true,
       runValidators: true,
     });
-
     if (!order) {
       return res.status(404).json({
         message: "Update order unsuccessful",
-      });
-    }
-    const newUser = await User.findByIdAndUpdate(
-      order.userId,
-      { $addToSet: { orders: order._id } },
-      { new: true, useFindAndModify: false }
-    );
-    if (!newUser) {
-      return res.status(403).json({
-        message: "Update user unsuccessful",
       });
     }
 

@@ -6,22 +6,25 @@ import { PageProvider } from "./PageContext";
 import { CartProvider } from "./CartContext";
 import { AuthProvider } from "./AuthContext";
 import { LocationProvider } from "./LocationContext";
+import { OrderProvider } from "./OrderContext";
 
 const IndexContexts = ({ children }: ChildrenProps) => {
   return (
-    <LocationProvider>
-      <AuthProvider>
-        <CartProvider>
-          <PageProvider>
-            <UserProvider>
-              <ProductProvider>
-                <CategoriesProvider>{children}</CategoriesProvider>
-              </ProductProvider>
-            </UserProvider>
-          </PageProvider>
-        </CartProvider>
-      </AuthProvider>
-    </LocationProvider>
+    <OrderProvider>
+      <LocationProvider>
+        <AuthProvider>
+          <CartProvider>
+            <PageProvider>
+              <UserProvider>
+                <ProductProvider>
+                  <CategoriesProvider>{children}</CategoriesProvider>
+                </ProductProvider>
+              </UserProvider>
+            </PageProvider>
+          </CartProvider>
+        </AuthProvider>
+      </LocationProvider>
+    </OrderProvider>
   );
 };
 

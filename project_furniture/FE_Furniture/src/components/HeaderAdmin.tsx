@@ -1,15 +1,16 @@
-import { useContext } from "react";
 import { usePageContext } from "../store/contexts/PageContext";
 import LogOut from "./LogOut";
-import { CartContext } from "../store/contexts/CartContext";
 import { Order } from "../interfaces/Cart";
 import dayjs from "dayjs";
+import { useContext } from "react";
+import { OrderContext } from "../store/contexts/OrderContext";
 
 const HeaderAdmin = () => {
   const { title, breadcrumbs } = usePageContext();
-  const { cartState } = useContext(CartContext);
 
-  const orderDataByMonth = cartState.orders.reduce(
+  const { orderState } = useContext(OrderContext);
+
+  const orderDataByMonth = orderState.orderCharts.reduce(
     (
       acc: Record<string, { totalPrice: number; totalOrders: number }>,
       order: Order

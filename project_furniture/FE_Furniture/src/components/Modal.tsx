@@ -52,7 +52,6 @@ const Modal = ({ showModal, setShowModal, order }: Props) => {
   const orderItems: OrderItem[] = order?.orderItems || [];
 
   const productOrder = orderItems.map((item) => {
-    console.log(item);
     const product = item.productId;
     return {
       quantity: item.quantity,

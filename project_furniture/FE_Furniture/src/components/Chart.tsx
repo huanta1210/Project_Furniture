@@ -9,9 +9,10 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import { CartContext } from "../store/contexts/CartContext";
 import dayjs from "dayjs";
 import advancedFormat from "dayjs/plugin/advancedFormat";
+
+import { OrderContext } from "../store/contexts/OrderContext";
 
 ChartJS.register(
   CategoryScale,
@@ -31,9 +32,9 @@ interface Order {
 }
 
 const Chart: React.FC = () => {
-  const { cartState } = useContext(CartContext);
+  const { orderState } = useContext(OrderContext);
 
-  const orderDataByMonth = cartState.orders.reduce(
+  const orderDataByMonth = orderState.orderCharts.reduce(
     (
       acc: Record<string, { totalPrice: number; totalOrders: number }>,
       order: Order

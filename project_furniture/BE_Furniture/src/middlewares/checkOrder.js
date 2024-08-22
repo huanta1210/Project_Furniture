@@ -3,9 +3,6 @@ import Order from "../models/Order";
 export const checkUserOrder = async (req, res, next) => {
   const { userId: paramId } = req.params;
   const userId = req.user?._id;
-  console.log("userId", userId);
-  console.log("paramId", paramId);
-  console.log("order", req.order);
 
   if (userId !== paramId) return res.sendStatus(403);
   try {

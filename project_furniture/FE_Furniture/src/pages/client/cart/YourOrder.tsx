@@ -2,7 +2,7 @@ import { memo, useContext, useState } from "react";
 import { Space, Table, TableColumnsType } from "antd";
 import Header from "../../../components/Header";
 import Footer from "../../../components/Footer";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import LogOut from "../../../components/LogOut";
 import { AuthContext } from "../../../store/contexts/AuthContext";
 import { CartContext } from "../../../store/contexts/CartContext";
@@ -16,8 +16,8 @@ const YourOrder = () => {
   const [showModal, setShowModal] = useState(false);
   const [order, setOrder] = useState<Order | undefined>(undefined);
   const { userState } = useContext(AuthContext);
-  const { cartState } = useContext(CartContext);
-  console.log(cartState.orders);
+  const { cartState, updateOrderStatus } = useContext(CartContext);
+  const location = useLocation();
   const columns: TableColumnsType<Order> = [
     {
       title: "Id",
@@ -40,6 +40,22 @@ const YourOrder = () => {
       title: "Status",
       dataIndex: "paymentStatus",
       key: "paymentStatus",
+      render: (paymentStatus) =>
+        paymentStatus === "Pending" ? (
+          <span className="text-orange-500">{paymentStatus}</span>
+        ) : paymentStatus === "Cancelled" ? (
+          <span className="text-red-500">{paymentStatus}</span>
+        ) : paymentStatus === "Payment Completed" ? (
+          <span className="text-green-500">{paymentStatus}</span>
+        ) : paymentStatus === "Shipped" ? (
+          <span className="text-yellow-500">{paymentStatus}</span>
+        ) : paymentStatus === "Delivery Successful" ? (
+          <span className="text-blue-500">Delivery Successful</span>
+        ) : paymentStatus === "Confirmed" ? (
+          <span className="text-purple-500">Confirmed</span>
+        ) : (
+          ""
+        ),
     },
 
     {
@@ -48,9 +64,25 @@ const YourOrder = () => {
       render: (_, record) => (
         <Space size="middle">
           <>
-            <button className="py-1 border border-red-500 px-3 bg-white text-red-500 font-semibold hover:text-white hover:bg-red-500 transition-all duration-1000 rounded">
-              Cancelled
-            </button>
+            {record.paymentStatus === "Cancelled" ? (
+              <span className="text-red-500">Cancelled</span>
+            ) : record.paymentStatus === "Delivery Successful" ? (
+              <span className="text-blue-500">Delivery Successful</span>
+            ) : record.paymentStatus === "Payment Completed" ? (
+              <span className="text-green-500">Payment Completed</span>
+            ) : record.paymentStatus === "Shipped" ? (
+              <span className="text-yellow-500">Shipped</span>
+            ) : record.paymentStatus === "Confirmed" ? (
+              <span className="text-purple-500">Confirmed</span>
+            ) : (
+              <button
+                onClick={() => updateOrderStatus(record._id!, "Cancelled")}
+                className="py-1 border border-red-500 px-3 bg-white text-red-500 font-semibold hover:text-white hover:bg-red-500 transition-all duration-1000 rounded"
+              >
+                Cancelled
+              </button>
+            )}
+
             <button
               onClick={() => handleClick(record)}
               className="border size-8 rounded-full transition-all duration-1000 hover:bg-black hover:text-white group"
@@ -105,7 +137,11 @@ const YourOrder = () => {
             {payload.map((payload, index) => (
               <div key={index}>
                 <Link
-                  className="text-sm text-gray-600 hover:text-red-400"
+                  className={`text-sm  ${
+                    location.pathname === payload.path
+                      ? "text-red-500"
+                      : "text-gray-600 hover:text-red-400"
+                  }`}
                   to={payload.path}
                 >
                   {payload.name}
