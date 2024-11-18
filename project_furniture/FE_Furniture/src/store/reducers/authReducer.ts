@@ -3,23 +3,29 @@ import { jwtDecode } from "jwt-decode";
 
 const isTokenExpired = (token: string): boolean => {
   try {
-    const decodedToken: any = jwtDecode(token);
-    const expiresAt = decodedToken.exp * 1000;
+    const decodedToken = jwtDecode<{ exp: number }>(token);
+    const expiresAt = decodedToken.exp! * 1000;
     return Date.now() > expiresAt;
   } catch (error) {
     return true;
   }
 };
 
-const authReducer = (userState: State, action: Action) => {
+const authReducer = (userState: State, action: Action): State => {
   switch (action.type) {
-    case "SET_AUTH": {
-      localStorage.setItem("token", action.payload.token);
-      localStorage.setItem("user", JSON.stringify(action.payload.users));
+    case "GET_AUTH": {
       return {
         ...userState,
-        token: action.payload.token,
-        users: action.payload.users,
+        users: action.payload,
+      };
+    }
+    case "SET_AUTH": {
+      localStorage.setItem("token", action.payload?.token || "");
+      localStorage.setItem("user", JSON.stringify(action.payload?.users || ""));
+      return {
+        ...userState,
+        token: action.payload?.token,
+        users: action.payload?.users,
       };
     }
     case "LOG_OUT": {

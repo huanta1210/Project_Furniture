@@ -104,14 +104,14 @@ const MainPage: React.FC = () => {
           <div className="gallery-list col-span-6">
             <img
               className="h-96 w-full img-gallery"
-              src="https://s3-alpha-sig.figma.com/img/33a1/6db2/6997f752b489f4a7590ce7a86e061493?Expires=1723420800&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=UW~-M917194~94aPMJ2c8L0Vho-wpbfK6OAau6Xfp9ZRiTTrgIGcng~17Wy84e7VDzc~na5YcMJzAb4o1R5OYsAFusAXDhkXrlMweAPxr0VpqNASEFfwBxNGPKCxBn0xKw~jm7zJOV2Kvmz1eixI6gvUCTgMQQWHPqN5yFFGyYEekWgW77MxeorxwC4oNMzcRE4kXVo2REMMMmVRgsWSz6XLQneOl-wBiD3PdOi3okk8vn-PtKRM1eEiBXYl4aTq5gcWa01sAMgemZybQdVPnnMM5crHMJ~Lw4JJxKbALxm0e78FWb8jBC4YWQZeD-curAkCVNWJjuV-6-PYqZNY6A__"
+              src="https://s3-alpha-sig.figma.com/img/4d26/0b19/5097c12f94c7d24479be52f8550f92f8?Expires=1733097600&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=OTslZ5k~oH7GVy6iIES271bk7qP1tEkkwngRhzjybM9mFmVFw58scV0PPdDs5xkFp6pFSK5jDUQjOYhNmfMf3buvhPoIsdXqJSnOghPYIKp97cJ7z8-niwgQcN78zbgs0igEjZxLyorhi1zT2F8zjqFauiJ4zQ0BvB6fFxFUOocyfqUFSmUQ--YQ2S9KVbBsZri8muqJ37wB2DK1HoeqiovktM-qGHx6GjJrFHNz0Jy-QWOjIbuJ0YJWJT8RZ7R~T6hq7CmpFI6s0SNVk6jtj1xSZmJS6WjBdsgjSdALKkAESINNnpZx5OifcPAa7XCNs~MO2P9PVAXm5GniWrhNYA__"
               alt=""
             />
           </div>
           <div className="gallery-list col-span-6">
             <img
               className="h-96 w-full img-gallery"
-              src="https://s3-alpha-sig.figma.com/img/0a1a/341e/7a1e963905a8a882e05f979d82d05601?Expires=1723420800&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=NzfN-9YDgh15Zlq9OyWLG9g8l7JoEZ4-x-167bYdN1YMXoIWy0hJ~JiZATESIn~IzWdN6XaAglWSkr~T4f56~GHCktjeLIk5PiznRBbVk2IGEa-5SH3ixMLwIpONJ4G8s6PY4GSZPqxqdBJxcLIkctWrzwlh-0KhF90ht3vZdhEfVELzvC4lfVwZ4vg9xlv5~3j3UIOefkuVWWFBjm8MfGKqFIj0zwr1QyiUCoJUOfSqVl9jCjbvQ09nNtG~QOMK8V2AXWA4RS6ReunuPpCfV0fxcFboLecBVIZcWOcFQoWbPPjrbavcxetC8T1-~18z1bsSDZ~8BEy4d92Mw5Apog__"
+              src="https://s3-alpha-sig.figma.com/img/1db4/6e73/69ea9e6d364518aa24f4bc45ef9ab45b?Expires=1733097600&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=QW~odcI4TOSv1nzhONHWsHYH4oMEWtGrSYNR6FfY~B0~EhTDimdg0E2ngcd9s~c2BgnDA9-9ELSK0qL96qQHXsxHHangUCFNVuUvW8jGVP53rnYviol3weZ9fvwuOOjMfeS~gELrmKc4eZ6RcxerNokQswgoy6ytSWsjU8cqILXKg5DeLPF5XvojsOz4gUaU0op878pYe1bjD7SK8vVJw2QIkjo1OGvQSpDl1EZ4oWun8aN3sHxuyLvHaHVvyga4SHY1k9rBhXCXxtTihl6qoNowkEc9krVPvNtHhnzS-NgN7ME3PsUsERf2WO~hl0wwM1ypcLe7fl2-agvS3QbJmg__"
               alt=""
             />
           </div>
@@ -135,7 +135,7 @@ const MainPage: React.FC = () => {
             <Link to="">
               <img
                 className="h-56 w-full"
-                src="https://s3-alpha-sig.figma.com/img/eee7/6002/16f342b7d46eb351da12b9c67059716e?Expires=1723420800&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=nYyZeztct9KKFp9AF-FDj~DTZTKw~gpiXkTz0yvbJqOvuIkS6Ybs6X5-qhMXp-idLjfIeK7P6WzKbld27~5ZbVTM4NrE2jJfeOoz~P6vgqYQLLXSrNr9YO5D9dWxiGOp2ziMGg1SIyZj3NyYErEIZ3vSRcLgMm9FF~4ZXj~qZ5UEhtyJ40m5FjRiV8YtlKhelMKubxoK3mtvlu7SW-SlXnVIbQmrsNIr18kkLoKwYwoujZ-pwky7VzPj7nSczZYSzqZ4q9YHAPKpSJlPGXN5Rs9Grc2DzI~nvvazHz7p-5xkza3hoLJASEX52qlEH-ezFnfrDJDEoTnylMm1vqFM9g__"
+                src="https://s3-alpha-sig.figma.com/img/eee7/6002/16f342b7d46eb351da12b9c67059716e?Expires=1733097600&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=grpt76Aw4Nv-UrIufmOEJoFXeBI78o5LO~LFLDwJwV4lEA1FE5H~9YrhsvWA74jZBqtRFDzEOrPg6EFtNoZlRb3S34ukbVSOMTBrgdk2n68Tpsnc5t67Wv5GOZUxILmEMSux3tDnv75qtOV~CvSFoeGdee8uh60sfHP2i~D08FukEtOr5M3THrpGurPM8za8RxNYmy18yOE~7AOIwqmaTi4xUPt~3oUNJWViH0Sas~mzi1ag-fwslf3Qdp0EEOe~EECGut~nM96iWAzSfShWvQeySSaw3TsUa64LKj6koglrLW-kgY32Y4FhLGKDU8ciMux52C2Ctnjee3Ox09~lUA__"
                 alt=""
               />
             </Link>
@@ -156,7 +156,7 @@ const MainPage: React.FC = () => {
             <a href="">
               <img
                 className="h-56 w-full"
-                src="https://s3-alpha-sig.figma.com/img/7ed8/7a00/cc36ab0533ea3614a0c62dd9ba440715?Expires=1723420800&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=MP8xVAHpqulsYbhyRYiOKmoqOvtGUEiLV8efhQJ2B2J5c9UvphAjyoYvk8-nvhI445Bm4UlcFPDsCusYIVUcrcK2uQBbm~5SEUmFQQI94H7cCTR2FpstRVAQOM9a9YreLCwKjOF5u39ae0uXiimgov0nqvG5rcBWbx~s0RRxu3ZOP4D1KeYfovqZuAm5ZW7Q-0VjJuDdCcWh85FJm-nm0634ZHqjuy8J6ArajbhKQewaOsM60PbADAH390BPtGT9Ie2CQqc-r5S5rqYjjPmvKhksV--9DYe297gHQh~2b59fVdFUCfx5V-EnBN-x46yJK7VtL6QMytOX8~rc3L9egA__"
+                src="https://s3-alpha-sig.figma.com/img/219d/63be/156517a1826b6609d27961537666a89f?Expires=1733097600&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=MVqgGyx2EI841DVkgxMdWvcmVlY57GIo33Ndu1bctShWxiWL6~6ej0W5wzPpzRkwrEqT4OPvi~-xXC3wYTN5jDWqKOuNv6D7QLWbguVsQh1eVTT0HkoMQvCZ~06721bRT0t6aHqgis60LZcM-OZSnprQOLRBQ~HRBdd4UFwUVRSlYCO43H0TBMok4tKKSCjtZl1j-mY7nYqx6fLRVFKt1KfYBaV~axIdVKXzHLvyRhHAz1tp9l~fNJmVU4eD5DjoCiJ1zGDo~409AJVzTWmMUNjiB34-NzZaAbEndEz8vOITFCIoMsU2fHKq7Y--zGELpUgNom4c6GkkdQxydPG9GA__"
                 alt=""
               />
             </a>
@@ -177,7 +177,7 @@ const MainPage: React.FC = () => {
             <a href="">
               <img
                 className="h-56 w-full"
-                src="https://s3-alpha-sig.figma.com/img/6123/88ac/f36bc331ad5fab4596c5755edefcca97?Expires=1723420800&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=MilzdLU-oBqekkXnJan1MSy9~wmspi4REUml0Eu5zZAa~O48UNyMP4km0LsuPpRxxRnqTcxtsC6SqitDn0xN4lAjtvtAdBWnNSLK95aLsgpqd~wIU-W9ejcNRhMihESFc9NwblgAVIAhQ~LLW-dVr9~-hRgOmXyO6KJeSrr5ckgQF9E3UmkeVPfN-pXF4NTF8ES-DKndl5pfqPk~FPWelP56-r87aq7TXE-BfTDQevK0YOgSk8z5LpHhV9-SVqRYEGp5UYHlM9LBs8jgnpxWwmY48675vjewQnMAVdzJJ41HKiq6HXi2YqDicp0ck-elAEd251WXQYiQ6DYVhbIQOQ__"
+                src="https://s3-alpha-sig.figma.com/img/6123/88ac/f36bc331ad5fab4596c5755edefcca97?Expires=1733097600&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=oj3223rjzWlwz5bi-vJrWgSAt53IIv9hM8Hdgpi9OY1YKKT~YUYShtJhaJ1WSJazGPOlT~BKy-ApNGbFJoTzi9awWPffcirxaEF1l-8OUk7Spw9-c9Lhw00iam~xczeCBs~yRv0JbFnk35g~aUsDeLhKeQ9DBUs4IJXVkzdKAvxnMLfl3AikvSSYsY5T19Q7eA75~VX8WKRQlD1guIFXZKTliRQIWJr-tfthtKfcbweRThL9SJ-A9alrjOXUthRuTi1X0SXgahXnbNIibJerQ2ZZAQLizOz9a2xglU2~EM0TX5ci4swIVNjImEM5~wKJl7TDbT-U-g4amCrg-CRjTw__"
                 alt=""
               />
             </a>
@@ -198,7 +198,7 @@ const MainPage: React.FC = () => {
             <a href="">
               <img
                 className="h-56 w-full"
-                src="https://s3-alpha-sig.figma.com/img/219d/63be/156517a1826b6609d27961537666a89f?Expires=1723420800&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=fFbfROyeXxJAun2B2-ixq~PZxc75h2q2VfPVc7DkFuodIOSAgDGOBNTJV8bnHYyBj94VpXQdX4A1HFR3xUJS-Kl7BConavbqEKv79k0HjyzMvtj5aBu65aeC5zOn7G85ozarvF7Qx6AgqcUMwbnOvCgiQ2Ks73z114YruV3lK44Ve6JGCd~ExALei86RUicZ1hGExDrw3ofkf9rDBXi9IYXMnEmoZ-YEc7U-zEeBZetnq5qS5EOcRsh-Jx0cC~lnrpPKvd2iNVM8MuD7-w2wS5K929liJgZwQ2ksXQyR57UeaG9rpto8KCm5nR74xsmJqP-1TUPqbUqZq4pNAUK5pA__"
+                src="https://s3-alpha-sig.figma.com/img/7ed8/7a00/cc36ab0533ea3614a0c62dd9ba440715?Expires=1733097600&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=AhaYzDEm1TUR5aQG33jHz4tmRACVaGqphhE1ClDFp8~ZgvnBkWGqKLNxPJkf0-5bm4~Erj-fxFc1bFcy8~ak~wjhceHEHTSxJRc53pCYIFgPEycFk7NxeRMrYoii4iz5lS2h3hCUXEl5MoH61GfKitBBU7DcxpR~8XQ-8O9NKz2RaNXLw2vPys-1s7WlR~0G6dlcrCavIcKCZ9FJHWICJ25phbr~rJm5pGKtYStS~sudMG3rzaDpVFtWz~tvdvJPK4OA0WlDOYdGhGoFYav3D~YEZI7-x3571EYCCM1lCAE-NpfNZYkykXbGdZ0LE4AAjc2CRwIRL0LKqlt0wm-j~w__"
                 alt=""
               />
             </a>

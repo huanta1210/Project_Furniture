@@ -15,7 +15,7 @@ const Cart = () => {
     handleDeleteCart,
   } = useContext(CartContext);
   const { userState } = useContext(AuthContext);
-  const userId: string | number = userState.users?._id || "";
+  const userId = userState.users?._id || "";
   const navigate = useNavigate();
 
   const handleCheckOut = () => {
@@ -38,7 +38,6 @@ const Cart = () => {
         <div className="mx-44 mt-12">
           <div className="grid grid-cols-12 gap-4">
             <div className="col-span-9">
-              {/* giỏ hàng trống */}
               {cartState.cartItems.length === 0 ? (
                 <div className="cart-empty text-center">
                   <img

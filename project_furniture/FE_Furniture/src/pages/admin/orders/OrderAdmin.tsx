@@ -6,6 +6,7 @@ import { memo, useContext, useState } from "react";
 import Modal from "../../../components/Modal";
 import { OrderContext } from "../../../store/contexts/OrderContext";
 import { CartContext } from "../../../store/contexts/CartContext";
+import { formatToVietnamTime } from "../../../utils/formatToVietnamTime";
 const MemoizedModal = memo(Modal);
 
 const OrderAdmin = () => {
@@ -39,6 +40,7 @@ const OrderList = () => {
       title: "Order Date",
       dataIndex: "orderDate",
       key: "orderDate",
+      render: (orderDate) => <span>{formatToVietnamTime(orderDate)}</span>,
     },
     {
       title: "Price",

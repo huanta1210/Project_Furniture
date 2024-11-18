@@ -23,7 +23,7 @@ export interface Order {
   paymentStatus: string;
   userId: string;
   addressId: string | unknown;
-  orderItems: string[];
+  orderItems?: string[] | number;
 }
 
 export type State = {

@@ -5,7 +5,7 @@ export interface OrderChart {
   paymentStatus: string;
   userId: string;
   addressId: string | unknown;
-  orderItems: string[];
+  orderItems?: string[];
 }
 
 export type State = {

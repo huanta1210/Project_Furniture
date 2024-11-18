@@ -72,7 +72,7 @@ export const CartProvider = ({ children }: ChildrenProps) => {
         }
       })();
     }
-  }, [userId, cartState.cartItems]);
+  }, [userId]);
   useEffect(() => {
     (async () => {
       try {
@@ -96,12 +96,15 @@ export const CartProvider = ({ children }: ChildrenProps) => {
   }, []);
 
   const addToCart = useCallback(
-    async (data: CartItem, quantity = 1) => {
+    async (data: CartItem) => {
       try {
+        if (!userState.token) {
+          toast.error("You must be logged in");
+        }
         const newCart = {
           userId: userState.users?._id,
           product: data.product,
-          quantity,
+          quantity: data.quantity,
         };
 
         const cart = await instance.post("/cart/create-cart", newCart);
@@ -120,10 +123,9 @@ export const CartProvider = ({ children }: ChildrenProps) => {
         dispatch({ type: "SET_CART", payload: cartItem });
       } catch (error) {
         console.log(error);
-        toast.error("Error adding");
       }
     },
-    [userState.users?._id]
+    [userState.users?._id, userState.token]
   );
   const handleDeleteCart = async (
     userId: string | number,
@@ -170,7 +172,7 @@ export const CartProvider = ({ children }: ChildrenProps) => {
       const res = await instance.delete(`/cart/delete-all-cart/${userId}`);
 
       if (!res) {
-        toast.error("Data delete failed");
+        console.log("Data delete failed");
       } else {
         dispatch({ type: "DELETE_ALL_CART" });
       }
@@ -179,47 +181,44 @@ export const CartProvider = ({ children }: ChildrenProps) => {
       toast.error("Error deleting all cart");
     }
   };
-  const placeOrder = useCallback(
-    async (order: Order) => {
-      try {
-        const res = await instance.post("/order/create-order", order);
-        if (!res || !res.data || !res.data.datas) {
-          toast.error("Error creating order");
-          return;
-        }
-
-        const newOrder = res.data.datas;
-        const orderId = newOrder._id;
-
-        cartState.cartItems.map((item) =>
-          orderItem({
-            quantity: item.quantity,
-            price: item.totalPrice!,
-            productId: item.product._id,
-            orderId: orderId!,
-          })
-        );
-        dispatch({ type: "PLACE_ORDER", payload: newOrder });
-
-        toast.success("Order created", {
-          autoClose: 500,
-        });
-
-        setTimeout(() => {
-          navigate("/products");
-        }, 500);
-      } catch (error) {
-        console.log(error);
-        toast.error("Error post order");
+  const placeOrder = async (order: Order) => {
+    try {
+      const res = await instance.post("/order/create-order", order);
+      if (!res || !res.data || !res.data.datas) {
+        toast.error("Error creating order");
+        return;
       }
-    },
-    [navigate]
-  );
 
-  const orderItem = useCallback(async (data: OrderItem) => {
+      const newOrder = res.data.datas;
+      const orderId = newOrder._id;
+      cartState.cartItems.map((item) =>
+        orderItem({
+          quantity: item.quantity,
+          price: item.totalPrice!,
+          productId: item.product._id,
+          orderId: orderId!,
+        })
+      );
+      dispatch({ type: "PLACE_ORDER", payload: newOrder });
+
+      toast.success("Order created", {
+        autoClose: 500,
+      });
+
+      setTimeout(() => {
+        navigate("/products");
+      }, 500);
+    } catch (error) {
+      console.log(error);
+      toast.error("Error post order");
+    }
+  };
+
+  const orderItem = async (data: OrderItem) => {
+    console.log(data);
     try {
       const res = await instance.post("/order-items/create-orderItems", data);
-
+      console.log(res.data.datas);
       if (!res) {
         toast.error("Error creating orderItem", { autoClose: 200 });
       }
@@ -230,7 +229,7 @@ export const CartProvider = ({ children }: ChildrenProps) => {
         autoClose: 200,
       });
     }
-  }, []);
+  };
 
   const updateOrderStatus = async (orderId: string, paymentStatus: string) => {
     try {

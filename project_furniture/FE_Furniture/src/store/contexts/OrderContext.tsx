@@ -25,9 +25,8 @@ export const OrderProvider = ({ children }: ChildrenProps) => {
 
       if (!res) {
         toast.error("Order not found");
-      } else {
-        dispatch({ type: "SET_ORDER_CHART", payload: res.data.datas });
       }
+      dispatch({ type: "SET_ORDER_CHART", payload: res.data.datas });
     } catch (error) {
       console.log(error);
     }

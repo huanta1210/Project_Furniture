@@ -36,7 +36,6 @@ export const sendConfirmationEmail = (email) => {
 };
 
 export const sendConfirmationEmailOrder = async (order) => {
-  console.log("order: " + order);
   const user = await User.findOne({ _id: order.userId });
 
   const addresses = await Address.find({ userId: user._id });

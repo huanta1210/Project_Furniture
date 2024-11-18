@@ -19,7 +19,7 @@ const HeaderAdmin = () => {
       if (!acc[month]) {
         acc[month] = { totalPrice: 0, totalOrders: 0 };
       }
-      acc[month].totalPrice += order.total * 25000;
+      acc[month].totalPrice += order.total;
       acc[month].totalOrders += 1;
       return acc;
     },
@@ -28,9 +28,11 @@ const HeaderAdmin = () => {
 
   const labels = Object.keys(orderDataByMonth);
   const totalPrices = labels.map((month) => orderDataByMonth[month].totalPrice);
+  const totalPrice = totalPrices.reduce((acc, cur) => acc + cur, 0);
   const totalOrders = labels.map(
     (month) => orderDataByMonth[month].totalOrders
   );
+  const totalOrder = totalOrders.reduce((acc, cur) => acc + cur, 0);
 
   return (
     <>
@@ -61,7 +63,7 @@ const HeaderAdmin = () => {
                   Number of users ordering by month
                 </p>
                 <p className="text-black font-semibold text-3xl pt-1">
-                  {totalOrders.toLocaleString()}
+                  {totalOrder.toLocaleString()}
                 </p>
               </div>
             </div>
@@ -77,7 +79,7 @@ const HeaderAdmin = () => {
                   Total amount by month
                 </p>
                 <p className="text-black font-semibold text-3xl pt-1">
-                  {totalPrices.toLocaleString()}
+                  {totalPrice.toLocaleString()}
                 </p>
               </div>
             </div>

@@ -43,7 +43,7 @@ const Chart: React.FC = () => {
       if (!acc[month]) {
         acc[month] = { totalPrice: 0, totalOrders: 0 };
       }
-      acc[month].totalPrice += order.total * 25000;
+      acc[month].totalPrice += order.total;
       acc[month].totalOrders += 1;
       return acc;
     },

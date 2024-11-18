@@ -20,6 +20,7 @@ const cartReducer = (cartState: State, action: Action): State => {
         );
 
         if (existingItemIndex !== -1) {
+          console.log(existingItemIndex);
           updatedItems[existingItemIndex].quantity += item.quantity;
           updatedItems[existingItemIndex].totalPrice =
             updatedItems[existingItemIndex].product.price! *
@@ -59,9 +60,8 @@ const cartReducer = (cartState: State, action: Action): State => {
           item.product._id === action.payload
             ? {
                 ...item,
-                quantity: Math.max(item.quantity - 1, 1),
-                totalPrice:
-                  item.product.price! * Math.max(item.quantity - 1, 1),
+                quantity: item.quantity - 1,
+                totalPrice: item.product.price! * item.quantity - 1,
               }
             : item
         ),

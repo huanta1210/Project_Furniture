@@ -5,10 +5,12 @@ import { useContext, useEffect, useState } from "react";
 import { ProductContext } from "../../store/contexts/ProductContext";
 import { CategoriesContext } from "../../store/contexts/CategoriesContext";
 import { CartContext } from "../../store/contexts/CartContext";
+import { AuthContext } from "../../store/contexts/AuthContext";
+import { toast } from "react-toastify";
 
 const ProductDetails = () => {
   const { id } = useParams();
-  const { state, getDetails } = useContext(ProductContext);
+  const { state } = useContext(ProductContext);
   const { category, getDetailCategory } = useContext(CategoriesContext);
   const { addToCart } = useContext(CartContext);
   const idCategory = state.selectedProduct?.categoriesId;
@@ -16,20 +18,25 @@ const ProductDetails = () => {
   const navigate = useNavigate();
   useEffect(() => {
     if (idCategory) getDetailCategory(idCategory);
-  }, []);
+  }, [getDetailCategory]);
 
   useEffect(() => {
-    if (id) getDetails(id);
-  }, []);
+    if (id) getDetailCategory(id);
+  }, [getDetailCategory, id]);
+  const { userState } = useContext(AuthContext);
 
   const handleAddToCart = () => {
-    if (state.selectedProduct) {
-      addToCart({
-        product: state.selectedProduct,
-        quantity,
-      });
+    if (!userState.token) {
+      toast.error("You must be logged in", { autoClose: 300 });
+    } else {
+      if (state.selectedProduct) {
+        addToCart({
+          product: state.selectedProduct,
+          quantity,
+        });
+      }
+      navigate("/cart");
     }
-    navigate("/cart");
   };
   return (
     <>

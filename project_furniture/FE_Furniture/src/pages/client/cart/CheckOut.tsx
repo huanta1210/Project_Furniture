@@ -6,9 +6,7 @@ import { LocationContext } from "../../../store/contexts/LocationContext";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { formSchema } from "../../../validators/formCheckout";
-
 import PhoneInput from "react-phone-number-input";
-
 import { FormValues } from "../../../interfaces/FormCheckOut";
 import { toast } from "react-toastify";
 import { AuthContext } from "../../../store/contexts/AuthContext";
@@ -83,8 +81,8 @@ const CheckOut = () => {
       let addressId;
       if (newAddress) {
         addressId = await handleCreateAddress(newAddress);
+        handleCreateOrder(addressId);
       }
-      handleCreateOrder(addressId);
       reset();
     } catch (error) {
       console.log(error);
@@ -96,19 +94,20 @@ const CheckOut = () => {
     setActive(id);
   };
   const handleCreateOrder = async (addressId: unknown) => {
-    const orderItems: string[] = cartState.orderitems
-      ?.map((item) => item._id)
-      .filter((id): id is string => id !== undefined);
-
+    console.log(cartState.orderitems);
+    const orderItems = cartState.orderitems?.map((item) => item._id as string);
     const total = cartState.orderitems.reduce(
       (acc, cur) => acc + cur.price * cur.quantity,
       0
     );
+    console.log(total);
+    console.log(orderItems);
+
     placeOrder({
       orderDate: new Date().toLocaleString("en-US", {
         timeZone: "Asia/Ho_Chi_Minh",
       }),
-      total: total,
+      total,
       paymentStatus: "Pending",
       userId,
       orderItems,
@@ -486,6 +485,7 @@ const CheckOut = () => {
                 <div className="mt-4">
                   <div className="text-center mt-5">
                     <button
+                      onClick={() => handleCreateOrder}
                       className="text-blue-700 font-semibold border-2 border-blue-300 text-base py-2 px-6 rounded-lg shadow-md transition-colors duration-300 ease-in-out  hover:bg-blue-500 hover:text-white"
                       type="submit"
                     >

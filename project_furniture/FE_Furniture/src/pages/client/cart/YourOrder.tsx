@@ -2,12 +2,13 @@ import { memo, useContext, useState } from "react";
 import { Space, Table, TableColumnsType } from "antd";
 import Header from "../../../components/Header";
 import Footer from "../../../components/Footer";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import LogOut from "../../../components/LogOut";
 import { AuthContext } from "../../../store/contexts/AuthContext";
 import { CartContext } from "../../../store/contexts/CartContext";
 import { Order } from "../../../interfaces/Cart";
 import Modal from "../../../components/Modal";
+import { formatToVietnamTime } from "../../../utils/formatToVietnamTime";
 const MemoizedModal = memo(Modal);
 const MemoizedHeader = memo(Header);
 const MemoizedFooter = memo(Footer);
@@ -29,6 +30,7 @@ const YourOrder = () => {
       title: "Order Date",
       dataIndex: "orderDate",
       key: "orderDate",
+      render: (orderDate) => <span>{formatToVietnamTime(orderDate)}</span>,
     },
     {
       title: "Price",
@@ -53,11 +55,8 @@ const YourOrder = () => {
           <span className="text-blue-500">Delivery Successful</span>
         ) : paymentStatus === "Confirmed" ? (
           <span className="text-purple-500">Confirmed</span>
-        ) : (
-          ""
-        ),
+        ) : null,
     },
-
     {
       title: "Action",
       key: "action",
@@ -136,16 +135,16 @@ const YourOrder = () => {
             </p>
             {payload.map((payload, index) => (
               <div key={index}>
-                <Link
+                <a
                   className={`text-sm  ${
                     location.pathname === payload.path
                       ? "text-red-500"
                       : "text-gray-600 hover:text-red-400"
                   }`}
-                  to={payload.path}
+                  href={payload.path}
                 >
                   {payload.name}
-                </Link>
+                </a>
               </div>
             ))}
 

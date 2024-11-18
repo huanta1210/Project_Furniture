@@ -1,6 +1,6 @@
 import { createContext, useEffect, useReducer } from "react";
 import { User } from "../../interfaces/User";
-import userReducer from "../reducers/userReducer";
+import userReducer from "../reducers/authReducer";
 import { toast } from "react-toastify";
 import instance from "../../api";
 import { ChildrenProps } from "../../interfaces/Children";
@@ -21,9 +21,8 @@ export const UserProvider = ({ children }: ChildrenProps) => {
         const res = await instance.get("auth/get-auth");
         if (!res) {
           toast.error("Get Auth Failed");
-        } else {
-          dispatch({ type: "GET_USER", payload: res.data.datas });
         }
+        dispatch({ type: "GET_AUTH", payload: res.data.datas });
       } catch (error) {
         console.error(error);
         toast.error("Error Api");

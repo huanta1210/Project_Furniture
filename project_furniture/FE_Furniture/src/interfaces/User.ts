@@ -1,5 +1,5 @@
 export interface User {
-  _id?: number | string;
+  _id?: string;
   userName?: string;
   phone?: string;
   email: string;
@@ -9,7 +9,7 @@ export interface User {
 }
 
 export interface AuthToken {
-  _id?: string | null;
+  _id?: string;
   userName?: string;
   phone?: string;
   email: string;
@@ -21,7 +21,7 @@ export interface AuthToken {
 }
 
 export interface JWTDecode {
-  id: string | null;
+  id: string;
   role: string;
   userName: string;
   email: string;
@@ -37,4 +37,5 @@ export type State = {
 export type Action =
   | { type: "SET_AUTH"; payload: { token: string; users: AuthToken } }
   | { type: "LOG_OUT" }
-  | { type: "CHECK_TOKEN" };
+  | { type: "CHECK_TOKEN" }
+  | { type: "GET_AUTH"; payload: User };
